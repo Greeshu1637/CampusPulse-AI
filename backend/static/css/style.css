@@ -129,3 +129,91 @@ body{
 .dashboard-header p{
     color:#666;
 }
+/* Dashboard Panels */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+    margin-top:35px;
+}
+
+.panel{
+    background:white;
+    border-radius:12px;
+    padding:25px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.panel h3{
+    margin-bottom:20px;
+    color:#2563eb;
+}
+
+.panel ul{
+    list-style:none;
+}
+
+.panel li{
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+/* Analytics Section */
+
+.chart-section{
+    margin-top:35px;
+}
+
+.chart-section h3{
+    color:#2563eb;
+    margin-bottom:20px;
+}
+
+.chart-placeholder{
+    background:white;
+    height:350px;
+    border-radius:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+    color:#666;
+    font-size:18px;
+}
+/* Responsive Design */
+
+@media (max-width: 992px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media (max-width: 600px){
+
+    .content{
+        padding:15px;
+    }
+
+    .navbar h3{
+        font-size:18px;
+    }
+
+    .sidebar h2{
+        font-size:22px;
+    }
+
+}
