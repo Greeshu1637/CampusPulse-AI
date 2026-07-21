@@ -16,30 +16,28 @@
 
 <div class="cards">
 
-    <div class="card">
-        <h4>Total Students</h4>
-        <h2>1250</h2>
-        <p>+18 this month</p>
-    </div>
+  <div class="card">
+    <h4>Total Students</h4>
+    <h2>{{ data.students }}</h2>
+    <p>Registered Students</p>
+</div>
+   <div class="card">
+    <h4>Pending Complaints</h4>
+    <h2>{{ data.complaints }}</h2>
+    <p>Needs Attention</p>
+</div>
 
     <div class="card">
-        <h4>Pending Complaints</h4>
-        <h2>12</h2>
-        <p>3 resolved today</p>
-    </div>
+    <h4>Mess Satisfaction</h4>
+    <h2>{{ data.mess }}</h2>
+    <p>Based on Feedback</p>
+</div>
 
-    <div class="card">
-        <h4>Mess Satisfaction</h4>
-        <h2>95%</h2>
-        <p>Excellent Rating</p>
-    </div>
-
-    <div class="card">
-        <h4>Empty Classrooms</h4>
-        <h2>8</h2>
-        <p>Available Now</p>
-    </div>
-
+   <div class="card">
+    <h4>Empty Classrooms</h4>
+    <h2>{{ data.rooms }}</h2>
+    <p>Available Right Now</p>
+</div>
 </div>
 <div class="dashboard-grid">
 
@@ -65,7 +63,19 @@
 <div class="chart-section">
 
     <h3>📈 Campus Analytics</h3>
+<div class="panel">
 
+    <h3>📊 Calculated KPIs</h3>
+
+    <ul>
+
+        <li>Complaint Rate : {{ data.complaint_rate }}%</li>
+
+        <li>Room Availability : {{ data.room_availability }}%</li>
+
+    </ul>
+
+</div>
     <div class="chart-placeholder">
 
         <p>Charts will appear here after connecting the database.</p>
@@ -88,7 +98,11 @@
             <li>Library occupancy predicted to peak at 4 PM.</li>
 
             <li>Recommend opening Room A-105 for study.</li>
+            <li>Total Complaints : {{ data.total_complaints }}</li>
 
+<li>Pending : {{ data.pending_complaints }}</li>
+
+<li>Resolved : {{ data.resolved_complaints }}</li>
         </ul>
 
     </div>

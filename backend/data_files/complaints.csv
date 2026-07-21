@@ -1,0 +1,11 @@
+Complaint_ID,Category,Status,Priority
+101,Electricity,Pending,High
+102,Water,Resolved,Medium
+103,WiFi,Pending,High
+104,Cleanliness,Resolved,Low
+105,Furniture,Pending,Medium
+106,Electricity,Resolved,High
+107,Water,Pending,Low
+108,WiFi,Resolved,Medium
+109,Cleanliness,Pending,High
+110,Furniture,Resolved,Low
