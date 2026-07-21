@@ -78,8 +78,11 @@
 </div>
     <div class="chart-placeholder">
 
-        <p>Charts will appear here after connecting the database.</p>
-
+         <canvas id="complaintChart"></canvas>
+         <script>
+const pendingComplaints = {{ data.pending_complaints }};
+const resolvedComplaints = {{ data.resolved_complaints }};
+</script>
     </div>
 
 </div>
@@ -108,4 +111,5 @@
     </div>
 
 </div>
+
 {% endblock %}
