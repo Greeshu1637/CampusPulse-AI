@@ -2,14 +2,40 @@
 
 {% block content %}
 
-<h2>Welcome Greeshma 👋</h2>
+<div class="dashboard-header">
 
-<p>This is the Dashboard Homepage.</p>
+    <div>
 
-<button onclick="sayHello()">
+        <h2>Dashboard Overview</h2>
 
-    Click Me
+        <p>Welcome back! Here's today's campus summary.</p>
 
-</button>
+    </div>
+
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>📋 Complaints</h3>
+        <p>12 Pending</p>
+    </div>
+
+    <div class="card">
+        <h3>🍽 Today's Menu</h3>
+        <p>Rice, Dal, Paneer Curry</p>
+    </div>
+
+    <div class="card">
+        <h3>🏫 Empty Classrooms</h3>
+        <p>8 Rooms Available</p>
+    </div>
+
+    <div class="card">
+        <h3>📅 Today's Classes</h3>
+        <p>4 Scheduled</p>
+    </div>
+
+</div>
 
 {% endblock %}

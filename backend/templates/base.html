@@ -5,31 +5,70 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CampusPulse AI</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+        href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-    <header>
+<div class="container">
 
-        <h1>🚀 CampusPulse AI</h1>
+    <!-- Sidebar -->
 
-    </header>
+    <aside class="sidebar">
 
-    <hr>
+        <h2>🎓 CampusPulse AI</h2>
 
-    {% block content %}
+        <ul>
 
-    {% endblock %}
+    <li class="active">📊 Dashboard</li>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <li>🍽 Mess</li>
+
+    <li>🛠 Complaints</li>
+
+    <li>📅 Timetable</li>
+
+    <li>📈 Analytics</li>
+
+    <li>⚙ Settings</li>
+
+</ul>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+
+        <!-- Navbar -->
+
+        <header class="navbar">
+
+            <h3>Welcome Greeshma 👋</h3>
+
+        </header>
+
+        <!-- Dynamic Page -->
+
+        <section class="content">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 
