@@ -82,3 +82,48 @@ if (categoryCtx) {
     });
 
 }
+const trendCtx = document.getElementById('trendChart');
+
+if (trendCtx) {
+
+    new Chart(trendCtx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: trendLabels,
+
+            datasets: [{
+
+                label: 'Daily Complaints',
+
+                data: trendValues,
+
+                fill: false,
+
+                tension: 0.3
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}

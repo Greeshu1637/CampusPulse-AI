@@ -117,3 +117,21 @@ def load_dashboard_summary():
         "resolved_percentage": resolved_percentage,
         "top_category": top_category
     }
+def load_daily_complaints():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DATE(created_at), COUNT(*)
+        FROM complaints
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at);
+    """)
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return rows

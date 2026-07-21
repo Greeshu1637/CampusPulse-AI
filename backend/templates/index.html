@@ -79,7 +79,7 @@
     <div class="chart-placeholder">
 
          <canvas id="complaintChart"></canvas>
-        <script>
+<script>
 
 const pendingComplaints = {{ data.pending_complaints }};
 
@@ -88,6 +88,10 @@ const resolvedComplaints = {{ data.resolved_complaints }};
 const categoryLabels = {{ data.category_labels | tojson }};
 
 const categoryValues = {{ data.category_values | tojson }};
+
+const trendLabels = {{ data.trend_labels | tojson }};
+
+const trendValues = {{ data.trend_values | tojson }};
 
 </script>
     </div>
@@ -113,6 +117,47 @@ const categoryValues = {{ data.category_values | tojson }};
         <li><strong>Top Complaint Category:</strong> {{ data.top_category }}</li>
 
     </ul>
+    <div class="panel">
+
+    <h3>📈 Complaint Trends</h3>
+
+    <canvas id="trendChart"></canvas>
+
+</div>
+
+</div>
+<div class="panel">
+
+    <h3>📌 Quick Statistics</h3>
+
+    <table>
+
+        <tr>
+            <td>Total Students</td>
+            <td>{{ data.students }}</td>
+        </tr>
+
+        <tr>
+            <td>Total Complaints</td>
+            <td>{{ data.total_db_complaints }}</td>
+        </tr>
+
+        <tr>
+            <td>Pending Complaints</td>
+            <td>{{ data.pending_complaints }}</td>
+        </tr>
+
+        <tr>
+            <td>Resolved Complaints</td>
+            <td>{{ data.resolved_complaints }}</td>
+        </tr>
+
+        <tr>
+            <td>Top Category</td>
+            <td>{{ data.top_category }}</td>
+        </tr>
+
+    </table>
 
 </div>
     <!-- AI Insights -->

@@ -2,7 +2,8 @@ from analytics import (
     load_dashboard_data,
     load_complaint_statistics,
     load_category_statistics,
-    load_dashboard_summary
+    load_dashboard_summary,
+    load_daily_complaints
 )
 
 # Load dashboard data
@@ -26,3 +27,12 @@ summary = load_dashboard_summary()
 dashboard_data["total_db_complaints"] = summary["total"]
 dashboard_data["resolved_percentage"] = summary["resolved_percentage"]
 dashboard_data["top_category"] = summary["top_category"]
+daily_stats = load_daily_complaints()
+
+dashboard_data["trend_labels"] = [
+    row[0].strftime("%d-%b") for row in daily_stats
+]
+
+dashboard_data["trend_values"] = [
+    row[1] for row in daily_stats
+]
