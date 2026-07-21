@@ -65,3 +65,55 @@ def load_complaint_statistics():
     conn.close()
 
     return stats
+def load_category_statistics():
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT category, COUNT(*)
+        FROM complaints
+        GROUP BY category
+        ORDER BY category
+    """)
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return rows
+
+
+def load_dashboard_summary():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM complaints")
+    total = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM complaints WHERE status='Resolved'")
+    resolved = cursor.fetchone()[0]
+
+    cursor.execute("""
+        SELECT category, COUNT(*)
+        FROM complaints
+        GROUP BY category
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+    """)
+
+    top_category = cursor.fetchone()[0]
+
+    cursor.close()
+    conn.close()
+
+    resolved_percentage = round((resolved / total) * 100, 2)
+
+    return {
+        "total": total,
+        "resolved_percentage": resolved_percentage,
+        "top_category": top_category
+    }

@@ -39,3 +39,46 @@ if (ctx) {
     });
 
 }
+const categoryCtx = document.getElementById('categoryChart');
+
+if (categoryCtx) {
+
+    new Chart(categoryCtx, {
+
+        type: 'bar',
+
+        data: {
+
+            labels: categoryLabels,
+
+            datasets: [{
+
+                label: 'Complaints',
+
+                data: categoryValues,
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}

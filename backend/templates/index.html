@@ -79,11 +79,40 @@
     <div class="chart-placeholder">
 
          <canvas id="complaintChart"></canvas>
-         <script>
+        <script>
+
 const pendingComplaints = {{ data.pending_complaints }};
+
 const resolvedComplaints = {{ data.resolved_complaints }};
+
+const categoryLabels = {{ data.category_labels | tojson }};
+
+const categoryValues = {{ data.category_values | tojson }};
+
 </script>
     </div>
+
+</div>
+<div class="panel">
+
+    <h3>📊 Complaints by Category</h3>
+
+    <canvas id="categoryChart"></canvas>
+
+</div>
+<div class="panel">
+
+    <h3>📈 Analytics Summary</h3>
+
+    <ul>
+
+        <li><strong>Total Complaints:</strong> {{ data.total_db_complaints }}</li>
+
+        <li><strong>Resolved Percentage:</strong> {{ data.resolved_percentage }}%</li>
+
+        <li><strong>Top Complaint Category:</strong> {{ data.top_category }}</li>
+
+    </ul>
 
 </div>
     <!-- AI Insights -->
