@@ -2,188 +2,311 @@
 
 {% block content %}
 
-<div class="dashboard-header">
+<!-- HERO -->
 
-    <div>
+<section class="hero">
 
-        <h2>Dashboard Overview</h2>
+    <div class="hero-left">
 
-        <p>Welcome back! Here's today's campus summary.</p>
+        <span class="badge">● AI SYSTEM ONLINE</span>
+
+        <h1>Mission Control</h1>
+
+        <p>
+            Monitor campus operations, predict issues, and make
+            AI-powered decisions from one intelligent platform.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="primary-btn">
+                View AI Insights
+            </button>
+
+            <button class="secondary-btn">
+                Generate Report
+            </button>
+
+        </div>
 
     </div>
 
-</div>
+    <div class="hero-right">
+
+        <div class="health-card">
+
+            <h4>Campus Health</h4>
+
+            <h1>94%</h1>
+
+            <p>Excellent</p>
+
+            <div class="health-bar">
+
+                <div class="health-fill"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- KPI CARDS -->
 
 <div class="cards">
 
-  <div class="card">
-    <h4>Total Students</h4>
-    <h2>{{ data.students }}</h2>
-    <p>Registered Students</p>
-</div>
-   <div class="card">
-    <h4>Pending Complaints</h4>
-    <h2>{{ data.complaints }}</h2>
-    <p>Needs Attention</p>
-</div>
-
     <div class="card">
-    <h4>Mess Satisfaction</h4>
-    <h2>{{ data.mess }}</h2>
-    <p>Based on Feedback</p>
-</div>
 
-   <div class="card">
-    <h4>Empty Classrooms</h4>
-    <h2>{{ data.rooms }}</h2>
-    <p>Available Right Now</p>
-</div>
-</div>
-<div class="dashboard-grid">
+        <div class="card-top">
 
-    <!-- Recent Activity -->
+            <h4>Total Students</h4>
 
-    <div class="panel">
+            <span class="trend positive">+3.4%</span>
 
-        <h3>📋 Recent Activity</h3>
+        </div>
 
-        <ul>
+        <h1>{{ data.students }}</h1>
 
-            <li>Complaint #102 marked as completed.</li>
-
-            <li>Room B-204 is available now.</li>
-
-            <li>Mess menu updated for today.</li>
-
-            <li>Timetable updated for CSE 3rd Year.</li>
-
-        </ul>
+        <p>Active students</p>
 
     </div>
-<div class="chart-section">
 
-    <h3>📈 Campus Analytics</h3>
-<div class="panel">
+    <div class="card">
 
-    <h3>📊 Calculated KPIs</h3>
+        <div class="card-top">
 
-    <ul>
+            <h4>Open Issues</h4>
 
-        <li>Complaint Rate : {{ data.complaint_rate }}%</li>
+            <span class="trend warning">{{ data.pending_complaints }}</span>
 
-        <li>Room Availability : {{ data.room_availability }}%</li>
+        </div>
 
-    </ul>
+        <h1>{{ data.total_db_complaints }}</h1>
+
+        <p>Need attention</p>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <h4>Resolved</h4>
+
+            <span class="trend positive">{{ data.resolved_percentage }}%</span>
+
+        </div>
+
+        <h1>{{ data.resolved_complaints }}</h1>
+
+        <p>Successfully completed</p>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <h4>AI Confidence</h4>
+
+            <span class="trend positive">High</span>
+
+        </div>
+
+        <h1>96%</h1>
+
+        <p>Prediction accuracy</p>
+
+    </div>
 
 </div>
-    <div class="chart-placeholder">
 
-         <canvas id="complaintChart"></canvas>
+<!-- DASHBOARD GRID -->
+
+<div class="dashboard-grid">
+
+    <div class="left-column">
+
+        <div class="panel">
+
+            <h3>Complaint Trends</h3>
+
+            <canvas id="trendChart"></canvas>
+
+        </div>
+
+        <div class="panel">
+
+            <h3>Complaint Categories</h3>
+
+            <canvas id="categoryChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="right-column">
+
+        <div class="panel ai-command">
+
+    <div class="panel-header">
+
+        <h3>🤖 AI Command Center</h3>
+
+        <span class="live-dot">LIVE</span>
+<hr style="margin:25px 0;">
+
+<h4>🚨 Live Alert Feed</h4>
+<div class="panel prediction-panel">
+
+    <h3>🧠 AI Prediction Engine</h3>
+
+    <div class="prediction-card">
+
+        <h4>📶 Wi-Fi Failure Risk</h4>
+
+        <div class="prediction-bar">
+
+            <div class="prediction-fill wifi">
+                18%
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="prediction-card">
+
+        <h4>🍽 Cafeteria Crowd</h4>
+
+        <div class="prediction-bar">
+
+            <div class="prediction-fill food">
+                82%
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="prediction-card">
+
+        <h4>🛠 Maintenance Load</h4>
+
+        <div class="prediction-bar">
+
+            <div class="prediction-fill maintenance">
+                61%
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="alertFeed">
+
+    <div class="alert-item">
+        🟢 Campus operating normally
+    </div>
+
+</div>
+    </div>
+
+    <div class="status-grid">
+
+        <div class="status-box">
+
+            <h5>Campus Status</h5>
+
+            <h2>🟢 Normal</h2>
+
+        </div>
+
+        <div class="status-box">
+
+            <h5>AI Confidence</h5>
+
+            <h2>96%</h2>
+
+        </div>
+
+        <div class="status-box">
+
+            <h5>Active Alerts</h5>
+
+            <h2>03</h2>
+
+        </div>
+
+        <div class="status-box">
+
+            <h5>Risk Level</h5>
+
+            <h2>LOW</h2>
+
+        </div>
+
+    </div>
+
+    <hr>
+<h4>🧠 Next AI Recommendation</h4>
+
+<p id="aiMessage">
+
+    Open Study Hall B between <strong>4 PM - 7 PM</strong>
+    to reduce predicted library congestion.
+
+</p>
+    
+
+    <div class="confidence-bar">
+
+        <div class="confidence-fill">
+
+            97% Confidence
+
+        </div>
+
+    </div>
+
+</div>
+
+            
+
+        </div>
+
+        <div class="panel">
+
+            <h3>Recent Activity</h3>
+
+            <ul>
+
+                <li>Complaint #102 resolved.</li>
+
+                <li>Mess menu updated.</li>
+
+                <li>Room B204 available.</li>
+
+                <li>Timetable updated.</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
-const pendingComplaints = {{ data.pending_complaints }};
-
-const resolvedComplaints = {{ data.resolved_complaints }};
-
 const categoryLabels = {{ data.category_labels | tojson }};
-
 const categoryValues = {{ data.category_values | tojson }};
-
 const trendLabels = {{ data.trend_labels | tojson }};
-
 const trendValues = {{ data.trend_values | tojson }};
 
 </script>
-    </div>
-
-</div>
-<div class="panel">
-
-    <h3>📊 Complaints by Category</h3>
-
-    <canvas id="categoryChart"></canvas>
-
-</div>
-<div class="panel">
-
-    <h3>📈 Analytics Summary</h3>
-
-    <ul>
-
-        <li><strong>Total Complaints:</strong> {{ data.total_db_complaints }}</li>
-
-        <li><strong>Resolved Percentage:</strong> {{ data.resolved_percentage }}%</li>
-
-        <li><strong>Top Complaint Category:</strong> {{ data.top_category }}</li>
-
-    </ul>
-    <div class="panel">
-
-    <h3>📈 Complaint Trends</h3>
-
-    <canvas id="trendChart"></canvas>
-
-</div>
-
-</div>
-<div class="panel">
-
-    <h3>📌 Quick Statistics</h3>
-
-    <table>
-
-        <tr>
-            <td>Total Students</td>
-            <td>{{ data.students }}</td>
-        </tr>
-
-        <tr>
-            <td>Total Complaints</td>
-            <td>{{ data.total_db_complaints }}</td>
-        </tr>
-
-        <tr>
-            <td>Pending Complaints</td>
-            <td>{{ data.pending_complaints }}</td>
-        </tr>
-
-        <tr>
-            <td>Resolved Complaints</td>
-            <td>{{ data.resolved_complaints }}</td>
-        </tr>
-
-        <tr>
-            <td>Top Category</td>
-            <td>{{ data.top_category }}</td>
-        </tr>
-
-    </table>
-
-</div>
-    <!-- AI Insights -->
-
-    <div class="panel">
-
-        <h3>🤖 AI Insights</h3>
-
-        <ul>
-
-            <li>Expected high lunch demand today.</li>
-
-            <li>Maintenance requests increased by 12%.</li>
-
-            <li>Library occupancy predicted to peak at 4 PM.</li>
-
-            <li>Recommend opening Room A-105 for study.</li>
-            <li>Total Complaints : {{ data.total_complaints }}</li>
-
-<li>Pending : {{ data.pending_complaints }}</li>
-
-<li>Resolved : {{ data.resolved_complaints }}</li>
-        </ul>
-
-    </div>
-
-</div>
 
 {% endblock %}

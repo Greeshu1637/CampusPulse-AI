@@ -11,36 +11,57 @@
 
     <link rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}">
-
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- Sidebar -->
+    <nav class="menu">
 
-    <aside class="sidebar">
+<a href="#" class="active">
+<i class="fa-solid fa-house"></i>
+<span>Mission Control</span>
+</a>
 
-        <h2>🎓 CampusPulse AI</h2>
+<a href="#">
+<i class="fa-solid fa-brain"></i>
+<span>AI Insights</span>
+</a>
 
-        <ul>
+<a href="#">
+<i class="fa-solid fa-chart-line"></i>
+<span>Analytics</span>
+</a>
 
-    <li class="active">📊 Dashboard</li>
+<a href="#">
+<i class="fa-solid fa-triangle-exclamation"></i>
+<span>Issue Intelligence</span>
+</a>
 
-    <li>🍽 Mess</li>
+<a href="#">
+<i class="fa-solid fa-map-location-dot"></i>
+<span>Campus Map</span>
+</a>
 
-    <li>🛠 Complaints</li>
+<a href="#">
+<i class="fa-solid fa-utensils"></i>
+<span>Smart Dining</span>
+</a>
 
-    <li>📅 Timetable</li>
+<a href="#">
+<i class="fa-solid fa-calendar-days"></i>
+<span>Academic Flow</span>
+</a>
 
-    <li>📈 Analytics</li>
+<a href="#">
+<i class="fa-solid fa-gear"></i>
+<span>Workspace</span>
+</a>
 
-    <li>⚙ Settings</li>
-
-</ul>
-
-    </aside>
+</nav>
 
     <!-- Main Content -->
 
@@ -50,9 +71,41 @@
 
         <header class="navbar">
 
-            <h3>Welcome Greeshma 👋</h3>
+    <div class="nav-left">
 
-        </header>
+        <h2>CampusPulse AI</h2>
+
+        <p>AI Operating System for Smart Universities</p>
+
+    </div>
+
+    <div class="nav-right">
+
+        <div class="status">
+
+            <span class="dot"></span>
+
+            System Online
+
+        </div>
+
+        <div class="profile">
+
+            <div class="avatar">G</div>
+
+            <div>
+
+                <h4>Greeshma</h4>
+
+                <small>Administrator</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
 
         <!-- Dynamic Page -->
 
