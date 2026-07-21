@@ -1,9 +1,12 @@
 import pandas as pd
+from database import get_connection
 
+# Read complaints CSV (used temporarily until everything moves to PostgreSQL)
 complaints_df = pd.read_csv("backend/data_files/complaints.csv")
 
-def load_dashboard_data():
 
+def load_dashboard_data():
+    # Read dashboard summary CSV
     df = pd.read_csv("backend/data_files/dashboard.csv")
 
     dashboard_data = {
@@ -13,7 +16,7 @@ def load_dashboard_data():
         "rooms": int(df.loc[df["Metric"] == "Empty Rooms", "Value"].values[0])
     }
 
-    # -------- KPIs --------
+    # ---------------- KPIs ----------------
 
     dashboard_data["complaint_rate"] = round(
         (dashboard_data["complaints"] / dashboard_data["students"]) * 100,
@@ -36,3 +39,29 @@ def load_dashboard_data():
     ).sum()
 
     return dashboard_data
+
+
+def load_complaint_statistics():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT status, COUNT(*)
+        FROM complaints
+        GROUP BY status
+    """)
+
+    rows = cursor.fetchall()
+
+    stats = {
+        "Pending": 0,
+        "Resolved": 0
+    }
+
+    for status, count in rows:
+        stats[status] = count
+
+    cursor.close()
+    conn.close()
+
+    return stats
