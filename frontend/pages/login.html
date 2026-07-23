@@ -1,0 +1,319 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Sign In</title>
+  <meta name="description" content="Sign in to CampusPulse AI – Smart University Management Platform" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127981;</text></svg>" />
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="lp-bg" aria-hidden="true">
+    <div class="lp-orb lp-orb--1"></div>
+    <div class="lp-orb lp-orb--2"></div>
+    <div class="lp-orb lp-orb--3"></div>
+    <div class="lp-grid"></div>
+  </div>
+
+  <!-- Floating theme toggle -->
+  <button class="theme-fab" id="themeToggle" aria-label="Switch to dark mode" title="Toggle theme">
+    <i class="fa-solid fa-moon" id="themeIcon"></i>
+    <span class="theme-fab__label" id="themeLabel">Dark</span>
+  </button>
+
+  <!-- ===========================================
+       MAIN LAYOUT — Split panel
+       =========================================== -->
+  <div class="lp-wrapper" role="main">
+
+    <!-- LEFT — Branding panel -->
+    <aside class="lp-left" aria-label="CampusPulse AI platform overview">
+
+      <div class="lp-logo">
+        <div class="lp-logo__icon" aria-hidden="true">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="lp-logo__text">
+          <span class="lp-logo__name">CampusPulse</span>
+          <span class="lp-logo__badge"><i class="fa-solid fa-bolt" aria-hidden="true"></i> AI</span>
+        </div>
+      </div>
+
+      <div class="lp-hero">
+        <h1 class="lp-hero__title">
+          Smart Campus.<br />
+          <span class="lp-gradient-text">Powered by AI.</span>
+        </h1>
+        <p class="lp-hero__sub">
+          One unified platform for students, faculty, facilities
+          and analytics — all driven by real-time intelligence.
+        </p>
+      </div>
+
+      <ul class="lp-features" aria-label="Platform features">
+        <li class="lp-feature">
+          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span>
+          Real-time Analytics &amp; Insights
+        </li>
+        <li class="lp-feature">
+          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-city"></i></span>
+          Digital Twin Campus
+        </li>
+        <li class="lp-feature">
+          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-robot"></i></span>
+          AI Copilot &amp; Recommendations
+        </li>
+        <li class="lp-feature">
+          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
+          Enterprise-grade Security
+        </li>
+      </ul>
+
+      <div class="lp-stats" aria-label="Platform statistics">
+        <div class="lp-stat">
+          <span class="lp-stat__val">12K+</span>
+          <span class="lp-stat__lbl">Students</span>
+        </div>
+        <span class="lp-stat__div" aria-hidden="true"></span>
+        <div class="lp-stat">
+          <span class="lp-stat__val">847</span>
+          <span class="lp-stat__lbl">Faculty</span>
+        </div>
+        <span class="lp-stat__div" aria-hidden="true"></span>
+        <div class="lp-stat">
+          <span class="lp-stat__val">98.2%</span>
+          <span class="lp-stat__lbl">Uptime</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT — Login form -->
+    <section class="lp-right" aria-label="Sign in to CampusPulse AI">
+
+      <div class="lp-card" id="lpCard">
+
+        <!-- Logo (shown in card on mobile) -->
+        <div class="lp-logo lp-logo--card" aria-hidden="true">
+          <div class="lp-logo__icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div class="lp-logo__text">
+            <span class="lp-logo__name">CampusPulse</span>
+            <span class="lp-logo__badge"><i class="fa-solid fa-bolt"></i> AI</span>
+          </div>
+        </div>
+
+        <!-- Welcome heading -->
+        <div class="lp-card__head">
+          <h2 class="lp-card__title">Welcome back</h2>
+          <p class="lp-card__sub">Sign in to your CampusPulse AI account</p>
+        </div>
+
+        <!-- Role Selector -->
+        <fieldset class="lp-roles" id="roleGroup">
+          <legend class="lp-label">Sign in as</legend>
+          <div class="lp-role-grid">
+            <button type="button" class="lp-role active" data-role="student" aria-pressed="true">
+              <i class="fa-solid fa-graduation-cap lp-role__ico" aria-hidden="true"></i>
+              <span class="lp-role__lbl">Student</span>
+            </button>
+            <button type="button" class="lp-role" data-role="admin" aria-pressed="false">
+              <i class="fa-solid fa-user-shield lp-role__ico" aria-hidden="true"></i>
+              <span class="lp-role__lbl">Administrator</span>
+            </button>
+            <button type="button" class="lp-role" data-role="maintenance" aria-pressed="false">
+              <i class="fa-solid fa-screwdriver-wrench lp-role__ico" aria-hidden="true"></i>
+              <span class="lp-role__lbl">Maintenance</span>
+            </button>
+            <button type="button" class="lp-role" data-role="mess" aria-pressed="false">
+              <i class="fa-solid fa-utensils lp-role__ico" aria-hidden="true"></i>
+              <span class="lp-role__lbl">Mess Manager</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <!-- Form -->
+        <form id="loginForm" class="lp-form" novalidate autocomplete="off">
+
+          <!-- Email / University ID -->
+          <div class="lp-field" id="emailField">
+            <label class="lp-label" for="emailInput">
+              University ID / Email
+            </label>
+            <div class="lp-input-wrap">
+              <span class="lp-input-icon lp-input-icon--l" aria-hidden="true">
+                <i class="fa-solid fa-id-card" id="emailIcon"></i>
+              </span>
+              <input
+                type="text"
+                id="emailInput"
+                class="lp-input"
+                placeholder="STU2024001 or you@university.edu"
+                autocomplete="username"
+                spellcheck="false"
+                aria-required="true"
+                aria-describedby="emailErr"
+              />
+            </div>
+            <span class="lp-err" id="emailErr" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="lp-field" id="passwordField">
+            <label class="lp-label" for="passwordInput">Password</label>
+            <div class="lp-input-wrap">
+              <span class="lp-input-icon lp-input-icon--l" aria-hidden="true">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+              <input
+                type="password"
+                id="passwordInput"
+                class="lp-input"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                aria-required="true"
+                aria-describedby="passwordErr"
+              />
+              <button
+                type="button"
+                class="lp-input-icon--r lp-pw-toggle"
+                id="pwToggle"
+                aria-label="Show password"
+              >
+                <i class="fa-solid fa-eye" id="pwToggleIcon"></i>
+              </button>
+            </div>
+            <span class="lp-err" id="passwordErr" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Remember me + Forgot -->
+          <div class="lp-meta">
+            <label class="lp-remember" for="rememberMe">
+              <input type="checkbox" id="rememberMe" class="lp-remember__input" />
+              <span class="lp-remember__box" aria-hidden="true">
+                <i class="fa-solid fa-check lp-remember__tick"></i>
+              </span>
+              <span class="lp-remember__txt">Remember me</span>
+            </label>
+            <a href="#" class="lp-forgot" id="forgotLink">Forgot password?</a>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="lp-btn" id="loginBtn">
+            <span class="lp-btn__default" id="btnDefault">
+              <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+              Sign In
+            </span>
+            <span class="lp-btn__loading" id="btnLoading" aria-hidden="true">
+              <span class="lp-spinner"></span>
+              Authenticating&hellip;
+            </span>
+          </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="lp-divider" aria-hidden="true">
+          <span class="lp-divider__line"></span>
+          <span class="lp-divider__txt">or continue with</span>
+          <span class="lp-divider__line"></span>
+        </div>
+
+        <!-- SSO -->
+        <div class="lp-sso" role="group" aria-label="Single sign-on options">
+          <button type="button" class="lp-sso-btn" aria-label="Sign in with Google">
+            <i class="fa-brands fa-google" aria-hidden="true"></i>
+            <span>Google</span>
+          </button>
+          <button type="button" class="lp-sso-btn" aria-label="Sign in with Microsoft">
+            <i class="fa-brands fa-microsoft" aria-hidden="true"></i>
+            <span>Microsoft</span>
+          </button>
+        </div>
+
+        <p class="lp-card__note">
+          Need access?
+          <a href="#" class="lp-card__note-link">Contact your campus administrator</a>
+        </p>
+
+      </div><!-- /lp-card -->
+
+      <div class="lp-version">
+        <span class="lp-version__dot" aria-hidden="true"></span>
+        <span>CampusPulse AI v4.1 &nbsp;&bull;&nbsp; All systems operational</span>
+      </div>
+
+    </section>
+  </div><!-- /lp-wrapper -->
+
+
+  <!-- Forgot Password Modal -->
+  <div
+    class="lp-modal-overlay"
+    id="forgotModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="forgotTitle"
+    hidden
+  >
+    <div class="lp-modal" id="forgotModalCard">
+
+      <button class="lp-modal__close" id="forgotClose" aria-label="Close dialog">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+
+      <div class="lp-modal__icon" aria-hidden="true">
+        <i class="fa-solid fa-envelope-open-text"></i>
+      </div>
+
+      <h3 class="lp-modal__title" id="forgotTitle">Reset Password</h3>
+      <p class="lp-modal__sub">
+        Enter your university email or ID and we will send you a password reset link.
+      </p>
+
+      <div class="lp-field" style="margin-top:20px">
+        <div class="lp-input-wrap">
+          <span class="lp-input-icon lp-input-icon--l" aria-hidden="true">
+            <i class="fa-solid fa-envelope"></i>
+          </span>
+          <input
+            type="text"
+            id="resetInput"
+            class="lp-input"
+            placeholder="University email or ID"
+            autocomplete="off"
+            aria-describedby="resetErr"
+          />
+        </div>
+        <span class="lp-err" id="resetErr" role="alert" aria-live="polite"></span>
+      </div>
+
+      <button class="lp-btn" id="resetBtn" style="margin-top:16px">
+        <span class="lp-btn__default" id="resetBtnDefault">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send Reset Link
+        </span>
+        <span class="lp-btn__loading" id="resetBtnLoading" aria-hidden="true">
+          <span class="lp-spinner"></span> Sending&hellip;
+        </span>
+      </button>
+
+      <div class="lp-modal__success" id="resetSuccess" hidden>
+        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        <p>Reset link sent! Check your inbox.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>
