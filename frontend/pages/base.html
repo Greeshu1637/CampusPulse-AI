@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Smart University Management Platform</title>
+  <meta name="description" content="CampusPulse AI – Enterprise-grade smart university management dashboard powered by artificial intelligence." />
+  <meta name="theme-color" content="#6C63FF" />
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Favicon inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+</head>
+<body>
+  <!--
+    CampusPulse AI – Base Template
+    This file provides the base layout shell.
+    See dashboard.html for the full feature-rich dashboard.
+  -->
+  <div id="app-root">
+    <div class="splash-screen" id="splashScreen">
+      <div class="splash-logo">
+        <div class="splash-icon">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <h1 class="splash-title">CampusPulse <span class="gradient-text">AI</span></h1>
+        <p class="splash-subtitle">Smart University Management Platform</p>
+        <div class="splash-loader">
+          <div class="loader-bar">
+            <div class="loader-fill" id="loaderFill"></div>
+          </div>
+          <span class="loader-text" id="loaderText">Initializing AI systems…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Splash screen → redirect to dashboard
+    (function () {
+      const fill = document.getElementById('loaderFill');
+      const text = document.getElementById('loaderText');
+      const messages = [
+        'Initializing AI systems…',
+        'Loading campus data…',
+        'Calibrating sensors…',
+        'Connecting Digital Twin…',
+        'Ready!'
+      ];
+      let pct = 0;
+      let msgIdx = 0;
+      const interval = setInterval(() => {
+        pct += 2;
+        fill.style.width = pct + '%';
+        if (pct % 20 === 0 && msgIdx < messages.length - 1) {
+          msgIdx++;
+          text.textContent = messages[msgIdx];
+        }
+        if (pct >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 400);
+        }
+      }, 30);
+    })();
+  </script>
+</body>
+</html>

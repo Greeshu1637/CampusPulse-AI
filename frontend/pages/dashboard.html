@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Dashboard</title>
+  <meta name="description" content="CampusPulse AI enterprise university management dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="../css/style.css">  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app-layout" id="appLayout">
+  <!-- ===========================
+       SIDEBAR
+       =========================== -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Toggle sidebar">
+      <i class="fa-solid fa-chevron-left" id="collapseIcon"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="logo-text">
+        <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
+        <span>Smart University Platform</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" data-page="dashboard">
+        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-tooltip">Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="digital-twin">
+        <span class="nav-icon"><i class="fa-solid fa-city"></i></span>
+        <span class="nav-label">Digital Twin</span>
+        <span class="nav-tooltip">Digital Twin</span>
+      </div>
+      <div class="nav-item" data-page="copilot">
+        <span class="nav-icon"><i class="fa-solid fa-robot"></i></span>
+        <span class="nav-label">AI Copilot</span>
+        <span class="nav-tooltip">AI Copilot</span>
+      </div>
+      <div class="nav-item" data-page="analytics">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="nav-label">Analytics</span>
+        <span class="nav-tooltip">Analytics</span>
+      </div>
+
+      <div class="nav-section-label">Modules</div>
+      <div class="nav-item" data-page="complaints">
+        <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span class="nav-label">Complaints</span>
+        <span class="nav-badge">7</span>
+        <span class="nav-tooltip">Complaints</span>
+      </div>
+      <div class="nav-item" data-page="hostels">
+        <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
+        <span class="nav-label">Hostels</span>
+        <span class="nav-tooltip">Hostels</span>
+      </div>
+      <div class="nav-item" data-page="dining">
+        <span class="nav-icon"><i class="fa-solid fa-utensils"></i></span>
+        <span class="nav-label">Smart Dining</span>
+        <span class="nav-tooltip">Smart Dining</span>
+      </div>
+      <div class="nav-item" data-page="library">
+        <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+        <span class="nav-label">Library</span>
+        <span class="nav-tooltip">Library</span>
+      </div>
+
+      <div class="nav-section-label">System</div>
+      <div class="nav-item" data-page="reports">
+        <span class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></span>
+        <span class="nav-label">Reports</span>
+        <span class="nav-tooltip">Reports</span>
+      </div>
+      <div class="nav-item" data-page="settings">
+        <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+        <span class="nav-label">Settings</span>
+        <span class="nav-tooltip">Settings</span>
+      </div>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="sidebarThemeBtn">
+        <span class="nav-icon"><i class="fa-solid fa-moon" id="sidebarThemeIcon"></i></span>
+        <span id="sidebarThemeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===========================
+       MAIN CONTENT
+       =========================== -->
+  <div class="main-content">
+    <!-- TOPBAR -->
+    <header class="topbar" id="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" placeholder="Search students, faculty, rooms…" id="searchInput" autocomplete="off" />
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbarDate"></span>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-topbar btn-ripple" id="themeToggle" title="Toggle theme">
+          <div class="toggle-thumb" id="toggleThumb">
+            <i class="fa-solid fa-sun" id="themeIcon"></i>
+          </div>
+        </button>
+
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="topbar-btn btn-ripple" id="notifBtn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="notification-panel" id="notifPanel">
+            <div class="notif-panel-header">
+              <h4>Notifications</h4>
+              <span class="notif-clear-btn">Mark all read</span>
+            </div>
+            <div class="notif-list" id="notifList"></div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <button class="topbar-btn btn-ripple" title="Messages">
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+
+        <!-- Profile -->
+        <div class="topbar-profile" id="profileBtn">
+          <div class="profile-avatar">AK</div>
+          <div class="profile-info">
+            <div class="profile-name">Dr. A. Kumar</div>
+            <div class="profile-role">Campus Admin</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px; color:var(--text-muted); margin-left:4px;"></i>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</div>
+            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Settings</div>
+            <div class="dropdown-item"><i class="fa-solid fa-chart-simple"></i> My Reports</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE WRAPPER -->
+    <main class="page-wrapper">
+
+      <!-- ===========================
+           HERO SECTION
+           =========================== -->
+      <section class="hero-section">
+        <div class="hero-bg-shapes">
+          <div class="hero-shape hero-shape-1"></div>
+          <div class="hero-shape hero-shape-2"></div>
+          <div class="hero-shape hero-shape-3"></div>
+        </div>
+        <div class="hero-content">
+          <div class="hero-badges">
+            <span class="hero-badge">
+              <span class="pulse-dot"></span>
+              AI Online
+            </span>
+            <span class="hero-badge"><i class="fa-solid fa-satellite-dish"></i> Mission Control</span>
+            <span class="hero-badge"><i class="fa-solid fa-shield-check"></i> Secure</span>
+          </div>
+          <h1 class="hero-title">University Mission Control</h1>
+          <p class="hero-subtitle">Real-time AI-powered insights for every corner of your campus — students, faculty, facilities, and beyond.</p>
+          <div class="hero-actions">
+            <button class="hero-btn hero-btn-primary btn-ripple" onclick="document.getElementById('copilotSection').scrollIntoView({behavior:'smooth'})">
+              <i class="fa-solid fa-file-chart-column"></i> Generate Report
+            </button>
+            <button class="hero-btn hero-btn-secondary btn-ripple" onclick="document.getElementById('copilotSection').scrollIntoView({behavior:'smooth'})">
+              <i class="fa-solid fa-robot"></i> Open AI Copilot
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="value">12,847</div><div class="label">Active Students</div></div>
+            <div class="hero-stat"><div class="value">847</div><div class="label">Faculty Members</div></div>
+            <div class="hero-stat"><div class="value">98.2%</div><div class="label">System Uptime</div></div>
+            <div class="hero-stat"><div class="value">AI v4.1</div><div class="label">Engine Version</div></div>
+          </div>
+        </div>
+        <div class="campus-score-widget">
+          <div class="score-ring">
+            <svg viewBox="0 0 100 100" width="110" height="110">
+              <circle class="ring-bg" cx="50" cy="50" r="45"/>
+              <circle class="ring-fill" cx="50" cy="50" r="45" id="scoreRing"/>
+            </svg>
+            <div class="score-center">
+              <div class="score-value" id="scoreValue">85</div>
+              <div class="score-label">SCORE</div>
+            </div>
+          </div>
+          <h4>Campus Health Score</h4>
+        </div>
+      </section>
+
+      <!-- ===========================
+           KPI CARDS
+           =========================== -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-gauge-high"></i></span>
+            Key Performance Indicators
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active">Live</button>
+            <button class="tab-btn">Weekly</button>
+            <button class="tab-btn">Monthly</button>
+          </div>
+        </div>
+        <div class="kpi-grid" id="kpiGrid">
+          <!-- KPI cards injected by JS -->
+        </div>
+      </section>
+
+      <!-- ===========================
+           ANALYTICS
+           =========================== -->
+      <section id="analyticsSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-chart-area"></i></span>
+            Analytics &amp; Insights
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active" onclick="switchAnalyticsTab(this,'weekly')">Weekly</button>
+            <button class="tab-btn" onclick="switchAnalyticsTab(this,'monthly')">Monthly</button>
+          </div>
+        </div>
+
+        <!-- Row 1: Line + Bar -->
+        <div class="analytics-grid" style="margin-bottom:20px;">
+          <div class="chart-card">
+            <div class="chart-title">Student Attendance Trend</div>
+            <div class="chart-subtitle">Daily attendance across all departments</div>
+            <div class="chart-container">
+              <canvas id="lineChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Department Enrollment</div>
+            <div class="chart-subtitle">Current semester enrollment by department</div>
+            <div class="chart-container">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Donut + Area + Heatmap -->
+        <div class="analytics-grid-3">
+          <div class="chart-card">
+            <div class="chart-title">Resource Distribution</div>
+            <div class="chart-subtitle">Campus resource allocation</div>
+            <div class="chart-container" style="display:flex;justify-content:center;">
+              <canvas id="donutChart" style="max-height:220px;max-width:220px;"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Energy &amp; Water Usage</div>
+            <div class="chart-subtitle">Monthly consumption forecast</div>
+            <div class="chart-container">
+              <canvas id="areaChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Activity Heatmap</div>
+            <div class="chart-subtitle">Campus activity by hour · last 7 days</div>
+            <div id="heatmapContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===========================
+           AI COMMAND CENTER
+           =========================== -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-brain"></i></span>
+            AI Command Center
+          </h2>
+        </div>
+        <div class="ai-command-grid">
+          <!-- Campus Status -->
+          <div class="ai-card">
+            <div class="ai-card-header">
+              <div class="ai-card-icon" style="background:var(--gradient-success);"><i class="fa-solid fa-circle-check"></i></div>
+              <div>
+                <div class="ai-card-title">Campus Status</div>
+                <div class="ai-card-sub">All systems overview</div>
+              </div>
+            </div>
+            <div class="status-indicators">
+              <div class="status-item">
+                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Network Infrastructure</span></div>
+                <span class="status-value badge badge-green">Optimal</span>
+              </div>
+              <div class="status-item">
+                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Academic Systems</span></div>
+                <span class="status-value badge badge-green">Online</span>
+              </div>
+              <div class="status-item">
+                <div class="status-left"><div class="status-dot yellow"></div><span class="status-name">Hostel Management</span></div>
+                <span class="status-value badge badge-amber">Degraded</span>
+              </div>
+              <div class="status-item">
+                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Library System</span></div>
+                <span class="status-value badge badge-green">Online</span>
+              </div>
+              <div class="status-item">
+                <div class="status-left"><div class="status-dot blue"></div><span class="status-name">AI Engine</span></div>
+                <span class="status-value badge badge-blue">v4.1.2</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Recommendations + Risk -->
+          <div class="ai-card span-2">
+            <div class="ai-card-header">
+              <div class="ai-card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div>
+                <div class="ai-card-title">AI Recommendations</div>
+                <div class="ai-card-sub">Powered by CampusPulse AI v4.1</div>
+              </div>
+              <span class="badge badge-purple" style="margin-left:auto;">3 New</span>
+            </div>
+            <div class="recommendation-list">
+              <div class="rec-item priority-high">
+                <div class="rec-title">⚡ Peak Power Alert – Block C</div>
+                <div class="rec-desc">Predicted 23% surge in energy consumption Friday 2–5 PM. Schedule load balancing to avoid overload.</div>
+                <div class="rec-meta"><span class="rec-tag">Energy</span><span class="rec-tag">High Priority</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 91%</span></div>
+              </div>
+              <div class="rec-item priority-medium">
+                <div class="rec-title">📚 Library Congestion Predicted</div>
+                <div class="rec-desc">Exam season starts in 5 days. Library occupancy will exceed 95%. Consider extending hours to 10 PM.</div>
+                <div class="rec-meta"><span class="rec-tag">Library</span><span class="rec-tag">Medium</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 87%</span></div>
+              </div>
+              <div class="rec-item priority-low">
+                <div class="rec-title">🍽️ Menu Optimization – Mess Hall A</div>
+                <div class="rec-desc">AI suggests adding 2 vegetarian options to reduce food waste by ~18% based on consumption patterns.</div>
+                <div class="rec-meta"><span class="rec-tag">Dining</span><span class="rec-tag">Low</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 79%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Level -->
+          <div class="ai-card">
+            <div class="ai-card-header">
+              <div class="ai-card-icon" style="background:var(--gradient-warning);"><i class="fa-solid fa-shield-halved"></i></div>
+              <div>
+                <div class="ai-card-title">Risk Assessment</div>
+                <div class="ai-card-sub">AI risk scoring</div>
+              </div>
+            </div>
+            <div class="risk-meter">
+              <div class="risk-label"><span>Infrastructure</span><span class="text-success">Low (24%)</span></div>
+              <div class="risk-bar"><div class="risk-fill low"></div></div>
+            </div>
+            <div class="risk-meter">
+              <div class="risk-label"><span>Academic</span><span class="text-warning">Medium (52%)</span></div>
+              <div class="risk-bar"><div class="risk-fill medium"></div></div>
+            </div>
+            <div class="risk-meter">
+              <div class="risk-label"><span>Security</span><span class="text-danger">High (78%)</span></div>
+              <div class="risk-bar"><div class="risk-fill high"></div></div>
+            </div>
+            <div style="margin-top:14px;">
+              <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">AI Prediction Confidence</div>
+              <div class="confidence-bar"><div class="confidence-fill" style="width:89%;"></div></div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">89% — High Confidence</div>
+            </div>
+          </div>
+
+          <!-- Emergency Alerts -->
+          <div class="ai-card">
+            <div class="ai-card-header">
+              <div class="ai-card-icon" style="background:var(--gradient-danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div>
+                <div class="ai-card-title">Alerts &amp; Predictions</div>
+                <div class="ai-card-sub">Real-time campus alerts</div>
+              </div>
+            </div>
+            <div class="alert-list">
+              <div class="alert-item alert-danger">
+                <i class="fa-solid fa-fire alert-icon" style="color:var(--accent-red);"></i>
+                <div><strong>Fire drill</strong> scheduled for Block A tomorrow 10 AM. Ensure all exits are clear.</div>
+              </div>
+              <div class="alert-item alert-warning">
+                <i class="fa-solid fa-droplet alert-icon" style="color:var(--accent-amber);"></i>
+                <div><strong>Water maintenance</strong> in Hostel B, 6–8 AM. Inform residents.</div>
+              </div>
+              <div class="alert-item alert-info">
+                <i class="fa-solid fa-circle-info alert-icon" style="color:var(--accent-blue);"></i>
+                <div><strong>Exam timetable</strong> released. Library access extended by 2 hours.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weather + Energy Forecast -->
+          <div class="ai-card">
+            <div class="ai-card-header">
+              <div class="ai-card-icon" style="background:linear-gradient(135deg,#3B82F6,#22D3EE);"><i class="fa-solid fa-cloud-sun"></i></div>
+              <div>
+                <div class="ai-card-title">Weather &amp; Forecast</div>
+                <div class="ai-card-sub">Campus environment data</div>
+              </div>
+            </div>
+            <div class="weather-widget">
+              <div class="weather-icon">⛅</div>
+              <div class="weather-info">
+                <div class="temp">28°C</div>
+                <div class="condition">Partly Cloudy</div>
+              </div>
+              <div class="weather-details">
+                <span><i class="fa-solid fa-droplet" style="color:#60A5FA;"></i> 68% humidity</span>
+                <span><i class="fa-solid fa-wind" style="color:#34D399;"></i> 14 km/h wind</span>
+                <span><i class="fa-solid fa-sun" style="color:#FBBF24;"></i> UV Index: 6</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;border-top:1px solid var(--border-color);padding-top:12px;">
+              <div style="font-size:0.8rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">Energy Forecast</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="prediction-chip"><i class="fa-solid fa-bolt"></i>Mon: 420 kWh</span>
+                <span class="prediction-chip"><i class="fa-solid fa-bolt"></i>Tue: 396 kWh</span>
+                <span class="prediction-chip"><i class="fa-solid fa-bolt"></i>Wed: 465 kWh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===========================
+           DIGITAL TWIN
+           =========================== -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-city"></i></span>
+            Digital Twin Campus
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active">All Buildings</button>
+            <button class="tab-btn">Alerts Only</button>
+          </div>
+        </div>
+        <div class="digital-twin-grid" id="digitalTwinGrid">
+          <!-- Injected by JS -->
+        </div>
+      </section>
+
+      <!-- ===========================
+           RECENT ACTIVITIES
+           =========================== -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+            Recent Activities
+          </h2>
+          <button class="tab-btn">View All</button>
+        </div>
+        <div class="activities-grid">
+          <!-- Timeline -->
+          <div class="activity-card">
+            <div class="chart-title" style="margin-bottom:18px;">Activity Timeline</div>
+            <div class="activity-timeline" id="activityTimeline">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+          <!-- Live Feed -->
+          <div class="activity-card">
+            <div class="chart-title" style="margin-bottom:18px;">Live Campus Feed</div>
+            <div id="liveFeed" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===========================
+           AI COPILOT
+           =========================== -->
+      <section id="copilotSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-robot"></i></span>
+            AI Copilot – Campus Intelligence
+          </h2>
+        </div>
+        <div class="copilot-card">
+          <div class="copilot-header">
+            <div class="copilot-header-icon"><i class="fa-solid fa-brain"></i></div>
+            <div class="copilot-header-text">
+              <h3>CampusPulse AI Copilot</h3>
+              <p>Ask anything about your campus — instant AI-powered answers</p>
+            </div>
+            <div class="copilot-status">
+              <span class="pulse-dot" style="width:7px;height:7px;border-radius:50%;background:#34D399;display:inline-block;animation:pulse 1.5s infinite;"></span>
+              AI Online · v4.1
+            </div>
+          </div>
+          <div class="copilot-messages" id="copilotMessages"></div>
+          <div class="copilot-suggestions" id="copilotSuggestions">
+            <span style="font-size:0.75rem;color:var(--text-muted);margin-right:4px;flex-shrink:0;">Suggested:</span>
+          </div>
+          <div class="copilot-input-area">
+            <div class="copilot-input-row">
+              <textarea class="copilot-input" id="copilotInput" placeholder="Ask Campus AI: e.g. 'Show hostel occupancy trend for this week…'" rows="1"></textarea>
+              <button class="copilot-send-btn btn-ripple" id="copilotSendBtn">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+            <div class="quick-actions-row">
+              <button class="quick-action-btn"><i class="fa-solid fa-chart-line"></i> Attendance Report</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-building"></i> Room Status</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-bolt"></i> Energy Summary</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-triangle-exclamation"></i> Active Alerts</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-graduation-cap"></i> Exam Schedule</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===========================
+           FOOTER
+           =========================== -->
+      <footer class="dashboard-footer">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <div class="logo-dot"></div>
+            CampusPulse AI
+          </div>
+          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <span class="footer-link">Privacy Policy</span>
+          <span class="footer-link">Terms of Service</span>
+          <span class="footer-link">Documentation</span>
+          <span class="footer-link">Support</span>
+          <span class="footer-link">API</span>
+        </div>
+        <div class="footer-system-info">
+          <div class="system-pill"><span class="dot" style="background:var(--accent-green);"></span>System OK</div>
+          <div class="system-pill"><i class="fa-solid fa-bolt" style="color:var(--accent-amber);font-size:10px;"></i> v4.1.2</div>
+        </div>
+      </footer>
+
+    </main><!-- /page-wrapper -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<script src="../js/dashboard.js"></script></body>
+</html>
