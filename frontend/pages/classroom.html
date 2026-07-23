@@ -1,0 +1,982 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Smart Classroom Finder</title>
+  <meta name="description" content="AI-powered smart classroom finder for CampusPulse – real-time room availability, occupancy and scheduling." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/classroom.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127979;</text></svg>" />
+</head>
+<body>
+
+<!-- ── Mobile overlay (sidebar) ── -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app-layout" id="appLayout">
+
+  <!-- ========================================================
+       SIDEBAR  (identical to dashboard)
+       ======================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Toggle sidebar">
+      <i class="fa-solid fa-chevron-left" id="collapseIcon"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="logo-text">
+        <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
+        <span>Smart University Platform</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+
+      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-tooltip">Dashboard</span>
+      </a>
+      <a class="nav-item" href="#" data-page="digital-twin">
+        <span class="nav-icon"><i class="fa-solid fa-city"></i></span>
+        <span class="nav-label">Digital Twin</span>
+        <span class="nav-tooltip">Digital Twin</span>
+      </a>
+      <a class="nav-item" href="#" data-page="copilot">
+        <span class="nav-icon"><i class="fa-solid fa-robot"></i></span>
+        <span class="nav-label">AI Copilot</span>
+        <span class="nav-tooltip">AI Copilot</span>
+      </a>
+      <a class="nav-item" href="#" data-page="analytics">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="nav-label">Analytics</span>
+        <span class="nav-tooltip">Analytics</span>
+      </a>
+
+      <div class="nav-section-label">Modules</div>
+
+      <a class="nav-item active" href="classroom.html" data-page="classrooms">
+        <span class="nav-icon"><i class="fa-solid fa-chalkboard"></i></span>
+        <span class="nav-label">Classrooms</span>
+        <span class="nav-tooltip">Classrooms</span>
+      </a>
+      <a class="nav-item" href="#" data-page="complaints">
+        <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span class="nav-label">Complaints</span>
+        <span class="nav-badge">7</span>
+        <span class="nav-tooltip">Complaints</span>
+      </a>
+      <a class="nav-item" href="#" data-page="hostels">
+        <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
+        <span class="nav-label">Hostels</span>
+        <span class="nav-tooltip">Hostels</span>
+      </a>
+      <a class="nav-item" href="#" data-page="dining">
+        <span class="nav-icon"><i class="fa-solid fa-utensils"></i></span>
+        <span class="nav-label">Smart Dining</span>
+        <span class="nav-tooltip">Smart Dining</span>
+      </a>
+      <a class="nav-item" href="#" data-page="library">
+        <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+        <span class="nav-label">Library</span>
+        <span class="nav-tooltip">Library</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+
+      <a class="nav-item" href="#" data-page="reports">
+        <span class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></span>
+        <span class="nav-label">Reports</span>
+        <span class="nav-tooltip">Reports</span>
+      </a>
+      <a class="nav-item" href="#" data-page="settings">
+        <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+        <span class="nav-label">Settings</span>
+        <span class="nav-tooltip">Settings</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar footer / theme -->
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="sidebarThemeBtn">
+        <span class="nav-icon"><i class="fa-solid fa-moon" id="sidebarThemeIcon"></i></span>
+        <span id="sidebarThemeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MAIN CONTENT
+       ======================================================== -->
+  <div class="main-content">
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar" id="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search rooms, blocks, floors…"
+          autocomplete="off"
+          aria-label="Search classrooms"
+        />
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbarDate"></span>
+
+        <!-- Theme toggle -->
+        <button class="theme-toggle-topbar btn-ripple" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+          <div class="toggle-thumb" id="toggleThumb">
+            <i class="fa-solid fa-sun" id="themeIcon"></i>
+          </div>
+        </button>
+
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="topbar-btn btn-ripple" id="notifBtn" title="Notifications" aria-label="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="notification-panel" id="notifPanel">
+            <div class="notif-panel-header">
+              <h4>Notifications</h4>
+              <span class="notif-clear-btn">Mark all read</span>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(108,99,255,0.12);color:#6C63FF;">
+                  <i class="fa-solid fa-chalkboard"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">Room A-204 Now Available</div>
+                  <div class="notif-desc">Lecture ended early. Room free until 3:00 PM.</div>
+                  <div class="notif-time">2 min ago</div>
+                </div>
+                <div class="notif-unread-dot"></div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">AI Suggestion Ready</div>
+                  <div class="notif-desc">3 optimal rooms suggested for your seminar.</div>
+                  <div class="notif-time">8 min ago</div>
+                </div>
+                <div class="notif-unread-dot"></div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(239,68,68,0.12);color:#EF4444;">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">Block B – Projector Fault</div>
+                  <div class="notif-desc">Room B-301 projector reported faulty by faculty.</div>
+                  <div class="notif-time">25 min ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <button class="topbar-btn btn-ripple" title="Messages" aria-label="Messages">
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+
+        <!-- Profile -->
+        <div class="topbar-profile" id="profileBtn">
+          <div class="profile-avatar">AK</div>
+          <div class="profile-info">
+            <div class="profile-name">Dr. A. Kumar</div>
+            <div class="profile-role">Campus Admin</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);margin-left:4px;" aria-hidden="true"></i>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</div>
+            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Settings</div>
+            <div class="dropdown-item"><i class="fa-solid fa-chart-simple"></i> My Reports</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- ======================================================
+         PAGE WRAPPER
+         ====================================================== -->
+    <main class="page-wrapper">
+
+      <!-- ====================================================
+           1. PAGE HEADER — Title, Breadcrumb, Actions
+           ==================================================== -->
+      <div class="section-header" style="margin-bottom:24px;">
+        <div>
+          <!-- Breadcrumb -->
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">
+            <a href="dashboard.html" style="color:var(--text-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--accent-purple)'" onmouseout="this.style.color='var(--text-muted)'">
+              <i class="fa-solid fa-house" style="font-size:11px;"></i> Dashboard
+            </a>
+            <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+            <span style="color:var(--text-accent);font-weight:600;">Smart Classroom Finder</span>
+          </nav>
+          <!-- Title -->
+          <h1 class="section-title" style="font-size:1.35rem;">
+            <span class="section-icon"><i class="fa-solid fa-chalkboard"></i></span>
+            Smart Classroom Finder
+          </h1>
+          <p style="font-size:0.83rem;color:var(--text-muted);margin-top:4px;margin-left:38px;">
+            Real-time room availability powered by AI · Last updated <span style="color:var(--accent-purple);font-weight:600;">just now</span>
+          </p>
+        </div>
+        <div class="section-actions" style="align-items:center;">
+          <span class="badge badge-purple" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius-full);">
+            <span style="width:6px;height:6px;background:var(--accent-purple);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block;"></span>
+            AI Online
+          </span>
+          <button class="hero-btn hero-btn-primary btn-ripple" style="padding:8px 18px;font-size:0.82rem;border-radius:var(--radius-full);">
+            <i class="fa-solid fa-file-export"></i> Export
+          </button>
+          <button class="tab-btn" style="display:flex;align-items:center;gap:6px;">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           2. QUICK STATISTICS CARDS
+           ==================================================== -->
+      <section aria-label="Quick statistics" style="margin-bottom:28px;">
+        <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
+
+          <!-- Total Rooms -->
+          <div class="kpi-card animate-delay-1" style="--card-gradient:linear-gradient(135deg,#6C63FF,#9B89FF);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon"><i class="fa-solid fa-door-open"></i></div>
+              <span class="kpi-change neutral">All</span>
+            </div>
+            <div class="kpi-value">128</div>
+            <div class="kpi-label">Total Rooms</div>
+            <div style="margin-top:12px;font-size:0.72rem;color:var(--text-muted);">
+              <i class="fa-solid fa-building" style="color:var(--accent-purple);margin-right:4px;"></i>4 Blocks · 6 Floors each
+            </div>
+          </div>
+
+          <!-- Available Rooms -->
+          <div class="kpi-card animate-delay-2" style="--card-gradient:linear-gradient(135deg,#10B981,#34D399);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-success);"><i class="fa-solid fa-circle-check"></i></div>
+              <span class="kpi-change up">+4 today</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-green);">47</div>
+            <div class="kpi-label">Available Now</div>
+            <div style="margin-top:12px;">
+              <div style="height:4px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;">
+                <div style="width:37%;height:100%;background:var(--gradient-success);border-radius:var(--radius-full);"></div>
+              </div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">37% of total</div>
+            </div>
+          </div>
+
+          <!-- Occupied Rooms -->
+          <div class="kpi-card animate-delay-3" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-danger);"><i class="fa-solid fa-circle-xmark"></i></div>
+              <span class="kpi-change down">-2 vs yesterday</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-red);">68</div>
+            <div class="kpi-label">Occupied Now</div>
+            <div style="margin-top:12px;">
+              <div style="height:4px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;">
+                <div style="width:53%;height:100%;background:var(--gradient-danger);border-radius:var(--radius-full);"></div>
+              </div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">53% of total</div>
+            </div>
+          </div>
+
+          <!-- Occupied Soon -->
+          <div class="kpi-card animate-delay-4" style="--card-gradient:linear-gradient(135deg,#F59E0B,#FBBF24);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-warning);"><i class="fa-solid fa-clock"></i></div>
+              <span class="kpi-change neutral">Next 30 min</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-amber);">13</div>
+            <div class="kpi-label">Occupied Soon</div>
+            <div style="margin-top:12px;">
+              <div style="height:4px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;">
+                <div style="width:10%;height:100%;background:var(--gradient-warning);border-radius:var(--radius-full);"></div>
+              </div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">10% of total</div>
+            </div>
+          </div>
+
+          <!-- AI Suggestions Today -->
+          <div class="kpi-card animate-delay-5" style="--card-gradient:linear-gradient(135deg,#EC4899,#8B5CF6);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:linear-gradient(135deg,#EC4899,#8B5CF6);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <span class="kpi-change up">+18%</span>
+            </div>
+            <div class="kpi-value">34</div>
+            <div class="kpi-label">AI Suggestions Today</div>
+            <div style="margin-top:12px;font-size:0.72rem;color:var(--text-muted);">
+              <i class="fa-solid fa-brain" style="color:#EC4899;margin-right:4px;"></i>94% acceptance rate
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- ====================================================
+           3. AI RECOMMENDATION CARD
+           ==================================================== -->
+      <section aria-label="AI recommendation" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            AI Room Recommendation
+          </h2>
+          <span class="badge badge-purple">Updated just now</span>
+        </div>
+
+        <div class="ai-card" style="background:linear-gradient(135deg,var(--bg-card) 0%,var(--bg-tertiary) 100%);border:1px solid var(--border-card);position:relative;overflow:hidden;">
+
+          <!-- Decorative gradient corner -->
+          <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(108,99,255,0.12),transparent 70%);border-radius:50%;pointer-events:none;" aria-hidden="true"></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;align-items:start;">
+
+            <!-- Recommended Room -->
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-muted);">Recommended Room</div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:44px;height:44px;background:var(--gradient-primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(108,99,255,0.35);">
+                  <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div>
+                  <div style="font-size:1.4rem;font-weight:800;color:var(--text-primary);line-height:1;">A-204</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Block A · Floor 2</div>
+                </div>
+              </div>
+              <span class="badge badge-green" style="width:fit-content;padding:4px 10px;border-radius:var(--radius-full);">
+                <i class="fa-solid fa-circle" style="font-size:7px;"></i> Available
+              </span>
+            </div>
+
+            <!-- Confidence Score -->
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-muted);">AI Confidence Score</div>
+              <div style="font-size:2rem;font-weight:900;color:var(--accent-purple);line-height:1;">94%</div>
+              <div class="confidence-bar" style="height:6px;width:100%;max-width:140px;">
+                <div class="confidence-fill" style="width:94%;"></div>
+              </div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Very High Confidence</div>
+            </div>
+
+            <!-- Reason -->
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-muted);">Why This Room?</div>
+              <ul style="display:flex;flex-direction:column;gap:6px;list-style:none;padding:0;">
+                <li style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:var(--text-secondary);">
+                  <i class="fa-solid fa-check-circle" style="color:var(--accent-green);margin-top:2px;flex-shrink:0;"></i>
+                  Closest to your department
+                </li>
+                <li style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:var(--text-secondary);">
+                  <i class="fa-solid fa-check-circle" style="color:var(--accent-green);margin-top:2px;flex-shrink:0;"></i>
+                  Seating capacity matches (60/80)
+                </li>
+                <li style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:var(--text-secondary);">
+                  <i class="fa-solid fa-check-circle" style="color:var(--accent-green);margin-top:2px;flex-shrink:0;"></i>
+                  Smart board &amp; AC available
+                </li>
+                <li style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:var(--text-secondary);">
+                  <i class="fa-solid fa-check-circle" style="color:var(--accent-green);margin-top:2px;flex-shrink:0;"></i>
+                  No back-to-back classes today
+                </li>
+              </ul>
+            </div>
+
+            <!-- Suggested Time Slot + Action -->
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-muted);">Suggested Time Slot</div>
+              <div style="padding:12px 14px;background:var(--bg-hover);border:1px solid var(--border-color);border-radius:var(--radius-sm);">
+                <div style="font-size:1.05rem;font-weight:700;color:var(--text-primary);">2:00 PM – 5:00 PM</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">Today, Thursday · 3 hrs free</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+                <button class="hero-btn hero-btn-primary btn-ripple" style="padding:8px 16px;font-size:0.8rem;border-radius:var(--radius-full);">
+                  <i class="fa-solid fa-calendar-plus"></i> Book Room
+                </button>
+                <button class="tab-btn" style="font-size:0.8rem;">
+                  <i class="fa-solid fa-rotate"></i> New Suggestion
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Footer note -->
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-color);display:flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-brain" style="color:var(--accent-purple);font-size:12px;"></i>
+            <span style="font-size:0.76rem;color:var(--text-muted);">
+              Recommendation generated by CampusPulse AI v4.1 based on your schedule, class size, room features, and historical usage patterns.
+            </span>
+          </div>
+        </div>
+      </section>
+      <!-- ====================================================
+           4. FILTER SECTION
+           ==================================================== -->
+      <section aria-label="Classroom filters" style="margin-bottom:24px;">
+        <div class="chart-card" style="padding:20px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;background:var(--gradient-primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">
+                <i class="fa-solid fa-sliders"></i>
+              </div>
+              <span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">Filter Classrooms</span>
+            </div>
+            <button class="tab-btn" style="font-size:0.78rem;display:flex;align-items:center;gap:5px;" aria-label="Clear all filters">
+              <i class="fa-solid fa-xmark"></i> Clear Filters
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
+
+            <!-- Block Selector -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" for="filterBlock">Block</label>
+              <div style="position:relative;">
+                <i class="fa-solid fa-building" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none;"></i>
+                <select id="filterBlock" class="topbar-search" style="width:100%;height:40px;padding:0 12px 0 34px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;" aria-label="Filter by block">
+                  <option value="">All Blocks</option>
+                  <option value="A">Block A</option>
+                  <option value="B">Block B</option>
+                  <option value="C">Block C</option>
+                  <option value="D">Block D</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;"></i>
+              </div>
+            </div>
+
+            <!-- Floor Selector -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" for="filterFloor">Floor</label>
+              <div style="position:relative;">
+                <i class="fa-solid fa-layer-group" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none;"></i>
+                <select id="filterFloor" style="width:100%;height:40px;padding:0 12px 0 34px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;" aria-label="Filter by floor">
+                  <option value="">All Floors</option>
+                  <option value="G">Ground Floor</option>
+                  <option value="1">Floor 1</option>
+                  <option value="2">Floor 2</option>
+                  <option value="3">Floor 3</option>
+                  <option value="4">Floor 4</option>
+                  <option value="5">Floor 5</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;"></i>
+              </div>
+            </div>
+
+            <!-- Room Type -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" for="filterType">Room Type</label>
+              <div style="position:relative;">
+                <i class="fa-solid fa-chalkboard" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none;"></i>
+                <select id="filterType" style="width:100%;height:40px;padding:0 12px 0 34px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;" aria-label="Filter by room type">
+                  <option value="">All Types</option>
+                  <option value="lecture">Lecture Hall</option>
+                  <option value="seminar">Seminar Room</option>
+                  <option value="lab">Computer Lab</option>
+                  <option value="tutorial">Tutorial Room</option>
+                  <option value="conference">Conference Room</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;"></i>
+              </div>
+            </div>
+
+            <!-- Capacity -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" for="filterCapacity">Capacity</label>
+              <div style="position:relative;">
+                <i class="fa-solid fa-users" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none;"></i>
+                <select id="filterCapacity" style="width:100%;height:40px;padding:0 12px 0 34px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;" aria-label="Filter by capacity">
+                  <option value="">Any Capacity</option>
+                  <option value="small">Small (up to 30)</option>
+                  <option value="medium">Medium (30–60)</option>
+                  <option value="large">Large (60–120)</option>
+                  <option value="xlarge">X-Large (120+)</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;"></i>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" for="filterAvailability">Availability</label>
+              <div style="position:relative;">
+                <i class="fa-solid fa-circle-dot" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none;"></i>
+                <select id="filterAvailability" style="width:100%;height:40px;padding:0 12px 0 34px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;" aria-label="Filter by availability">
+                  <option value="">All Status</option>
+                  <option value="available">Available Now</option>
+                  <option value="soon">Occupied Soon</option>
+                  <option value="occupied">Occupied</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;"></i>
+              </div>
+            </div>
+
+            <!-- Apply / Search -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:transparent;" aria-hidden="true">Action</label>
+              <button class="hero-btn hero-btn-primary btn-ripple" style="height:40px;border-radius:var(--radius-sm);font-size:0.85rem;font-weight:600;" aria-label="Apply filters">
+                <i class="fa-solid fa-magnifying-glass"></i> Apply Filters
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Active filter chips -->
+          <div style="display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap;">
+            <span style="font-size:0.75rem;color:var(--text-muted);font-weight:500;">Active:</span>
+            <span class="badge badge-purple" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;cursor:pointer;">
+              Block A <i class="fa-solid fa-xmark" style="font-size:9px;"></i>
+            </span>
+            <span class="badge badge-blue" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;cursor:pointer;">
+              Available <i class="fa-solid fa-xmark" style="font-size:9px;"></i>
+            </span>
+            <span class="badge badge-green" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;cursor:pointer;">
+              Lecture Hall <i class="fa-solid fa-xmark" style="font-size:9px;"></i>
+            </span>
+          </div>
+        </div>
+      </section>
+      <!-- ====================================================
+           5. CLASSROOM GRID
+           ==================================================== -->
+      <section aria-label="Classroom grid">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-table-cells"></i></span>
+            All Classrooms
+            <span class="badge badge-purple" style="margin-left:8px;font-size:0.72rem;">128 rooms</span>
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active" aria-pressed="true">Grid View</button>
+            <button class="tab-btn" aria-pressed="false">List View</button>
+            <button class="tab-btn" aria-pressed="false">Floor Plan</button>
+          </div>
+        </div>
+
+        <!-- ── Sub-header: Block A ── -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:4px;">
+          <div style="width:30px;height:30px;background:var(--gradient-primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;">A</div>
+          <span style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">Block A</span>
+          <span class="badge badge-green">12 Available</span>
+          <span class="badge badge-red">8 Occupied</span>
+          <div style="flex:1;height:1px;background:var(--border-color);margin-left:8px;"></div>
+        </div>
+
+        <div class="digital-twin-grid" style="margin-bottom:28px;" id="classroomGridA">
+
+          <!-- ── Room Card: Available ── -->
+          <article class="twin-card animate-delay-1" style="--card-gradient:linear-gradient(135deg,#10B981,#34D399);" tabindex="0" role="article" aria-label="Room A-101, Available">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge online" aria-label="Status: Available">● Available</span>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-success);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;">
+                <i class="fa-solid fa-chalkboard-user"></i>
+              </div>
+              <div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-101</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Lecture Hall</div>
+              </div>
+            </div>
+
+            <div class="twin-stats">
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span>
+                <span class="twin-stat-value">A</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span>
+                <span class="twin-stat-value">Ground</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span>
+                <span class="twin-stat-value">120</span>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— No class in progress —</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">OS Lab · 3:00 PM</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;">
+                <i class="fa-solid fa-clock" style="width:14px;"></i> Available Until
+              </div>
+              <div style="font-size:0.82rem;color:var(--accent-green);font-weight:700;">2:50 PM today</div>
+            </div>
+
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;" aria-label="Book room A-101">
+              <i class="fa-solid fa-calendar-plus"></i> Book Room
+            </button>
+          </article>
+
+          <!-- ── Room Card: Occupied ── -->
+          <article class="twin-card animate-delay-2" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);" tabindex="0" role="article" aria-label="Room A-102, Occupied">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge offline" aria-label="Status: Occupied">● Occupied</span>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-danger);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;">
+                <i class="fa-solid fa-chalkboard-user"></i>
+              </div>
+              <div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-102</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Lecture Hall</div>
+              </div>
+            </div>
+
+            <div class="twin-stats">
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span>
+                <span class="twin-stat-value">A</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span>
+                <span class="twin-stat-value">Ground</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span>
+                <span class="twin-stat-value">80</span>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--accent-red);font-weight:600;">Data Structures · Prof. Mehta</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">DBMS · 3:30 PM</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;">
+                <i class="fa-solid fa-clock" style="width:14px;"></i> Available Until
+              </div>
+              <div style="font-size:0.82rem;color:var(--accent-red);font-weight:700;">After 5:30 PM</div>
+            </div>
+
+            <button class="tab-btn" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;gap:6px;" aria-label="View schedule for room A-102">
+              <i class="fa-solid fa-calendar"></i> View Schedule
+            </button>
+          </article>
+
+          <!-- ── Room Card: Occupied Soon ── -->
+          <article class="twin-card animate-delay-3" style="--card-gradient:linear-gradient(135deg,#F59E0B,#FBBF24);" tabindex="0" role="article" aria-label="Room A-201, Occupied Soon">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge warning" aria-label="Status: Occupied Soon">⚠ Occupied Soon</span>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-warning);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;">
+                <i class="fa-solid fa-desktop"></i>
+              </div>
+              <div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-201</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Computer Lab</div>
+              </div>
+            </div>
+
+            <div class="twin-stats">
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span>
+                <span class="twin-stat-value">A</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span>
+                <span class="twin-stat-value">Floor 2</span>
+              </div>
+              <div class="twin-stat">
+                <span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span>
+                <span class="twin-stat-value">40</span>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— Free now —</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;">
+                <i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class
+              </div>
+              <div style="font-size:0.8rem;color:var(--accent-amber);font-weight:600;">Python Lab · in 20 min</div>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;">
+                <i class="fa-solid fa-clock" style="width:14px;"></i> Available Until
+              </div>
+              <div style="font-size:0.82rem;color:var(--accent-amber);font-weight:700;">1:40 PM · Hurry!</div>
+            </div>
+
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;" aria-label="Book room A-201 quickly">
+              <i class="fa-solid fa-bolt"></i> Quick Book
+            </button>
+          </article>
+
+          <!-- ── Room A-202: Available ── -->
+          <article class="twin-card animate-delay-4" style="--card-gradient:linear-gradient(135deg,#3B82F6,#60A5FA);" tabindex="0" role="article" aria-label="Room A-202, Available">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge online">● Available</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-info);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-202</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Seminar Room</div>
+              </div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">A</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Floor 2</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">30</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— No class in progress —</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">Research Seminar · 4:00 PM</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-green);font-weight:700;">3:50 PM today</div></div>
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;"><i class="fa-solid fa-calendar-plus"></i> Book Room</button>
+          </article>
+
+          <!-- ── Room A-301: Occupied ── -->
+          <article class="twin-card animate-delay-5" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);" tabindex="0" role="article" aria-label="Room A-301, Occupied">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge offline">● Occupied</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-danger);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;"><i class="fa-solid fa-chalkboard-user"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-301</div><div style="font-size:0.72rem;color:var(--text-muted);">Lecture Hall</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">A</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Floor 3</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">120</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-red);font-weight:600;">Networks · Prof. Sharma</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">Cloud Computing · 5:00 PM</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-red);font-weight:700;">After 6:00 PM</div></div>
+            <button class="tab-btn" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fa-solid fa-calendar"></i> View Schedule</button>
+          </article>
+
+          <!-- ── Room A-204: Available (AI Pick) ── -->
+          <article class="twin-card animate-delay-6" style="--card-gradient:linear-gradient(135deg,#6C63FF,#9B89FF);border:2px solid var(--accent-purple);" tabindex="0" role="article" aria-label="Room A-204, Available, AI Recommended">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge online">● Available</span>
+            <!-- AI Recommended badge -->
+            <div style="position:absolute;top:10px;left:12px;display:flex;align-items:center;gap:4px;background:var(--gradient-primary);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:var(--radius-full);letter-spacing:0.05em;">
+              <i class="fa-solid fa-brain"></i> AI Pick
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:18px;">
+              <div style="width:38px;height:38px;background:var(--gradient-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;box-shadow:0 4px 12px rgba(108,99,255,0.4);"><i class="fa-solid fa-chalkboard-user"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">A-204</div><div style="font-size:0.72rem;color:var(--text-muted);">Lecture Hall</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">A</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Floor 2</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">80</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— No class in progress —</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">AI &amp; ML · 5:00 PM</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-green);font-weight:700;">4:50 PM · 3 hrs free</div></div>
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;"><i class="fa-solid fa-calendar-plus"></i> Book Room</button>
+          </article>
+
+        </div><!-- /grid Block A -->
+        <!-- ── Sub-header: Block B ── -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:30px;height:30px;background:var(--gradient-secondary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;">B</div>
+          <span style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">Block B</span>
+          <span class="badge badge-green">9 Available</span>
+          <span class="badge badge-red">12 Occupied</span>
+          <span class="badge badge-amber">3 Occupied Soon</span>
+          <div style="flex:1;height:1px;background:var(--border-color);margin-left:8px;"></div>
+        </div>
+
+        <div class="digital-twin-grid" style="margin-bottom:28px;">
+
+          <!-- B-101 Occupied -->
+          <article class="twin-card animate-delay-1" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);" tabindex="0" aria-label="Room B-101, Occupied">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge offline">● Occupied</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-danger);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;"><i class="fa-solid fa-chalkboard-user"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">B-101</div><div style="font-size:0.72rem;color:var(--text-muted);">Lecture Hall</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">B</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Ground</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">90</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-red);font-weight:600;">Algorithms · Dr. Patel</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">Compiler Design · 3:00 PM</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-red);font-weight:700;">After 5:00 PM</div></div>
+            <button class="tab-btn" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;gap:6px;"><i class="fa-solid fa-calendar"></i> View Schedule</button>
+          </article>
+
+          <!-- B-102 Available -->
+          <article class="twin-card animate-delay-2" style="--card-gradient:linear-gradient(135deg,#10B981,#34D399);" tabindex="0" aria-label="Room B-102, Available">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge online">● Available</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-success);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;"><i class="fa-solid fa-users"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">B-102</div><div style="font-size:0.72rem;color:var(--text-muted);">Tutorial Room</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">B</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Ground</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">25</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— No class in progress —</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--text-secondary);font-weight:500;">Tutorial · 4:30 PM</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-green);font-weight:700;">4:20 PM today</div></div>
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;"><i class="fa-solid fa-calendar-plus"></i> Book Room</button>
+          </article>
+
+          <!-- B-201 Occupied Soon -->
+          <article class="twin-card animate-delay-3" style="--card-gradient:linear-gradient(135deg,#F59E0B,#FBBF24);" tabindex="0" aria-label="Room B-201, Occupied Soon">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge warning">⚠ Occupied Soon</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:var(--gradient-warning);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;"><i class="fa-solid fa-desktop"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">B-201</div><div style="font-size:0.72rem;color:var(--text-muted);">Computer Lab</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">B</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Floor 2</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">45</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— Free now —</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-arrow-right" style="width:14px;"></i> Next Class</div><div style="font-size:0.8rem;color:var(--accent-amber);font-weight:600;">Web Dev Lab · in 15 min</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-amber);font-weight:700;">1:45 PM · 15 min left</div></div>
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;background:var(--gradient-warning);"><i class="fa-solid fa-bolt"></i> Quick Book</button>
+          </article>
+
+          <!-- B-301 Available Conference -->
+          <article class="twin-card animate-delay-4" style="--card-gradient:linear-gradient(135deg,#8B5CF6,#6C63FF);" tabindex="0" aria-label="Room B-301, Available Conference Room">
+            <div class="twin-card-bg"></div>
+            <span class="twin-status-badge online">● Available</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:38px;height:38px;background:linear-gradient(135deg,#8B5CF6,#6C63FF);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;"><i class="fa-solid fa-person-chalkboard"></i></div>
+              <div><div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1;">B-301</div><div style="font-size:0.72rem;color:var(--text-muted);">Conference Room</div></div>
+            </div>
+            <div class="twin-stats">
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-building"></i> Block</span><span class="twin-stat-value">B</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-layer-group"></i> Floor</span><span class="twin-stat-value">Floor 3</span></div>
+              <div class="twin-stat"><span class="twin-stat-label"><i class="fa-solid fa-users"></i> Capacity</span><span class="twin-stat-value">20</span></div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);">
+              <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-book-open" style="width:14px;"></i> Current Class</div>
+              <div style="font-size:0.8rem;color:var(--accent-green);font-weight:600;">— No class in progress —</div>
+            </div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:4px;"><i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-amber);width:14px;"></i> Note</div><div style="font-size:0.8rem;color:var(--accent-amber);font-weight:500;">Projector fault reported</div></div>
+            <div style="margin-top:6px;"><div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:2px;"><i class="fa-solid fa-clock" style="width:14px;"></i> Available Until</div><div style="font-size:0.82rem;color:var(--accent-green);font-weight:700;">End of day</div></div>
+            <button class="hero-btn hero-btn-primary btn-ripple" style="width:100%;margin-top:12px;padding:8px;font-size:0.78rem;border-radius:var(--radius-sm);justify-content:center;"><i class="fa-solid fa-calendar-plus"></i> Book Room</button>
+          </article>
+
+        </div><!-- /grid Block B -->
+
+        <!-- ── Load More ── -->
+        <div style="display:flex;justify-content:center;margin-bottom:32px;">
+          <button class="tab-btn" style="padding:10px 28px;font-size:0.85rem;display:flex;align-items:center;gap:8px;" aria-label="Load more classrooms">
+            <i class="fa-solid fa-arrows-rotate"></i> Load More Rooms (96 remaining)
+          </button>
+        </div>
+
+      </section><!-- /classroom grid -->
+      <!-- ====================================================
+           FOOTER  (identical to dashboard)
+           ==================================================== -->
+      <footer class="dashboard-footer">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <div class="logo-dot"></div>
+            CampusPulse AI
+          </div>
+          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <span class="footer-link">Privacy Policy</span>
+          <span class="footer-link">Terms of Service</span>
+          <span class="footer-link">Documentation</span>
+          <span class="footer-link">Support</span>
+          <span class="footer-link">API</span>
+        </div>
+        <div class="footer-system-info">
+          <div class="system-pill">
+            <span class="dot" style="background:var(--accent-green);"></span>System OK
+          </div>
+          <div class="system-pill">
+            <i class="fa-solid fa-bolt" style="color:var(--accent-amber);font-size:10px;"></i> v4.1.2
+          </div>
+        </div>
+      </footer>
+
+    </main><!-- /page-wrapper -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- =========================================================
+     SCRIPTS — reuse dashboard.js (handles theme, sidebar, topbar)
+     ========================================================= -->
+<script src="../js/classroom.js"></script>
+
+</body>
+</html>
