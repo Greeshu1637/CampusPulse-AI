@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Smart Mess Management</title>
+  <meta name="description" content="AI-powered mess management system for CampusPulse – menu planning, nutrition tracking, and waste reduction." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/mess.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+</head>
+<body>
+
+<!-- ── Mobile overlay (sidebar) ── -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app-layout" id="appLayout">
+
+  <!-- ========================================================
+       SIDEBAR
+       ======================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Toggle sidebar">
+      <i class="fa-solid fa-chevron-left" id="collapseIcon"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="logo-text">
+        <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
+        <span>Smart University Platform</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+
+      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-tooltip">Dashboard</span>
+      </a>
+      <a class="nav-item" href="#" data-page="digital-twin">
+        <span class="nav-icon"><i class="fa-solid fa-city"></i></span>
+        <span class="nav-label">Digital Twin</span>
+        <span class="nav-tooltip">Digital Twin</span>
+      </a>
+      <a class="nav-item" href="#" data-page="copilot">
+        <span class="nav-icon"><i class="fa-solid fa-robot"></i></span>
+        <span class="nav-label">AI Copilot</span>
+        <span class="nav-tooltip">AI Copilot</span>
+      </a>
+      <a class="nav-item" href="#" data-page="analytics">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="nav-label">Analytics</span>
+        <span class="nav-tooltip">Analytics</span>
+      </a>
+
+      <div class="nav-section-label">Modules</div>
+
+      <a class="nav-item" href="classroom.html" data-page="classrooms">
+        <span class="nav-icon"><i class="fa-solid fa-chalkboard"></i></span>
+        <span class="nav-label">Classrooms</span>
+        <span class="nav-tooltip">Classrooms</span>
+      </a>
+      <a class="nav-item" href="complaints.html" data-page="complaints">
+        <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span class="nav-label">Complaints</span>
+        <span class="nav-badge">7</span>
+        <span class="nav-tooltip">Complaints</span>
+      </a>
+      <a class="nav-item" href="#" data-page="hostels">
+        <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
+        <span class="nav-label">Hostels</span>
+        <span class="nav-tooltip">Hostels</span>
+      </a>
+      <a class="nav-item active" href="mess.html" data-page="dining">
+        <span class="nav-icon"><i class="fa-solid fa-utensils"></i></span>
+        <span class="nav-label">Smart Dining</span>
+        <span class="nav-tooltip">Smart Dining</span>
+      </a>
+      <a class="nav-item" href="#" data-page="library">
+        <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+        <span class="nav-label">Library</span>
+        <span class="nav-tooltip">Library</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+
+      <a class="nav-item" href="#" data-page="reports">
+        <span class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></span>
+        <span class="nav-label">Reports</span>
+        <span class="nav-tooltip">Reports</span>
+      </a>
+      <a class="nav-item" href="#" data-page="settings">
+        <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+        <span class="nav-label">Settings</span>
+        <span class="nav-tooltip">Settings</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar footer / theme -->
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="sidebarThemeBtn">
+        <span class="nav-icon"><i class="fa-solid fa-moon" id="sidebarThemeIcon"></i></span>
+        <span id="sidebarThemeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MAIN CONTENT
+       ======================================================== -->
+  <div class="main-content">
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar" id="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search menu items, meals, ingredients…"
+          autocomplete="off"
+          aria-label="Search menu"
+        />
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbarDate"></span>
+
+        <!-- View Toggle -->
+        <div class="view-toggle" id="viewToggle">
+          <button class="view-btn active" data-view="student">
+            <i class="fa-solid fa-user"></i> Student
+          </button>
+          <button class="view-btn" data-view="manager">
+            <i class="fa-solid fa-user-tie"></i> Manager
+          </button>
+        </div>
+
+        <!-- Theme toggle -->
+        <button class="theme-toggle-topbar btn-ripple" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+          <div class="toggle-thumb" id="toggleThumb">
+            <i class="fa-solid fa-sun" id="themeIcon"></i>
+          </div>
+        </button>
+
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="topbar-btn btn-ripple" id="notifBtn" title="Notifications" aria-label="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="notification-panel" id="notifPanel">
+            <div class="notif-panel-header">
+              <h4>Notifications</h4>
+              <span class="notif-clear-btn">Mark all read</span>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">
+                  <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">Today's Special Available</div>
+                  <div class="notif-desc">Paneer Tikka Masala with Garlic Naan – High rating expected!</div>
+                  <div class="notif-time">Just now</div>
+                </div>
+                <div class="notif-unread-dot"></div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(108,99,255,0.12);color:#6C63FF;">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">AI Menu Suggestion</div>
+                  <div class="notif-desc">Add South Indian breakfast on Sunday based on student preferences.</div>
+                  <div class="notif-time">15 min ago</div>
+                </div>
+                <div class="notif-unread-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <button class="topbar-btn btn-ripple" title="Messages" aria-label="Messages">
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+
+        <!-- Profile -->
+        <div class="topbar-profile" id="profileBtn">
+          <div class="profile-avatar">AK</div>
+          <div class="profile-info">
+            <div class="profile-name">Dr. A. Kumar</div>
+            <div class="profile-role">Campus Admin</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);margin-left:4px;" aria-hidden="true"></i>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</div>
+            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Settings</div>
+            <div class="dropdown-item"><i class="fa-solid fa-chart-simple"></i> My Reports</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================
+         PAGE WRAPPER
+         ====================================================== -->
+    <main class="page-wrapper">
+
+      <!-- ====================================================
+           PAGE HEADER
+           ==================================================== -->
+      <div class="section-header" style="margin-bottom:24px;">
+        <div>
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">
+            <a href="dashboard.html" style="color:var(--text-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--accent-purple)'" onmouseout="this.style.color='var(--text-muted)'">
+              <i class="fa-solid fa-house" style="font-size:11px;"></i> Dashboard
+            </a>
+            <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+            <span style="color:var(--text-accent);font-weight:600;">Smart Mess Management</span>
+          </nav>
+          <h1 class="section-title" style="font-size:1.35rem;">
+            <span class="section-icon"><i class="fa-solid fa-utensils"></i></span>
+            Smart Mess Management
+          </h1>
+          <p style="font-size:0.83rem;color:var(--text-muted);margin-top:4px;margin-left:38px;">
+            AI-powered nutrition tracking & waste reduction · Last updated <span style="color:var(--accent-purple);font-weight:600;">just now</span>
+          </p>
+        </div>
+        <div class="section-actions" style="align-items:center;">
+          <span class="badge badge-purple" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius-full);">
+            <span style="width:6px;height:6px;background:var(--accent-purple);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block;"></span>
+            AI Online
+          </span>
+          <button class="hero-btn hero-btn-primary btn-ripple" id="updateMenuBtn" style="padding:8px 18px;font-size:0.82rem;border-radius:var(--radius-full);display:none;">
+            <i class="fa-solid fa-edit"></i> Update Menu
+          </button>
+          <button class="tab-btn" style="display:flex;align-items:center;gap:6px;">
+            <i class="fa-solid fa-download"></i> Export
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           STUDENT VIEW
+           ==================================================== -->
+      <div id="studentView">
+
+        <!-- TODAY'S SPECIAL BANNER -->
+        <section class="todays-special-banner" style="margin-bottom:28px;">
+          <div class="special-card">
+            <div class="special-badge">
+              <i class="fa-solid fa-star"></i> Today's Special
+            </div>
+            <div class="special-content">
+              <div class="special-icon">
+                <i class="fa-solid fa-fire"></i>
+              </div>
+              <div class="special-info">
+                <h2 class="special-title">Paneer Tikka Masala with Garlic Naan</h2>
+                <p class="special-desc">Chef's signature recipe with authentic Indian spices · Served with mint chutney & onion salad</p>
+                <div class="special-meta">
+                  <span class="special-tag"><i class="fa-solid fa-pepper-hot"></i> Spicy</span>
+                  <span class="special-tag"><i class="fa-solid fa-leaf"></i> Vegetarian</span>
+                  <span class="special-tag"><i class="fa-solid fa-fire"></i> 420 Cal</span>
+                  <span class="special-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                    <span>4.8</span>
+                  </span>
+                </div>
+              </div>
+              <button class="special-btn hero-btn hero-btn-primary btn-ripple">
+                <i class="fa-solid fa-heart"></i> Rate Meal
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TODAY'S MENU -->
+        <section aria-label="Today's menu" style="margin-bottom:28px;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-icon"><i class="fa-solid fa-calendar-day"></i></span>
+              Today's Menu
+            </h2>
+            <span class="badge badge-green">Friday, July 24</span>
+          </div>
+
+          <div class="menu-grid">
+            <!-- Breakfast -->
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon breakfast">
+                  <i class="fa-solid fa-mug-saucer"></i>
+                </div>
+                <div>
+                  <h3 class="meal-title">Breakfast</h3>
+                  <p class="meal-time">7:00 AM – 9:30 AM</p>
+                </div>
+                <span class="meal-status available">Available</span>
+              </div>
+              <div class="meal-items">
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Idli Sambar</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 220 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 8g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Aloo Paratha</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 310 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 6g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Fresh Fruit Salad</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 85 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 2g Protein</span>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-footer">
+                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
+                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
+              </div>
+            </div>
+
+            <!-- Lunch -->
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon lunch">
+                  <i class="fa-solid fa-bowl-rice"></i>
+                </div>
+                <div>
+                  <h3 class="meal-title">Lunch</h3>
+                  <p class="meal-time">12:00 PM – 2:30 PM</p>
+                </div>
+                <span class="meal-status upcoming">Upcoming</span>
+              </div>
+              <div class="meal-items">
+                <div class="menu-item featured">
+                  <div class="item-info">
+                    <span class="item-name">Paneer Tikka Masala ⭐</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 420 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 18g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Dal Tadka</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 180 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 12g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Jeera Rice</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 240 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 4g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Garlic Naan</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 290 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 7g Protein</span>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-footer">
+                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
+                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
+              </div>
+            </div>
+
+            <!-- Snacks -->
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon snacks">
+                  <i class="fa-solid fa-cookie"></i>
+                </div>
+                <div>
+                  <h3 class="meal-title">Snacks</h3>
+                  <p class="meal-time">4:00 PM – 5:30 PM</p>
+                </div>
+                <span class="meal-status upcoming">Upcoming</span>
+              </div>
+              <div class="meal-items">
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Masala Chai</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 90 Cal</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Samosa</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 260 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 5g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Bread Pakora</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 210 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 6g Protein</span>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-footer">
+                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
+                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
+              </div>
+            </div>
+
+            <!-- Dinner -->
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon dinner">
+                  <i class="fa-solid fa-moon"></i>
+                </div>
+                <div>
+                  <h3 class="meal-title">Dinner</h3>
+                  <p class="meal-time">7:00 PM – 9:30 PM</p>
+                </div>
+                <span class="meal-status upcoming">Upcoming</span>
+              </div>
+              <div class="meal-items">
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Chole Bhature</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 480 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 14g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Mixed Vegetable Curry</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 150 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 8g Protein</span>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-info">
+                    <span class="item-name">Gulab Jamun</span>
+                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
+                  </div>
+                  <div class="item-nutrition">
+                    <span><i class="fa-solid fa-fire"></i> 140 Cal</span>
+                    <span><i class="fa-solid fa-dumbbell"></i> 3g Protein</span>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-footer">
+                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
+                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- WEEKLY MENU -->
+        <section aria-label="Weekly menu" style="margin-bottom:28px;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-icon"><i class="fa-solid fa-calendar-week"></i></span>
+              This Week's Menu
+            </h2>
+            <div class="section-actions">
+              <button class="tab-btn active">This Week</button>
+              <button class="tab-btn">Next Week</button>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="weekly-menu-container">
+              <div class="day-column">
+                <div class="day-header">
+                  <div class="day-name">Monday</div>
+                  <div class="day-date">Jul 21</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Poha, Jalebi</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Rajma Rice</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Roti, Aloo Gobi</div>
+                </div>
+              </div>
+
+              <div class="day-column">
+                <div class="day-header">
+                  <div class="day-name">Tuesday</div>
+                  <div class="day-date">Jul 22</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Upma, Coffee</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Biryani</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Dal, Roti, Sabzi</div>
+                </div>
+              </div>
+
+              <div class="day-column">
+                <div class="day-header">
+                  <div class="day-name">Wednesday</div>
+                  <div class="day-date">Jul 23</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Dosa, Chutney</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Chole Rice</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Paneer Curry</div>
+                </div>
+              </div>
+
+              <div class="day-column active">
+                <div class="day-header">
+                  <div class="day-name">Thursday</div>
+                  <div class="day-date">Jul 24 <span class="today-badge">Today</span></div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Idli Sambar</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Paneer Tikka ⭐</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Chole Bhature</div>
+                </div>
+              </div>
+
+              <div class="day-column">
+                <div class="day-header">
+                  <div class="day-name">Friday</div>
+                  <div class="day-date">Jul 25</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Paratha, Curd</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Fish Curry</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Mix Veg, Roti</div>
+                </div>
+              </div>
+
+              <div class="day-column weekend">
+                <div class="day-header">
+                  <div class="day-name">Saturday</div>
+                  <div class="day-date">Jul 26</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Puri Bhaji</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Special Thali</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Pizza, Pasta</div>
+                </div>
+              </div>
+
+              <div class="day-column weekend">
+                <div class="day-header">
+                  <div class="day-name">Sunday</div>
+                  <div class="day-date">Jul 27</div>
+                </div>
+                <div class="day-meals">
+                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Bread, Omelette</div>
+                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Chicken Biryani</div>
+                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Momos, Noodles</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ====================================================
+           MANAGER VIEW
+           ==================================================== -->
+      <div id="managerView" style="display:none;">
+
+        <!-- STATISTICS CARDS -->
+        <section aria-label="Mess statistics" style="margin-bottom:28px;">
+          <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
+
+            <div class="kpi-card animate-delay-1" style="--card-gradient:linear-gradient(135deg,#6C63FF,#9B89FF);">
+              <div class="kpi-card-header">
+                <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+                <span class="kpi-change up">+5% today</span>
+              </div>
+              <div class="kpi-value">847</div>
+              <div class="kpi-label">Today's Attendance</div>
+              <div style="margin-top:12px;font-size:0.72rem;color:var(--text-muted);">
+                <i class="fa-solid fa-chart-line" style="color:var(--accent-purple);margin-right:4px;"></i>89% of registered
+              </div>
+            </div>
+
+            <div class="kpi-card animate-delay-2" style="--card-gradient:linear-gradient(135deg,#10B981,#34D399);">
+              <div class="kpi-card-header">
+                <div class="kpi-icon" style="background:var(--gradient-success);"><i class="fa-solid fa-star"></i></div>
+                <span class="kpi-change up">+0.2</span>
+              </div>
+              <div class="kpi-value" style="color:var(--accent-green);">4.6</div>
+              <div class="kpi-label">Average Rating</div>
+              <div style="margin-top:12px;">
+                <div style="height:4px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:92%;height:100%;background:var(--gradient-success);border-radius:var(--radius-full);"></div>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">428 ratings this week</div>
+              </div>
+            </div>
+
+            <div class="kpi-card animate-delay-3" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);">
+              <div class="kpi-card-header">
+                <div class="kpi-icon" style="background:var(--gradient-danger);"><i class="fa-solid fa-trash"></i></div>
+                <span class="kpi-change down">-12%</span>
+              </div>
+              <div class="kpi-value" style="color:var(--accent-red);">14.2kg</div>
+              <div class="kpi-label">Food Waste Today</div>
+              <div style="margin-top:12px;">
+                <div style="height:4px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:18%;height:100%;background:var(--gradient-danger);border-radius:var(--radius-full);"></div>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">Target: <10kg/day</div>
+              </div>
+            </div>
+
+            <div class="kpi-card animate-delay-4" style="--card-gradient:linear-gradient(135deg,#F59E0B,#FBBF24);">
+              <div class="kpi-card-header">
+                <div class="kpi-icon" style="background:var(--gradient-warning);"><i class="fa-solid fa-box"></i></div>
+                <span class="kpi-change neutral">Stock OK</span>
+              </div>
+              <div class="kpi-value" style="color:var(--accent-amber);">86%</div>
+              <div class="kpi-label">Inventory Level</div>
+              <div style="margin-top:12px;font-size:0.72rem;color:var(--text-muted);">
+                <i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-amber);margin-right:4px;"></i>3 items low stock
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- AI RECOMMENDATION PANEL -->
+        <section aria-label="AI recommendations" style="margin-bottom:28px;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+              AI Recommendations & Insights
+            </h2>
+            <span class="badge badge-purple">AI Analysis</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;">
+
+            <div class="chart-card ai-glow">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div style="width:36px;height:36px;background:var(--gradient-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
+                  <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">Menu Optimization</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">Based on student preferences</div>
+                </div>
+              </div>
+              <div style="padding:14px;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--accent-purple);margin-bottom:10px;">
+                <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin-bottom:6px;">🍕 Add Continental Options</div>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">Students prefer Italian/Chinese on weekends. Adding pasta & noodles could boost satisfaction by 18%.</div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <span class="badge badge-purple" style="font-size:0.7rem;">94% Confidence</span>
+                  <button class="quick-action-btn" style="padding:4px 10px;font-size:0.72rem;">Implement</button>
+                </div>
+              </div>
+              <div style="padding:14px;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--accent-green);">
+                <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin-bottom:6px;">🥗 Increase Protein Options</div>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">15% of students request more protein-rich vegetarian meals. Add paneer/tofu dishes.</div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <span class="badge badge-green" style="font-size:0.7rem;">87% Confidence</span>
+                  <button class="quick-action-btn" style="padding:4px 10px;font-size:0.72rem;">Implement</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div style="width:36px;height:36px;background:var(--gradient-danger);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">Waste Reduction</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">AI predictions & trends</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div style="font-size:0.82rem;color:var(--text-secondary);">This Week</div>
+                <div style="font-size:1.2rem;font-weight:700;color:var(--accent-red);">82.4 kg</div>
+              </div>
+              <div style="height:6px;background:var(--bg-hover);border-radius:var(--radius-full);overflow:hidden;margin-bottom:6px;">
+                <div style="width:68%;height:100%;background:var(--gradient-danger);border-radius:var(--radius-full);"></div>
+              </div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:14px;">Target: <70kg/week</div>
+              <div style="padding:12px;background:var(--bg-hover);border-radius:var(--radius-sm);font-size:0.75rem;color:var(--text-secondary);">
+                <strong style="color:var(--text-primary);">AI Insight:</strong> Rice portions are 23% over consumed. Reduce serving size by 30g to cut waste by 8kg/week.
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div style="width:36px;height:36px;background:var(--gradient-warning);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
+                  <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">Inventory Alerts</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">Restock recommendations</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="padding:12px;background:rgba(239,68,68,0.1);border-radius:var(--radius-sm);border-left:3px solid var(--accent-red);">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Rice (Basmati)</span>
+                    <span class="badge badge-red" style="font-size:0.7rem;">Critical</span>
+                  </div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">12kg remaining · Restock in 1 day</div>
+                </div>
+                <div style="padding:12px;background:rgba(245,158,11,0.1);border-radius:var(--radius-sm);border-left:3px solid var(--accent-amber);">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Dal (Yellow)</span>
+                    <span class="badge badge-amber" style="font-size:0.7rem;">Low</span>
+                  </div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">28kg remaining · Restock in 3 days</div>
+                </div>
+                <div style="padding:12px;background:rgba(245,158,11,0.1);border-radius:var(--radius-sm);border-left:3px solid var(--accent-amber);">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Cooking Oil</span>
+                    <span class="badge badge-amber" style="font-size:0.7rem;">Low</span>
+                  </div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);">18L remaining · Restock in 2 days</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ANALYTICS CHARTS -->
+        <section aria-label="Analytics" style="margin-bottom:28px;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-icon"><i class="fa-solid fa-chart-bar"></i></span>
+              Analytics & Trends
+            </h2>
+            <div class="section-actions">
+              <button class="tab-btn active">Weekly</button>
+              <button class="tab-btn">Monthly</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;">
+            
+            <div class="chart-card">
+              <div class="chart-title">Attendance Trend</div>
+              <div class="chart-subtitle">Daily mess attendance this week</div>
+              <div class="chart-placeholder">
+                <i class="fa-solid fa-chart-line"></i>
+                <p>Chart: Line graph showing daily attendance</p>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Food Waste Analysis</div>
+              <div class="chart-subtitle">Daily waste tracking & reduction</div>
+              <div class="chart-placeholder">
+                <i class="fa-solid fa-chart-bar"></i>
+                <p>Chart: Bar chart showing waste per meal</p>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Popular Items</div>
+              <div class="chart-subtitle">Top rated dishes this month</div>
+              <div class="chart-placeholder">
+                <i class="fa-solid fa-chart-pie"></i>
+                <p>Chart: Pie chart of popular dishes</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="dashboard-footer">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <div class="logo-dot"></div>
+            CampusPulse AI
+          </div>
+          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <span class="footer-link">Privacy Policy</span>
+          <span class="footer-link">Terms of Service</span>
+          <span class="footer-link">Documentation</span>
+          <span class="footer-link">Support</span>
+          <span class="footer-link">API</span>
+        </div>
+        <div class="footer-system-info">
+          <div class="system-pill"><span class="dot" style="background:var(--accent-green);"></span>System OK</div>
+          <div class="system-pill"><i class="fa-solid fa-bolt" style="color:var(--accent-amber);font-size:10px;"></i> v4.1.2</div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script src="../js/mess.js"></script>
+</body>
+</html>
