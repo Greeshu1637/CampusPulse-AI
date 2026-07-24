@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse AI – Advanced Analytics</title>
+  <meta name="description" content="AI-powered analytics dashboard for CampusPulse – comprehensive insights and trends." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/analytics.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+</head>
+<body>
+
+<!-- ── Mobile overlay (sidebar) ── -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app-layout" id="appLayout">
+
+  <!-- ========================================================
+       SIDEBAR
+       ======================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Toggle sidebar">
+      <i class="fa-solid fa-chevron-left" id="collapseIcon"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="logo-text">
+        <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
+        <span>Smart University Platform</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+
+      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-tooltip">Dashboard</span>
+      </a>
+      <a class="nav-item" href="#" data-page="digital-twin">
+        <span class="nav-icon"><i class="fa-solid fa-city"></i></span>
+        <span class="nav-label">Digital Twin</span>
+        <span class="nav-tooltip">Digital Twin</span>
+      </a>
+      <a class="nav-item" href="#" data-page="copilot">
+        <span class="nav-icon"><i class="fa-solid fa-robot"></i></span>
+        <span class="nav-label">AI Copilot</span>
+        <span class="nav-tooltip">AI Copilot</span>
+      </a>
+      <a class="nav-item active" href="analytics.html" data-page="analytics">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="nav-label">Analytics</span>
+        <span class="nav-tooltip">Analytics</span>
+      </a>
+
+      <div class="nav-section-label">Modules</div>
+
+      <a class="nav-item" href="classroom.html" data-page="classrooms">
+        <span class="nav-icon"><i class="fa-solid fa-chalkboard"></i></span>
+        <span class="nav-label">Classrooms</span>
+        <span class="nav-tooltip">Classrooms</span>
+      </a>
+      <a class="nav-item" href="complaints.html" data-page="complaints">
+        <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span class="nav-label">Complaints</span>
+        <span class="nav-badge">7</span>
+        <span class="nav-tooltip">Complaints</span>
+      </a>
+      <a class="nav-item" href="#" data-page="hostels">
+        <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
+        <span class="nav-label">Hostels</span>
+        <span class="nav-tooltip">Hostels</span>
+      </a>
+      <a class="nav-item" href="mess.html" data-page="dining">
+        <span class="nav-icon"><i class="fa-solid fa-utensils"></i></span>
+        <span class="nav-label">Smart Dining</span>
+        <span class="nav-tooltip">Smart Dining</span>
+      </a>
+      <a class="nav-item" href="#" data-page="library">
+        <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+        <span class="nav-label">Library</span>
+        <span class="nav-tooltip">Library</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+
+      <a class="nav-item" href="#" data-page="reports">
+        <span class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></span>
+        <span class="nav-label">Reports</span>
+        <span class="nav-tooltip">Reports</span>
+      </a>
+      <a class="nav-item" href="#" data-page="settings">
+        <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+        <span class="nav-label">Settings</span>
+        <span class="nav-tooltip">Settings</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar footer / theme -->
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="sidebarThemeBtn">
+        <span class="nav-icon"><i class="fa-solid fa-moon" id="sidebarThemeIcon"></i></span>
+        <span id="sidebarThemeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MAIN CONTENT
+       ======================================================== -->
+  <div class="main-content">
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar" id="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search analytics, metrics, trends…"
+          autocomplete="off"
+          aria-label="Search analytics"
+        />
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbarDate"></span>
+
+        <!-- Theme toggle -->
+        <button class="theme-toggle-topbar btn-ripple" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+          <div class="toggle-thumb" id="toggleThumb">
+            <i class="fa-solid fa-sun" id="themeIcon"></i>
+          </div>
+        </button>
+
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="topbar-btn btn-ripple" id="notifBtn" title="Notifications" aria-label="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="notification-panel" id="notifPanel">
+            <div class="notif-panel-header">
+              <h4>Notifications</h4>
+              <span class="notif-clear-btn">Mark all read</span>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(108,99,255,0.12);color:#6C63FF;">
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">Weekly Report Generated</div>
+                  <div class="notif-desc">Analytics report for Week 29 is ready for download.</div>
+                  <div class="notif-time">5 min ago</div>
+                </div>
+                <div class="notif-unread-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <button class="topbar-btn btn-ripple" title="Messages" aria-label="Messages">
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+
+        <!-- Profile -->
+        <div class="topbar-profile" id="profileBtn">
+          <div class="profile-avatar">AK</div>
+          <div class="profile-info">
+            <div class="profile-name">Dr. A. Kumar</div>
+            <div class="profile-role">Campus Admin</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);margin-left:4px;" aria-hidden="true"></i>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</div>
+            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Settings</div>
+            <div class="dropdown-item"><i class="fa-solid fa-chart-simple"></i> My Reports</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================
+         PAGE WRAPPER
+         ====================================================== -->
+    <main class="page-wrapper">
+
+      <!-- ====================================================
+           PAGE HEADER
+           ==================================================== -->
+      <div class="section-header" style="margin-bottom:24px;">
+        <div>
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">
+            <a href="dashboard.html" style="color:var(--text-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--accent-purple)'" onmouseout="this.style.color='var(--text-muted)'">
+              <i class="fa-solid fa-house" style="font-size:11px;"></i> Dashboard
+            </a>
+            <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+            <span style="color:var(--text-accent);font-weight:600;">Advanced Analytics</span>
+          </nav>
+          <h1 class="section-title" style="font-size:1.35rem;">
+            <span class="section-icon"><i class="fa-solid fa-chart-bar"></i></span>
+            Advanced Analytics
+          </h1>
+          <p style="font-size:0.83rem;color:var(--text-muted);margin-top:4px;margin-left:38px;">
+            AI-powered insights & trends · Last updated <span style="color:var(--accent-purple);font-weight:600;">just now</span>
+          </p>
+        </div>
+        <div class="section-actions" style="align-items:center;">
+          <span class="badge badge-purple" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius-full);">
+            <span style="width:6px;height:6px;background:var(--accent-purple);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block;"></span>
+            AI Online
+          </span>
+          <button class="hero-btn hero-btn-primary btn-ripple" id="exportReportBtn" style="padding:8px 18px;font-size:0.82rem;border-radius:var(--radius-full);">
+            <i class="fa-solid fa-file-export"></i> Export Report
+          </button>
+          <button class="tab-btn" style="display:flex;align-items:center;gap:6px;">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           FILTERS SECTION
+           ==================================================== -->
+      <section aria-label="Analytics filters" style="margin-bottom:28px;">
+        <div class="chart-card" style="padding:20px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;background:var(--gradient-primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">
+                <i class="fa-solid fa-filter"></i>
+              </div>
+              <span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">Filter Analytics</span>
+            </div>
+            <button class="tab-btn" id="clearFiltersBtn" style="font-size:0.78rem;display:flex;align-items:center;gap:5px;" aria-label="Clear all filters">
+              <i class="fa-solid fa-xmark"></i> Clear Filters
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
+
+            <!-- Time Range -->
+            <div class="filter-group">
+              <label for="filterTimeRange">Time Range</label>
+              <div class="filter-select-wrapper">
+                <i class="fa-solid fa-calendar"></i>
+                <select id="filterTimeRange" class="filter-select">
+                  <option value="today">Today</option>
+                  <option value="week" selected>This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="quarter">This Quarter</option>
+                  <option value="year">This Year</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-arrow"></i>
+              </div>
+            </div>
+
+            <!-- Department -->
+            <div class="filter-group">
+              <label for="filterDepartment">Department</label>
+              <div class="filter-select-wrapper">
+                <i class="fa-solid fa-building-columns"></i>
+                <select id="filterDepartment" class="filter-select">
+                  <option value="">All Departments</option>
+                  <option value="cse">Computer Science</option>
+                  <option value="ece">Electronics</option>
+                  <option value="mech">Mechanical</option>
+                  <option value="civil">Civil</option>
+                  <option value="eee">Electrical</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-arrow"></i>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="filter-group">
+              <label for="filterCategory">Category</label>
+              <div class="filter-select-wrapper">
+                <i class="fa-solid fa-tag"></i>
+                <select id="filterCategory" class="filter-select">
+                  <option value="">All Categories</option>
+                  <option value="academic">Academic</option>
+                  <option value="complaints">Complaints</option>
+                  <option value="mess">Mess</option>
+                  <option value="hostel">Hostel</option>
+                  <option value="library">Library</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-arrow"></i>
+              </div>
+            </div>
+
+            <!-- Metric Type -->
+            <div class="filter-group">
+              <label for="filterMetric">Metric Type</label>
+              <div class="filter-select-wrapper">
+                <i class="fa-solid fa-chart-line"></i>
+                <select id="filterMetric" class="filter-select">
+                  <option value="">All Metrics</option>
+                  <option value="attendance">Attendance</option>
+                  <option value="performance">Performance</option>
+                  <option value="satisfaction">Satisfaction</option>
+                  <option value="utilization">Utilization</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-arrow"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           KPI CARDS
+           ==================================================== -->
+      <section aria-label="Key metrics" style="margin-bottom:28px;">
+        <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+
+          <div class="kpi-card animate-delay-1" style="--card-gradient:linear-gradient(135deg,#6C63FF,#9B89FF);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+              <span class="kpi-change up">+5.2%</span>
+            </div>
+            <div class="kpi-value">12,847</div>
+            <div class="kpi-label">Total Students</div>
+            <div class="kpi-sparkline" id="sparkline1"></div>
+          </div>
+
+          <div class="kpi-card animate-delay-2" style="--card-gradient:linear-gradient(135deg,#10B981,#34D399);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-success);"><i class="fa-solid fa-graduation-cap"></i></div>
+              <span class="kpi-change up">+2.8%</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-green);">94.2%</div>
+            <div class="kpi-label">Avg Attendance</div>
+            <div class="kpi-sparkline" id="sparkline2"></div>
+          </div>
+
+          <div class="kpi-card animate-delay-3" style="--card-gradient:linear-gradient(135deg,#EF4444,#F87171);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <span class="kpi-change down">-18%</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-red);">47</div>
+            <div class="kpi-label">Open Complaints</div>
+            <div class="kpi-sparkline" id="sparkline3"></div>
+          </div>
+
+          <div class="kpi-card animate-delay-4" style="--card-gradient:linear-gradient(135deg,#F59E0B,#FBBF24);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-warning);"><i class="fa-solid fa-chalkboard"></i></div>
+              <span class="kpi-change up">+12%</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-amber);">78%</div>
+            <div class="kpi-label">Room Utilization</div>
+            <div class="kpi-sparkline" id="sparkline4"></div>
+          </div>
+
+          <div class="kpi-card animate-delay-5" style="--card-gradient:linear-gradient(135deg,#3B82F6,#60A5FA);">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background:var(--gradient-info);"><i class="fa-solid fa-star"></i></div>
+              <span class="kpi-change up">+0.3</span>
+            </div>
+            <div class="kpi-value" style="color:var(--accent-blue);">4.6</div>
+            <div class="kpi-label">Food Rating</div>
+            <div class="kpi-sparkline" id="sparkline5"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================
+           AI INSIGHTS PANEL
+           ==================================================== -->
+      <section aria-label="AI insights" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            AI-Powered Insights
+          </h2>
+          <span class="badge badge-purple">Real-time Analysis</span>
+        </div>
+
+        <div class="insights-grid">
+
+          <div class="insight-card positive">
+            <div class="insight-icon">
+              <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+            <div class="insight-content">
+              <h3 class="insight-title">Attendance Improving</h3>
+              <p class="insight-desc">Student attendance increased by 5.2% this week. Computer Science leads with 96.8% attendance.</p>
+              <div class="insight-footer">
+                <span class="insight-badge positive">Positive Trend</span>
+                <span class="insight-confidence">AI Confidence: 94%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card warning">
+            <div class="insight-icon">
+              <i class="fa-solid fa-exclamation-triangle"></i>
+            </div>
+            <div class="insight-content">
+              <h3 class="insight-title">Complaint Spike Detected</h3>
+              <p class="insight-desc">Wi-Fi related complaints increased by 42% in the last 3 days. Recommend infrastructure review.</p>
+              <div class="insight-footer">
+                <span class="insight-badge warning">Needs Attention</span>
+                <span class="insight-confidence">AI Confidence: 87%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card info">
+            <div class="insight-icon">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div class="insight-content">
+              <h3 class="insight-title">Optimal Room Usage</h3>
+              <p class="insight-desc">Block A classrooms show 92% utilization. Consider scheduling more classes in underutilized Block D.</p>
+              <div class="insight-footer">
+                <span class="insight-badge info">Recommendation</span>
+                <span class="insight-confidence">AI Confidence: 91%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card success">
+            <div class="insight-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="insight-content">
+              <h3 class="insight-title">Food Waste Reduced</h3>
+              <p class="insight-desc">Mess food waste decreased by 23% after implementing AI portion recommendations. Annual savings: ₹2.4L.</p>
+              <div class="insight-footer">
+                <span class="insight-badge success">Achieved</span>
+                <span class="insight-confidence">AI Confidence: 96%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================
+           STUDENT ANALYTICS
+           ==================================================== -->
+      <section aria-label="Student analytics" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-user-graduate"></i></span>
+            Student Analytics
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active">Overview</button>
+            <button class="tab-btn">By Department</button>
+            <button class="tab-btn">By Year</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;">
+          
+          <div class="chart-card">
+            <div class="chart-title">Attendance Trend</div>
+            <div class="chart-subtitle">Daily attendance over the last 30 days</div>
+            <div class="chart-placeholder">
+              <i class="fa-solid fa-chart-line"></i>
+              <p>Line Chart: Daily Attendance %</p>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#6C63FF;"></span> Overall</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span> CSE</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span> ECE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Department Enrollment</div>
+            <div class="chart-subtitle">Student distribution across departments</div>
+            <div class="chart-placeholder">
+              <i class="fa-solid fa-chart-pie"></i>
+              <p>Donut Chart: Enrollment by Department</p>
+              <div class="chart-stats">
+                <div class="stat-item">
+                  <span class="stat-label">CSE</span>
+                  <span class="stat-value">3,247 <span class="stat-percent">25.3%</span></span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">ECE</span>
+                  <span class="stat-value">2,891 <span class="stat-percent">22.5%</span></span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">MECH</span>
+                  <span class="stat-value">2,456 <span class="stat-percent">19.1%</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================
+           COMPLAINT TRENDS
+           ==================================================== -->
+      <section aria-label="Complaint trends" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+            Complaint Trends
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active">This Month</button>
+            <button class="tab-btn">Last 3 Months</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+          
+          <div class="chart-card">
+            <div class="chart-title">Complaints Over Time</div>
+            <div class="chart-subtitle">Weekly complaint volume & resolution rate</div>
+            <div class="chart-placeholder" style="min-height:280px;">
+              <i class="fa-solid fa-chart-area"></i>
+              <p>Area Chart: Complaint Volume vs Resolution</p>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span> Complaints</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span> Resolved</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Complaint Categories</div>
+            <div class="chart-subtitle">Top complaint types</div>
+            <div class="complaint-category-list">
+              <div class="category-item">
+                <div class="category-info">
+                  <span class="category-name">Wi-Fi Issues</span>
+                  <span class="category-count">24</span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width:85%;background:var(--accent-red);"></div>
+                </div>
+              </div>
+              <div class="category-item">
+                <div class="category-info">
+                  <span class="category-name">Water Supply</span>
+                  <span class="category-count">18</span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width:64%;background:var(--accent-amber);"></div>
+                </div>
+              </div>
+              <div class="category-item">
+                <div class="category-info">
+                  <span class="category-name">Food Quality</span>
+                  <span class="category-count">12</span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width:43%;background:var(--accent-blue);"></div>
+                </div>
+              </div>
+              <div class="category-item">
+                <div class="category-info">
+                  <span class="category-name">Maintenance</span>
+                  <span class="category-count">9</span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width:32%;background:var(--accent-purple);"></div>
+                </div>
+              </div>
+              <div class="category-item">
+                <div class="category-info">
+                  <span class="category-name">Others</span>
+                  <span class="category-count">6</span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width:21%;background:var(--accent-green);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================
+           CLASSROOM UTILIZATION
+           ==================================================== -->
+      <section aria-label="Classroom utilization" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-chalkboard"></i></span>
+            Classroom Utilization
+          </h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;">
+          
+          <div class="chart-card">
+            <div class="chart-title">Hourly Utilization Heatmap</div>
+            <div class="chart-subtitle">Peak usage hours by day of week</div>
+            <div class="heatmap-container">
+              <div class="heatmap-grid">
+                <div class="heatmap-row">
+                  <span class="heatmap-label">Mon</span>
+                  <div class="heatmap-cell high" title="9AM: 92%"></div>
+                  <div class="heatmap-cell high" title="10AM: 88%"></div>
+                  <div class="heatmap-cell medium" title="11AM: 75%"></div>
+                  <div class="heatmap-cell low" title="12PM: 45%"></div>
+                  <div class="heatmap-cell medium" title="1PM: 68%"></div>
+                  <div class="heatmap-cell high" title="2PM: 85%"></div>
+                  <div class="heatmap-cell medium" title="3PM: 72%"></div>
+                </div>
+                <div class="heatmap-row">
+                  <span class="heatmap-label">Tue</span>
+                  <div class="heatmap-cell high" title="9AM: 94%"></div>
+                  <div class="heatmap-cell high" title="10AM: 91%"></div>
+                  <div class="heatmap-cell high" title="11AM: 87%"></div>
+                  <div class="heatmap-cell medium" title="12PM: 52%"></div>
+                  <div class="heatmap-cell medium" title="1PM: 71%"></div>
+                  <div class="heatmap-cell high" title="2PM: 89%"></div>
+                  <div class="heatmap-cell medium" title="3PM: 76%"></div>
+                </div>
+                <div class="heatmap-row">
+                  <span class="heatmap-label">Wed</span>
+                  <div class="heatmap-cell high" title="9AM: 90%"></div>
+                  <div class="heatmap-cell high" title="10AM: 86%"></div>
+                  <div class="heatmap-cell medium" title="11AM: 73%"></div>
+                  <div class="heatmap-cell low" title="12PM: 48%"></div>
+                  <div class="heatmap-cell medium" title="1PM: 65%"></div>
+                  <div class="heatmap-cell high" title="2PM: 82%"></div>
+                  <div class="heatmap-cell medium" title="3PM: 70%"></div>
+                </div>
+                <div class="heatmap-row">
+                  <span class="heatmap-label">Thu</span>
+                  <div class="heatmap-cell high" title="9AM: 95%"></div>
+                  <div class="heatmap-cell high" title="10AM: 93%"></div>
+                  <div class="heatmap-cell high" title="11AM: 89%"></div>
+                  <div class="heatmap-cell medium" title="12PM: 55%"></div>
+                  <div class="heatmap-cell medium" title="1PM: 74%"></div>
+                  <div class="heatmap-cell high" title="2PM: 91%"></div>
+                  <div class="heatmap-cell high" title="3PM: 81%"></div>
+                </div>
+                <div class="heatmap-row">
+                  <span class="heatmap-label">Fri</span>
+                  <div class="heatmap-cell high" title="9AM: 88%"></div>
+                  <div class="heatmap-cell high" title="10AM: 84%"></div>
+                  <div class="heatmap-cell medium" title="11AM: 71%"></div>
+                  <div class="heatmap-cell low" title="12PM: 42%"></div>
+                  <div class="heatmap-cell medium" title="1PM: 62%"></div>
+                  <div class="heatmap-cell medium" title="2PM: 76%"></div>
+                  <div class="heatmap-cell low" title="3PM: 58%"></div>
+                </div>
+              </div>
+              <div class="heatmap-legend">
+                <span>Low</span>
+                <div class="legend-gradient"></div>
+                <span>High</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Block-wise Utilization</div>
+            <div class="chart-subtitle">Average utilization by building</div>
+            <div class="chart-placeholder">
+              <i class="fa-solid fa-chart-bar"></i>
+              <p>Bar Chart: Utilization by Block</p>
+              <div class="block-stats">
+                <div class="block-stat-item">
+                  <div class="block-stat-header">
+                    <span class="block-name">Block A</span>
+                    <span class="block-percent">92%</span>
+                  </div>
+                  <div class="block-bar">
+                    <div class="block-fill" style="width:92%;background:var(--gradient-success);"></div>
+                  </div>
+                </div>
+                <div class="block-stat-item">
+                  <div class="block-stat-header">
+                    <span class="block-name">Block B</span>
+                    <span class="block-percent">85%</span>
+                  </div>
+                  <div class="block-bar">
+                    <div class="block-fill" style="width:85%;background:var(--gradient-info);"></div>
+                  </div>
+                </div>
+                <div class="block-stat-item">
+                  <div class="block-stat-header">
+                    <span class="block-name">Block C</span>
+                    <span class="block-percent">78%</span>
+                  </div>
+                  <div class="block-bar">
+                    <div class="block-fill" style="width:78%;background:var(--gradient-warning);"></div>
+                  </div>
+                </div>
+                <div class="block-stat-item">
+                  <div class="block-stat-header">
+                    <span class="block-name">Block D</span>
+                    <span class="block-percent">64%</span>
+                  </div>
+                  <div class="block-bar">
+                    <div class="block-fill" style="width:64%;background:var(--gradient-danger);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================
+           MESS FOOD ANALYTICS
+           ==================================================== -->
+      <section aria-label="Mess analytics" style="margin-bottom:28px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-utensils"></i></span>
+            Mess Food Analytics
+          </h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;">
+          
+          <div class="chart-card">
+            <div class="chart-title">Food Rating Trends</div>
+            <div class="chart-subtitle">Weekly average ratings</div>
+            <div class="chart-placeholder">
+              <i class="fa-solid fa-star"></i>
+              <p>Line Chart: Average Ratings Over Time</p>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Food Waste Tracking</div>
+            <div class="chart-subtitle">Daily waste in kg</div>
+            <div class="chart-placeholder">
+              <i class="fa-solid fa-trash"></i>
+              <p>Bar Chart: Food Waste per Day</p>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Popular Meals</div>
+            <div class="chart-subtitle">Top rated dishes this month</div>
+            <div class="popular-meals-list">
+              <div class="meal-rank-item rank-1">
+                <span class="rank-badge">1</span>
+                <div class="meal-info">
+                  <span class="meal-name">Paneer Tikka Masala</span>
+                  <div class="meal-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                    <span>4.8</span>
+                  </div>
+                </div>
+                <span class="meal-votes">342 votes</span>
+              </div>
+              <div class="meal-rank-item rank-2">
+                <span class="rank-badge">2</span>
+                <div class="meal-info">
+                  <span class="meal-name">Biryani</span>
+                  <div class="meal-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                    <span>4.7</span>
+                  </div>
+                </div>
+                <span class="meal-votes">298 votes</span>
+              </div>
+              <div class="meal-rank-item rank-3">
+                <span class="rank-badge">3</span>
+                <div class="meal-info">
+                  <span class="meal-name">Dosa & Chutney</span>
+                  <div class="meal-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                    <span>4.5</span>
+                  </div>
+                </div>
+                <span class="meal-votes">276 votes</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="dashboard-footer">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <div class="logo-dot"></div>
+            CampusPulse AI
+          </div>
+          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <span class="footer-link">Privacy Policy</span>
+          <span class="footer-link">Terms of Service</span>
+          <span class="footer-link">Documentation</span>
+          <span class="footer-link">Support</span>
+          <span class="footer-link">API</span>
+        </div>
+        <div class="footer-system-info">
+          <div class="system-pill"><span class="dot" style="background:var(--accent-green);"></span>System OK</div>
+          <div class="system-pill"><i class="fa-solid fa-bolt" style="color:var(--accent-amber);font-size:10px;"></i> v4.1.2</div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script src="../js/analytics.js"></script>
+</body>
+</html>
