@@ -364,32 +364,43 @@ const LoginHandler = (function () {
    * Simulate authentication API call
    * In production, replace with actual API endpoint
    */
-  function authenticateUser(email, password, role) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Demo credentials (remove in production)
-        const demoCredentials = {
-          student: { id: 'STU2024001', password: 'student123' },
-          admin: { id: 'admin@campus.edu', password: 'admin123' },
-          maintenance: { id: 'MNT001', password: 'maint123' },
-          mess: { id: 'MESS001', password: 'mess123' },
-        };
+ 
+ async function authenticateUser(email, password, role) {
 
-        const demo = demoCredentials[role];
-        const emailLower = email.toLowerCase();
-        const demoIdLower = demo ? demo.id.toLowerCase() : '';
+    const remember =
+        document.getElementById("rememberMe").checked;
 
-        if (demo && emailLower === demoIdLower && password === demo.password) {
-          resolve({ success: true, user: { email, role } });
-        } else if (email.endsWith('@university.edu') && password.length >= 6) {
-          // Accept any @university.edu email for demo
-          resolve({ success: true, user: { email, role } });
-        } else {
-          reject(new Error('Invalid credentials. Please try again.'));
-        }
-      }, 1600);
+    const response = await fetch("/auth/login", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            email: email,
+            password: password,
+            role: role,
+            remember: remember
+
+        })
+
     });
-  }
+
+    const result = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(result.message);
+
+    }
+
+    return result;
+
+}
+ 
 
   /**
    * Handle form submission
@@ -436,8 +447,7 @@ const LoginHandler = (function () {
         RememberManager.save(email, role);
 
         // Redirect to dashboard (adjust path as needed)
-        window.location.href = 'dashboard.html';
-      })
+window.location.href = response.redirect;      })
       .catch((error) => {
         // Authentication failed
         isSubmitting = false;

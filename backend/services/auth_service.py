@@ -17,7 +17,7 @@ Uses hardcoded users for development. Will integrate with
 database when User model is implemented.
 """
 
-from models.user import User
+from backend.models.user import User
 
 
 class AuthService:

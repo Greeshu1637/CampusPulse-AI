@@ -198,49 +198,45 @@ class TestingConfig(Config):
 # ============================================================
 # PRODUCTION CONFIGURATION
 # ============================================================
-class ProductionConfig(Config):
-    """
-    Production environment configuration.
-    
-    Security-focused settings for deployment.
-    Requires PostgreSQL database and proper environment variables.
-    """
-    
-    # Disable debug mode in production
-    DEBUG = False
-    TESTING = False
-    
-    # Require environment variables in production
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    if not SECRET_KEY:
-        raise ValueError('SECRET_KEY environment variable must be set in production')
-    
-    # Use PostgreSQL in production
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-    if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError('DATABASE_URL environment variable must be set in production')
-    
-    # Production security settings
-    SESSION_COOKIE_SECURE = True  # Only send cookies over HTTPS
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
-    
-    # Disable JSON pretty printing in production
-    JSONIFY_PRETTYPRINT_REGULAR = False
-    
-    # Use Redis for rate limiting in production
-    RATELIMIT_STORAGE_URL = os.environ.get('REDIS_URL') or 'redis://localhost:6379/1'
-    
-    @staticmethod
-    def init_app(app):
-        """Initialize production-specific settings."""
-        print('🚀 Production mode enabled')
-        print('🔒 Security: Enhanced')
-        print('📊 Database: PostgreSQL')
+
         
         # TODO: Set up production logging
         # TODO: Set up error tracking (e.g., Sentry)
+class ProductionConfig(Config):
+    """
+    Production environment configuration.
 
+    Security-focused settings for deployment.
+    """
+
+    # Disable debug mode
+    DEBUG = False
+    TESTING = False
+
+    # Production values from environment variables
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+
+    # Production security settings
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Strict"
+
+    # Disable JSON pretty printing
+    JSONIFY_PRETTYPRINT_REGULAR = False
+
+    # Redis
+    RATELIMIT_STORAGE_URL = (
+        os.environ.get("REDIS_URL")
+        or "redis://localhost:6379/1"
+    )
+
+    @staticmethod
+    def init_app(app):
+        """Initialize production-specific settings."""
+        print("🚀 Production mode enabled")
+        print("🔒 Security: Enhanced")
+        print("📊 Database: PostgreSQL")
 
 # ============================================================
 # CONFIGURATION DICTIONARY

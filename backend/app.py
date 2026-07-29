@@ -16,6 +16,12 @@ Usage:
 """
 
 import os
+import sys
+
+# Add project root to Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 from flask import Flask, render_template, jsonify
 from config import config
 
@@ -62,8 +68,8 @@ def create_app(config_name=None):
     # Each blueprint handles a specific feature area
     
     # Import blueprints
-    from routes.auth import auth_bp
-    from routes.dashboard import dashboard_bp
+    from backend.routes.auth import auth_bp
+    from backend.routes.dashboard import dashboard_bp
     
     # Register authentication blueprint
     # All auth routes will be prefixed with /auth (e.g., /auth/login)

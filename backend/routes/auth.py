@@ -20,8 +20,7 @@ Security Features:
 """
 
 from flask import Blueprint, request, jsonify, render_template, session, redirect, url_for
-from services.auth_service import AuthService
-
+from backend.services.auth_service import AuthService
 # ============================================================
 # CREATE AUTHENTICATION BLUEPRINT
 # ============================================================
