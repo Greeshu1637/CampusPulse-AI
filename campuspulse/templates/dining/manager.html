@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mess Manager - CampusPulse AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dining.css') }}">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button class="theme-option active" data-theme="light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            Light
+        </button>
+        <button class="theme-option" data-theme="dark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            Dark
+        </button>
+        <button class="theme-option" data-theme="system">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            System
+        </button>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="sidebar-logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <div class="sidebar-title">CampusPulse AI</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('main.dashboard') }}" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('dining.manager_view') }}" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20"/>
+                        <path d="M21 15V2a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3z"/>
+                    </svg>
+                    <span>Smart Dining</span>
+                </a>
+
+                <a href="{{ url_for('dining.analytics_view') }}" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="20" x2="12" y2="10"/>
+                        <line x1="18" y1="20" x2="18" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="16"/>
+                    </svg>
+                    <span>Analytics</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showComingSoon(event, 'Hostel')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <path d="M9 22V12h6v10"/>
+                    </svg>
+                    <span>Hostel</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showComingSoon(event, 'Settings')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <div class="search-bar">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" class="search-input" placeholder="Search...">
+                    </div>
+                </div>
+
+                <div class="navbar-right">
+                    <button class="navbar-icon-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge"></span>
+                    </button>
+
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-name">{{ user_name }}</div>
+                            <div class="user-role">{{ role.replace('-', ' ').title() }}</div>
+                        </div>
+                        <div class="avatar">
+                            {{ user_name[0].upper() }}
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Manager Content -->
+            <main class="dashboard-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Mess Management</h1>
+                        <p class="page-subtitle">Create and manage daily meal menus</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showCreateMenuModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Create Menu
+                    </button>
+                </div>
+
+                <!-- Today's Menu -->
+                <div class="dining-section">
+                    <h2 class="section-title">Today's Menu</h2>
+                    <div id="menu-grid" class="menu-grid">
+                        <div class="loading-container">
+                            <div class="spinner"></div>
+                            <p>Loading menu...</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create/Edit Menu Modal -->
+    <div id="menuModal" class="modal-overlay">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="menu-modal-title">Create Menu</h3>
+                <button class="modal-close" onclick="closeMenuModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="menu-date">Date</label>
+                    <input type="date" id="menu-date" class="input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="menu-type">Meal Type</label>
+                    <select id="menu-type" class="input" required>
+                        <option value="">Select meal type</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="snacks">Snacks</option>
+                        <option value="dinner">Dinner</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="menu-items">Menu Items</label>
+                    <textarea id="menu-items" class="input" rows="3" placeholder="e.g., Idli, Sambar, Chutney" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="menu-description">Description (Optional)</label>
+                    <textarea id="menu-description" class="input" rows="2" placeholder="Additional details about the meal"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="menu-calories">Calories (Optional)</label>
+                    <input type="number" id="menu-calories" class="input" placeholder="e.g., 450">
+                </div>
+
+                <input type="hidden" id="menu-edit-id" value="">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeMenuModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveMenu()">Save Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Waste Modal -->
+    <div id="wasteModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Food Waste</h3>
+                <button class="modal-close" onclick="closeWasteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="waste-meal-info">
+                    <div class="meal-type-badge" id="waste-meal-type"></div>
+                    <div id="waste-menu-items"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="waste-kg">Food Waste (kg)</label>
+                    <input type="number" id="waste-kg" class="input" step="0.1" min="0" placeholder="e.g., 2.5" required>
+                </div>
+
+                <input type="hidden" id="waste-menu-id" value="">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeWasteModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveWaste()">Update Waste</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coming Soon Modal -->
+    <div id="comingSoonModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <h3 class="modal-title" id="modalTitle">Coming in Next Sprint</h3>
+            <p class="modal-message">This feature will be available in the next development sprint.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Got it</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dining_manager.js') }}"></script>
+</body>
+</html>

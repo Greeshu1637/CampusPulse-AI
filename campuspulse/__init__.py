@@ -26,6 +26,9 @@ def create_app(config_name='development'):
     from campuspulse.config import config
     app.config.from_object(config[config_name])
     
+    # Set secret key for sessions
+    app.secret_key = app.config['SECRET_KEY']
+    
     # Initialize extensions with app
     db.init_app(app)
     migrate.init_app(app, db)
@@ -33,5 +36,9 @@ def create_app(config_name='development'):
     # Register routes
     from campuspulse.routes import main_bp
     app.register_blueprint(main_bp)
+    
+    # Register Smart Dining blueprint
+    from campuspulse.blueprints.dining import dining_bp
+    app.register_blueprint(dining_bp)
     
     return app
