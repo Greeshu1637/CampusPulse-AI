@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPulse AI – Sign In</title>
-  <meta name="description" content="Sign in to CampusPulse AI – Smart University Management Platform" />
+  <meta name="description" content="Sign in to CampusPulse AI – Girls Hostel & Smart Dining Management" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="/css/login.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127981;</text></svg>" />
 </head>
 <body>
@@ -49,11 +49,11 @@
 
       <div class="lp-hero">
         <h1 class="lp-hero__title">
-          Smart Campus.<br />
+          Smart Hostel.<br />
           <span class="lp-gradient-text">Powered by AI.</span>
         </h1>
         <p class="lp-hero__sub">
-          One unified platform for students, faculty, facilities
+          One unified platform for students, wardens, dining management
           and analytics — all driven by real-time intelligence.
         </p>
       </div>
@@ -64,8 +64,8 @@
           Real-time Analytics &amp; Insights
         </li>
         <li class="lp-feature">
-          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-city"></i></span>
-          Digital Twin Campus
+          <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-home"></i></span>
+          Smart Hostel Dashboard
         </li>
         <li class="lp-feature">
           <span class="lp-feature__icon" aria-hidden="true"><i class="fa-solid fa-robot"></i></span>
@@ -85,7 +85,7 @@
         <span class="lp-stat__div" aria-hidden="true"></span>
         <div class="lp-stat">
           <span class="lp-stat__val">847</span>
-          <span class="lp-stat__lbl">Faculty</span>
+          <span class="lp-stat__lbl">Wardens</span>
         </div>
         <span class="lp-stat__div" aria-hidden="true"></span>
         <div class="lp-stat">
@@ -147,7 +147,7 @@
           <!-- Email / University ID -->
           <div class="lp-field" id="emailField">
             <label class="lp-label" for="emailInput">
-              University ID / Email
+              Hostel ID / Email
             </label>
             <div class="lp-input-wrap">
               <span class="lp-input-icon lp-input-icon--l" aria-hidden="true">
@@ -157,7 +157,7 @@
                 type="text"
                 id="emailInput"
                 class="lp-input"
-                placeholder="STU2024001 or you@university.edu"
+                placeholder="STU2024001 or you@hostel.edu"
                 autocomplete="username"
                 spellcheck="false"
                 aria-required="true"
@@ -230,7 +230,7 @@
 
         <!-- SSO -->
         <div class="lp-sso" role="group" aria-label="Single sign-on options">
-          <button type="button" class="lp-sso-btn" aria-label="Sign in with Google">
+          <button type="button" class="lp-sso-btn" id="googleLoginBtn" aria-label="Sign in with Google">
             <i class="fa-brands fa-google" aria-hidden="true"></i>
             <span>Google</span>
           </button>
@@ -242,7 +242,7 @@
 
         <p class="lp-card__note">
           Need access?
-          <a href="#" class="lp-card__note-link">Contact your campus administrator</a>
+          <a href="#" class="lp-card__note-link">Contact your hostel administrator</a>
         </p>
 
       </div><!-- /lp-card -->
@@ -277,7 +277,7 @@
 
       <h3 class="lp-modal__title" id="forgotTitle">Reset Password</h3>
       <p class="lp-modal__sub">
-        Enter your university email or ID and we will send you a password reset link.
+        Enter your hostel email or ID and we will send you a password reset link.
       </p>
 
       <div class="lp-field" style="margin-top:20px">
@@ -289,7 +289,7 @@
             type="text"
             id="resetInput"
             class="lp-input"
-            placeholder="University email or ID"
+            placeholder="Hostel email or ID"
             autocomplete="off"
             aria-describedby="resetErr"
           />
@@ -314,6 +314,6 @@
     </div>
   </div>
 
-  <script src="../js/login.js"></script>
+  <script src="/js/login.js"></script>
 </body>
 </html>

@@ -4,30 +4,53 @@ CampusPulse AI - Models Package
 
 This package contains all database models for the application.
 
-Models represent database tables and define:
-- Table structure (columns, types, constraints)
-- Relationships between tables
-- Business logic methods
-- Data validation
-
-When database is implemented, models will use SQLAlchemy ORM:
+Complete Smart Dining System Models:
 - User: User accounts and authentication
-- Student: Student profile data
-- Faculty: Faculty member data
-- Complaint: Complaint tracking
-- Classroom: Classroom and scheduling
-- Mess: Mess menu and ratings
-- Analytics: Analytics and metrics storage
+- MealTiming: Meal schedule configuration
+- MessMenu: Daily meal menus
+- MenuItem: Individual food items
+- FoodRating: Student ratings (1-5 stars)
+- FoodFeedback: Detailed feedback
+- MealAttendance: Student attendance tracking
 
-Currently contains placeholder models for development.
+Complete Complaint Management System Models:
+- Complaint: Main complaint entity
+- ComplaintCategory: Complaint categories
+- ComplaintComment: Comments on complaints
+- ComplaintStatusHistory: Audit trail of status changes
 """
 
-__all__ = ['User']
+from backend.models.user import User
+from backend.models.mess import (
+    MealTiming,
+    MessMenu,
+    MenuItem,
+    FoodRating,
+    FoodFeedback,
+    MealAttendance
+)
+from backend.models.complaint import (
+    Complaint,
+    ComplaintCategory,
+    ComplaintComment,
+    ComplaintStatusHistory
+)
 
-# TODO: Import all models when database is set up
-# from .user import User
+__all__ = [
+    'User',
+    'MealTiming',
+    'MessMenu',
+    'MenuItem',
+    'FoodRating',
+    'Feedback',
+    'MealAttendance',
+    'Complaint',
+    'ComplaintCategory',
+    'ComplaintComment',
+    'ComplaintStatusHistory'
+]
+
+# TODO: Import remaining models when implemented
 # from .student import Student
 # from .faculty import Faculty
-# from .complaint import Complaint
 # from .classroom import Classroom
-# from .mess import Mess

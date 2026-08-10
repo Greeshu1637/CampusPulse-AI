@@ -52,6 +52,256 @@ def require_auth():
 # DASHBOARD DATA ROUTES
 # ============================================================
 
+@dashboard_bp.route('/student/dashboard', methods=['GET'])
+def get_student_dashboard():
+    """
+    Get student dashboard data.
+    
+    GET /api/student/dashboard
+    
+    Returns comprehensive dashboard data for students including:
+    - Today's classes
+    - Empty classrooms
+    - Mess menu (from database)
+    - Pending complaints
+    - Announcements
+    
+    Returns:
+        JSON response with student dashboard data
+    """
+    try:
+        # Check authentication
+        if not session.get('user_id'):
+            return jsonify({
+                'success': False,
+                'message': 'Authentication required'
+            }), 401
+        
+        user_name = session.get('user_name', 'Student')
+        user_role = session.get('user_role', 'student')
+        
+        # Get current day and time
+        from datetime import datetime, timedelta
+        now = datetime.now()
+        current_day = now.strftime('%A')
+        current_time = now.strftime('%H:%M')
+        
+        # Today's Classes (Sample Data)
+        todays_classes = [
+            {
+                'id': 1,
+                'subject': 'Data Structures',
+                'code': 'CS201',
+                'time': '09:00 - 10:30',
+                'room': 'Block A - 301',
+                'professor': 'Dr. Sharma',
+                'status': 'upcoming' if now.hour < 9 else 'ongoing' if now.hour < 10 else 'completed'
+            },
+            {
+                'id': 2,
+                'subject': 'Database Management',
+                'code': 'CS301',
+                'time': '11:00 - 12:30',
+                'room': 'Block B - 205',
+                'professor': 'Dr. Kumar',
+                'status': 'upcoming' if now.hour < 11 else 'ongoing' if now.hour < 12 else 'completed'
+            },
+            {
+                'id': 3,
+                'subject': 'Operating Systems',
+                'code': 'CS302',
+                'time': '14:00 - 15:30',
+                'room': 'Block A - 401',
+                'professor': 'Dr. Patel',
+                'status': 'upcoming' if now.hour < 14 else 'ongoing' if now.hour < 15 else 'completed'
+            },
+            {
+                'id': 4,
+                'subject': 'Computer Networks',
+                'code': 'CS303',
+                'time': '16:00 - 17:30',
+                'room': 'Block C - 102',
+                'professor': 'Dr. Singh',
+                'status': 'upcoming'
+            }
+        ]
+        
+        # Empty Classrooms (Sample Data)
+        empty_classrooms = [
+            {
+                'id': 1,
+                'name': 'Block A - 201',
+                'capacity': 60,
+                'facilities': ['Projector', 'AC', 'Whiteboard'],
+                'available_until': '14:00',
+                'floor': 2,
+                'block': 'A'
+            },
+            {
+                'id': 2,
+                'name': 'Block B - 105',
+                'capacity': 40,
+                'facilities': ['Smart Board', 'AC'],
+                'available_until': '16:00',
+                'floor': 1,
+                'block': 'B'
+            },
+            {
+                'id': 3,
+                'name': 'Block C - 301',
+                'capacity': 80,
+                'facilities': ['Projector', 'AC', 'Sound System'],
+                'available_until': '15:30',
+                'floor': 3,
+                'block': 'C'
+            },
+            {
+                'id': 4,
+                'name': 'Block D - 202',
+                'capacity': 50,
+                'facilities': ['Projector', 'Whiteboard'],
+                'available_until': '17:00',
+                'floor': 2,
+                'block': 'D'
+            }
+        ]
+        
+        # Today's Mess Menu (From Database)
+        from backend.services.mess_service import MessService
+        mess_menu = MessService.get_today_menu()
+        
+        # If no menu found in database, provide default message
+        if not mess_menu:
+            mess_menu = {
+                'date': now.strftime('%Y-%m-%d'),
+                'day': current_day,
+                'meals': [],
+                'rating': 0.0,
+                'total_ratings': 0
+            }
+        
+        # Pending Complaints (Sample Data)
+        pending_complaints = [
+            {
+                'id': 1,
+                'title': 'Wi-Fi Not Working in Room 204',
+                'category': 'Internet',
+                'status': 'in_progress',
+                'priority': 'high',
+                'submitted_date': (now - timedelta(days=2)).strftime('%Y-%m-%d'),
+                'description': 'Internet connection is very slow',
+                'assigned_to': 'IT Team'
+            },
+            {
+                'id': 2,
+                'title': 'Water Leakage in Bathroom',
+                'category': 'Plumbing',
+                'status': 'pending',
+                'priority': 'medium',
+                'submitted_date': (now - timedelta(days=1)).strftime('%Y-%m-%d'),
+                'description': 'Tap is leaking continuously',
+                'assigned_to': 'Maintenance'
+            },
+            {
+                'id': 3,
+                'title': 'AC Not Cooling',
+                'category': 'Electrical',
+                'status': 'pending',
+                'priority': 'low',
+                'submitted_date': now.strftime('%Y-%m-%d'),
+                'description': 'AC is making noise but not cooling',
+                'assigned_to': None
+            }
+        ]
+        
+        # Announcements (Sample Data)
+        announcements = [
+            {
+                'id': 1,
+                'title': 'Mid-Semester Exams Schedule Released',
+                'content': 'The mid-semester examination schedule has been released. Please check the academic portal for your schedule.',
+                'category': 'Academic',
+                'priority': 'high',
+                'published_date': now.strftime('%Y-%m-%d'),
+                'published_by': 'Academic Office',
+                'icon': 'fa-calendar-check'
+            },
+            {
+                'id': 2,
+                'title': 'Library Extended Hours',
+                'content': 'The library will remain open 24/7 during exam season starting next week.',
+                'category': 'Facilities',
+                'priority': 'medium',
+                'published_date': (now - timedelta(days=1)).strftime('%Y-%m-%d'),
+                'published_by': 'Library Administration',
+                'icon': 'fa-book'
+            },
+            {
+                'id': 3,
+                'title': 'Tech Fest Registration Open',
+                'content': 'Register for TechFest 2026! Multiple events including hackathons, coding competitions, and workshops.',
+                'category': 'Events',
+                'priority': 'medium',
+                'published_date': (now - timedelta(days=2)).strftime('%Y-%m-%d'),
+                'published_by': 'Student Affairs',
+                'icon': 'fa-trophy'
+            },
+            {
+                'id': 4,
+                'title': 'Hostel Mess Menu Survey',
+                'content': 'Share your feedback on the current mess menu. Survey closes this Friday.',
+                'category': 'Mess',
+                'priority': 'low',
+                'published_date': (now - timedelta(days=3)).strftime('%Y-%m-%d'),
+                'published_by': 'Mess Committee',
+                'icon': 'fa-utensils'
+            }
+        ]
+        
+        # Quick Stats
+        quick_stats = {
+            'attendance_percentage': 92.5,
+            'classes_today': len(todays_classes),
+            'pending_assignments': 3,
+            'upcoming_exams': 2,
+            'library_books': 2,
+            'mess_balance': 450.00
+        }
+        
+        dashboard_data = {
+            'success': True,
+            'user': {
+                'name': user_name,
+                'role': user_role,
+                'picture': session.get('user_picture'),
+                'email': session.get('user_email')
+            },
+            'timestamp': now.isoformat(),
+            'today': {
+                'date': now.strftime('%Y-%m-%d'),
+                'day': current_day,
+                'time': current_time
+            },
+            'todays_classes': todays_classes,
+            'empty_classrooms': empty_classrooms,
+            'mess_menu': mess_menu,
+            'pending_complaints': pending_complaints,
+            'announcements': announcements,
+            'quick_stats': quick_stats
+        }
+        
+        return jsonify(dashboard_data), 200
+    
+    except Exception as e:
+        print(f'Student dashboard error: {str(e)}')
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'message': 'Failed to load dashboard data'
+        }), 500
+
+
 @dashboard_bp.route('/dashboard', methods=['GET'])
 def get_dashboard_data():
     """

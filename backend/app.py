@@ -62,6 +62,49 @@ def create_app(config_name=None):
     config[config_name].init_app(app)
     
     # ============================================================
+    # INITIALIZE DATABASE
+    # ============================================================
+    from backend.database import db, init_db, seed_db
+    
+    # Import models to ensure they're registered with SQLAlchemy
+    from backend.models.user import User
+    from backend.models.mess import (
+        MealTiming,
+        MessMenu,
+        MenuItem,
+        FoodRating,
+        FoodFeedback,
+        MealAttendance
+    )
+    from backend.models.complaint import (
+        Complaint,
+        ComplaintCategory,
+        ComplaintComment,
+        ComplaintStatusHistory
+    )
+    
+    # Initialize SQLAlchemy with Flask app
+    db.init_app(app)
+    
+    # Create tables if they don't exist
+    with app.app_context():
+        db.create_all()
+        print('✓ Database tables created')
+        
+        # Seed database with test users and Smart Dining data (only in development)
+        if config_name == 'development':
+            seed_db(app)
+            
+            # Seed Smart Dining module
+            from backend.services.seed_smart_dining import seed_smart_dining
+            seed_smart_dining()
+            
+            # Seed Complaint Categories
+            from backend.services.seed_complaints import seed_complaint_categories, seed_sample_complaints
+            seed_complaint_categories()
+            seed_sample_complaints()
+    
+    # ============================================================
     # REGISTER BLUEPRINTS
     # ============================================================
     # Blueprints are modular components that organize routes
@@ -70,14 +113,44 @@ def create_app(config_name=None):
     # Import blueprints
     from backend.routes.auth import auth_bp
     from backend.routes.dashboard import dashboard_bp
+    from backend.routes.google_auth import google_auth_bp
+    from backend.routes.mess import mess_bp
+    from backend.routes.student_dining import student_dining_bp
+    from backend.routes.mess_manager import mess_manager_bp
+    from backend.routes.admin_analytics import admin_analytics_bp
+    from backend.routes.complaints import complaints_bp
     
     # Register authentication blueprint
     # All auth routes will be prefixed with /auth (e.g., /auth/login)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     
+    # Register Google OAuth blueprint
+    # All Google auth routes will be prefixed with /auth/google
+    app.register_blueprint(google_auth_bp)
+    
     # Register dashboard blueprint
     # All dashboard routes will be prefixed with /api (e.g., /api/dashboard)
     app.register_blueprint(dashboard_bp, url_prefix='/api')
+    
+    # Register mess blueprint (legacy - kept for backward compatibility)
+    # All mess routes will be prefixed with /api/mess (e.g., /api/mess/today)
+    app.register_blueprint(mess_bp)
+    
+    # Register student dining blueprint (new Smart Dining API)
+    # All student dining routes will be prefixed with /api/dining
+    app.register_blueprint(student_dining_bp)
+    
+    # Register mess manager blueprint (Manager CRUD operations)
+    # All manager routes will be prefixed with /api/manager
+    app.register_blueprint(mess_manager_bp)
+    
+    # Register admin analytics blueprint (Admin analytics and reports)
+    # All admin routes will be prefixed with /api/admin
+    app.register_blueprint(admin_analytics_bp)
+    
+    # Register complaints blueprint (Complaint management system)
+    # All complaint routes will be prefixed with /api/complaints
+    app.register_blueprint(complaints_bp)
     
     # ============================================================
     # ROOT ROUTES
@@ -91,7 +164,60 @@ def create_app(config_name=None):
         Returns:
             Rendered dashboard.html template
         """
+        return render_template('login.html')
+    
+    # ============================================================
+    # FRONTEND PAGE ROUTES
+    # ============================================================
+    
+    @app.route('/login')
+    @app.route('/frontend/pages/login.html')
+    def login_page():
+        """Login page"""
+        return render_template('login.html')
+    
+    @app.route('/register')
+    @app.route('/frontend/pages/register.html')
+    def register_page():
+        """Registration page"""
+        return render_template('register.html')
+    
+    @app.route('/dashboard')
+    @app.route('/frontend/pages/dashboard.html')
+    def dashboard_page():
+        """Dashboard page"""
         return render_template('dashboard.html')
+    
+    @app.route('/mess')
+    @app.route('/mess.html')
+    @app.route('/frontend/pages/mess.html')
+    def mess_page():
+        """Mess/Smart Dining page"""
+        return render_template('mess.html')
+    
+    @app.route('/student-dashboard')
+    @app.route('/frontend/pages/student-dashboard.html')
+    def student_dashboard_page():
+        """Student dashboard page"""
+        return render_template('student-dashboard.html')
+    
+    @app.route('/analytics')
+    @app.route('/frontend/pages/analytics.html')
+    def analytics_page():
+        """Analytics page"""
+        return render_template('analytics.html')
+    
+    @app.route('/classroom')
+    @app.route('/frontend/pages/classroom.html')
+    def classroom_page():
+        """Classroom page"""
+        return render_template('classroom.html')
+    
+    @app.route('/complaints')
+    @app.route('/frontend/pages/complaints.html')
+    def complaints_page():
+        """Complaints page"""
+        return render_template('complaints.html')
     
     @app.route('/health')
     def health_check():

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard - CampusPulse AI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127981;</text></svg>" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <div class="sidebar__logo">
+        <i class="fa-solid fa-brain"></i>
+        <span class="sidebar__logo-text">CampusPulse <span class="badge-ai">AI</span></span>
+      </div>
+      <button class="sidebar__toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="#" class="sidebar__item active" data-page="dashboard">
+        <i class="fa-solid fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/frontend/pages/mess.html" class="sidebar__item" data-page="mess">
+        <i class="fa-solid fa-utensils"></i>
+        <span>Mess Menu</span>
+      </a>
+      <a href="/frontend/pages/complaints.html" class="sidebar__item" data-page="complaints">
+        <i class="fa-solid fa-wrench"></i>
+        <span>Hostel Complaints</span>
+      </a>
+      <a href="#" class="sidebar__item" data-page="timetable">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Timetable</span>
+      </a>
+      <a href="#" class="sidebar__item" data-page="announcements">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span>Announcements</span>
+      </a>
+      <a href="#" class="sidebar__item" data-page="profile">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+      <a href="#" class="sidebar__item" data-page="settings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="sidebar__theme" id="themeToggle">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+        <span id="themeText">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main" id="main">
+    
+    <!-- Top Navigation -->
+    <header class="topnav">
+      <div class="topnav__left">
+        <button class="topnav__menu" id="mobileMenuToggle">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="topnav__title">Dashboard</h1>
+      </div>
+
+      <div class="topnav__right">
+        <button class="topnav__icon" id="refreshBtn" title="Refresh">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+        
+        <button class="topnav__icon" id="notifBtn" title="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="topnav__badge">3</span>
+        </button>
+
+        <div class="topnav__user" id="userMenu">
+          <img src="https://ui-avatars.com/api/?name=Student&background=6366f1&color=fff" alt="User" class="topnav__avatar" id="userAvatar" />
+          <div class="topnav__user-info">
+            <span class="topnav__name" id="userName">Loading...</span>
+            <span class="topnav__role" id="userRole">Student</span>
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="dropdown" id="userDropdown">
+          <a href="#" class="dropdown__item">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#" class="dropdown__item">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+          </a>
+          <div class="dropdown__divider"></div>
+          <a href="#" class="dropdown__item" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="content">
+      
+      <!-- Welcome Section -->
+      <section class="welcome">
+        <div class="welcome__text">
+          <h2 class="welcome__title">Welcome back, <span id="welcomeName">Student</span>! 👋</h2>
+          <p class="welcome__subtitle">Here's what's happening in your hostel today</p>
+        </div>
+        <div class="welcome__date">
+          <i class="fa-solid fa-calendar-day"></i>
+          <span id="currentDate">Loading...</span>
+        </div>
+      </section>
+
+      <!-- Quick Stats -->
+      <section class="stats">
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--blue">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div class="stat-card__content">
+            <h3 class="stat-card__value" id="attendanceValue">--</h3>
+            <p class="stat-card__label">Attendance</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--green">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
+          <div class="stat-card__content">
+            <h3 class="stat-card__value" id="classesTodayValue">--</h3>
+            <p class="stat-card__label">Classes Today</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--orange">
+            <i class="fa-solid fa-file-lines"></i>
+          </div>
+          <div class="stat-card__content">
+            <h3 class="stat-card__value" id="assignmentsValue">--</h3>
+            <p class="stat-card__label">Pending Assignments</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--purple">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+          </div>
+          <div class="stat-card__content">
+            <h3 class="stat-card__value" id="messBalanceValue">--</h3>
+            <p class="stat-card__label">Mess Balance</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        
+        <!-- Today's Classes -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">
+              <i class="fa-solid fa-calendar-check"></i>
+              Today's Classes
+            </h3>
+            <button class="card__action" title="View all">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="card__body" id="classesContainer">
+            <!-- Loading skeleton -->
+            <div class="skeleton skeleton--class"></div>
+            <div class="skeleton skeleton--class"></div>
+            <div class="skeleton skeleton--class"></div>
+          </div>
+        </div>
+
+        <!-- Mess Menu -->
+        <div class="card card--full">
+          <div class="card__header">
+            <h3 class="card__title">
+              <i class="fa-solid fa-bowl-food"></i>
+              Today's Mess Menu
+            </h3>
+            <button class="card__action" title="View all">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="card__body" id="messMenuContainer">
+            <!-- Loading skeleton -->
+            <div class="skeleton skeleton--menu"></div>
+          </div>
+        </div>
+
+        <!-- Pending Complaints -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">
+              <i class="fa-solid fa-tools"></i>
+              My Complaints
+            </h3>
+            <button class="card__action" title="New complaint">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          <div class="card__body" id="complaintsContainer">
+            <!-- Loading skeleton -->
+            <div class="skeleton skeleton--complaint"></div>
+            <div class="skeleton skeleton--complaint"></div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">
+              <i class="fa-solid fa-bullhorn"></i>
+              Latest Announcements
+            </h3>
+            <button class="card__action" title="View all">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="card__body" id="announcementsContainer">
+            <!-- Loading skeleton -->
+            <div class="skeleton skeleton--announcement"></div>
+            <div class="skeleton skeleton--announcement"></div>
+            <div class="skeleton skeleton--announcement"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="../js/student-dashboard.js"></script>
+</body>
+</html>

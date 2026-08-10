@@ -704,7 +704,35 @@ const ForgotPasswordModal = (function () {
 
 
 /* ============================================================
-   8. INITIALIZATION
+   8. GOOGLE OAUTH HANDLER
+   Handles Google Sign-In button click and redirects to OAuth flow.
+   ============================================================ */
+const GoogleAuthHandler = (function () {
+  const googleBtn = document.getElementById('googleLoginBtn');
+
+  /**
+   * Handle Google login button click
+   */
+  function handleGoogleLogin() {
+    // Redirect to backend Google OAuth route
+    window.location.href = '/auth/google/login';
+  }
+
+  /**
+   * Initialize Google auth handler
+   */
+  function init() {
+    if (googleBtn) {
+      googleBtn.addEventListener('click', handleGoogleLogin);
+    }
+  }
+
+  return { init };
+})();
+
+
+/* ============================================================
+   9. INITIALIZATION
    Initialize all modules when DOM is ready.
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -714,6 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
   LoginHandler.init();
   RememberManager.init();
   ForgotPasswordModal.init();
+  GoogleAuthHandler.init();
 
   console.log('✓ CampusPulse AI Login — All modules initialized');
 });

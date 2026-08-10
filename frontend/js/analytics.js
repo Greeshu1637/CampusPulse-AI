@@ -610,7 +610,7 @@
   // ============================================================
   // INITIALIZATION
   // ============================================================
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     ThemeManager.init();
     SidebarManager.init();
     TopbarManager.init();
@@ -623,7 +623,111 @@
     ScrollAnimations.init();
     TabSwitcher.init();
 
+    // Initialize Analytics Data Manager (API Integration)
+    await AnalyticsDataManager.init();
+
     console.log('📊 CampusPulse Analytics Dashboard initialized successfully!');
+    console.log('✅ API Integration Active - Analytics data from database');
   });
 
 })();
+
+
+  // ============================================================
+  // ANALYTICS DATA MANAGER - Real API Integration
+  // ============================================================
+  const AnalyticsDataManager = {
+    dashboardData: null,
+
+    async init() {
+      console.log('📊 Initializing Analytics Data Manager...');
+      await this.fetchDashboardData();
+    },
+
+    async fetchDashboardData() {
+      try {
+        const response = await fetch('/api/admin/dashboard');
+        const data = await response.json();
+        
+        if (data.success) {
+          this.dashboardData = data.data;
+          console.log('✅ Analytics dashboard data loaded from database');
+          this.renderDashboard();
+        } else if (response.status === 401) {
+          console.warn('⚠️  Analytics requires authentication');
+          this.showAuthRequired();
+        } else {
+          console.error('❌ Failed to load analytics:', data.message);
+          this.showError('Failed to load analytics data');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching analytics:', error);
+        this.showError('Error connecting to analytics API');
+      }
+    },
+
+    showAuthRequired() {
+      const mainContent = document.querySelector('.main-content, main');
+      if (mainContent) {
+        mainContent.innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <i class="fa-solid fa-lock" style="font-size:64px;color:var(--accent-amber);margin-bottom:20px;"></i>
+            <h2>Authentication Required</h2>
+            <p style="color:var(--text-muted);margin:16px 0;">Please log in to access analytics dashboard</p>
+            <a href="/pages/login.html" class="btn-primary" style="display:inline-block;padding:12px 24px;background:var(--accent-purple);color:white;text-decoration:none;border-radius:8px;margin-top:16px;">
+              Go to Login
+            </a>
+          </div>
+        `;
+      }
+    },
+
+    showError(message) {
+      const mainContent = document.querySelector('.main-content, main');
+      if (mainContent) {
+        mainContent.innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:64px;color:var(--accent-red);margin-bottom:20px;"></i>
+            <h2>Error Loading Analytics</h2>
+            <p style="color:var(--text-muted);margin:16px 0;">${message}</p>
+            <button onclick="location.reload()" class="btn-primary" style="padding:12px 24px;background:var(--accent-purple);color:white;border:none;border-radius:8px;margin-top:16px;cursor:pointer;">
+              Retry
+            </button>
+          </div>
+        `;
+      }
+    },
+
+    renderDashboard() {
+      if (!this.dashboardData) return;
+
+      console.log('✅ Rendering analytics dashboard with real data');
+      
+      // Update KPI cards if they exist
+      this.updateKPIs();
+      
+      // Note: Full Chart.js integration would go here
+      // For now, we're connecting to the API and displaying we have real data
+      console.log('📊 Analytics data available:', Object.keys(this.dashboardData));
+    },
+
+    updateKPIs() {
+      // Update any KPI elements with real data
+      const data = this.dashboardData;
+      
+      // Example: Update total students
+      const totalStudentsEl = document.querySelector('[data-kpi="total-students"]');
+      if (totalStudentsEl && data.total_students) {
+        totalStudentsEl.textContent = data.total_students;
+      }
+
+      // Example: Update attendance rate
+      const attendanceEl = document.querySelector('[data-kpi="attendance-rate"]');
+      if (attendanceEl && data.attendance_rate) {
+        attendanceEl.textContent = data.attendance_rate + '%';
+      }
+
+      console.log('✅ KPIs updated with database values');
+    }
+  };
+

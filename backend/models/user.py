@@ -10,172 +10,268 @@ The User model represents user accounts in the system, including:
 - Maintenance staff
 - Mess managers
 
-When database is implemented, this will be a proper SQLAlchemy model
-with database columns, relationships, and methods.
+Supports multiple authentication providers:
+- Email/Password (traditional)
+- Google OAuth 2.0
 
-Current Status: PLACEHOLDER
-Will be implemented when PostgreSQL database is set up.
+Database: SQLAlchemy ORM with SQLite (dev) / PostgreSQL (prod)
 """
 
 from datetime import datetime
-# TODO: Uncomment when database is set up
-# from flask_sqlalchemy import SQLAlchemy
-# from werkzeug.security import generate_password_hash, check_password_hash
-
-# db = SQLAlchemy()
+from werkzeug.security import generate_password_hash, check_password_hash
+from backend.database import db, TimestampMixin
 
 
-class User:
+class User(db.Model, TimestampMixin):
     """
-    User model placeholder.
+    User model for authentication and authorization.
     
     Represents a user account in the CampusPulse AI system.
     
-    Attributes (planned for database implementation):
+    Supports multiple authentication providers:
+    - email: Traditional email/password authentication
+    - google: Google OAuth 2.0 authentication
+    
+    Attributes:
         id (int): Primary key
+        google_id (str): Google OAuth ID (unique, nullable)
         email (str): User's email address (unique)
-        password_hash (str): Hashed password
+        password_hash (str): Hashed password (nullable for OAuth users)
         name (str): Full name
+        profile_picture (str): URL to profile picture
         role (str): User role (student, admin, maintenance, mess)
-        department (str): Department (for students/faculty)
-        phone (str): Contact number
+        auth_provider (str): Authentication provider (email, google)
         is_active (bool): Account status
         is_verified (bool): Email verification status
-        created_at (datetime): Account creation timestamp
         last_login (datetime): Last login timestamp
-        profile_picture (str): URL to profile picture
-        
-    Relationships (planned):
-        - complaints: One-to-many with Complaint model
-        - ratings: One-to-many with MessRating model
-        - bookings: One-to-many with ClassroomBooking model
-    
-    Methods (planned):
-        - set_password(password): Hash and set password
-        - check_password(password): Verify password
-        - generate_auth_token(): Generate JWT token
-        - verify_auth_token(token): Verify JWT token
-        - to_dict(): Convert user object to dictionary
+        created_at (datetime): Account creation timestamp (from TimestampMixin)
+        updated_at (datetime): Last update timestamp (from TimestampMixin)
     """
     
-    def __init__(self, id, email, name, role, department=None):
+    # Table name
+    __tablename__ = 'users'
+    
+    # ===== PRIMARY KEY =====
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # ===== OAUTH FIELDS =====
+    google_id = db.Column(
+        db.String(255),
+        unique=True,
+        nullable=True,
+        index=True,
+        comment='Google OAuth unique identifier'
+    )
+    
+    # ===== AUTHENTICATION FIELDS =====
+    email = db.Column(
+        db.String(120),
+        unique=True,
+        nullable=False,
+        index=True,
+        comment='User email address'
+    )
+    
+    password_hash = db.Column(
+        db.String(255),
+        nullable=True,
+        comment='Hashed password (nullable for OAuth users)'
+    )
+    
+    # ===== PROFILE FIELDS =====
+    name = db.Column(
+        db.String(100),
+        nullable=False,
+        comment='Full name'
+    )
+    
+    profile_picture = db.Column(
+        db.String(500),
+        nullable=True,
+        comment='URL to profile picture'
+    )
+    
+    role = db.Column(
+        db.String(20),
+        nullable=False,
+        default='student',
+        comment='User role: student, admin, maintenance, mess'
+    )
+    
+    auth_provider = db.Column(
+        db.String(20),
+        nullable=False,
+        default='email',
+        comment='Authentication provider: email, google'
+    )
+    
+    # ===== STATUS FIELDS =====
+    is_active = db.Column(
+        db.Boolean,
+        default=True,
+        nullable=False,
+        comment='Account active status'
+    )
+    
+    is_verified = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False,
+        comment='Email verification status'
+    )
+    
+    # ===== TIMESTAMP FIELDS =====
+    last_login = db.Column(
+        db.DateTime,
+        nullable=True,
+        comment='Last login timestamp'
+    )
+    
+    # created_at and updated_at are provided by TimestampMixin
+    
+    # ===== INDEXES =====
+    __table_args__ = (
+        db.Index('idx_email', 'email'),
+        db.Index('idx_google_id', 'google_id'),
+        db.Index('idx_auth_provider', 'auth_provider'),
+    )
+    
+    # ===== METHODS =====
+    
+    def set_password(self, password):
         """
-        Initialize User object (placeholder).
+        Hash and set user password.
+        
+        Uses Werkzeug's security functions with pbkdf2:sha256 algorithm.
         
         Args:
-            id (int): User ID
-            email (str): User email
-            name (str): User name
-            role (str): User role
-            department (str, optional): User department
+            password (str): Plain text password
         """
-        self.id = id
-        self.email = email
-        self.name = name
-        self.role = role
-        self.department = department
-        self.is_active = True
-        self.is_verified = True
-        self.created_at = datetime.utcnow()
-        self.last_login = datetime.utcnow()
+        self.password_hash = generate_password_hash(password)
     
-    def to_dict(self):
+    def check_password(self, password):
+        """
+        Verify user password.
+        
+        Args:
+            password (str): Plain text password to verify
+        
+        Returns:
+            bool: True if password matches, False otherwise
+        """
+        if not self.password_hash:
+            return False
+        return check_password_hash(self.password_hash, password)
+    
+    def update_last_login(self):
+        """
+        Update last login timestamp to current time.
+        """
+        self.last_login = datetime.utcnow()
+        db.session.commit()
+    
+    def to_dict(self, include_sensitive=False):
         """
         Convert user object to dictionary.
+        
+        Args:
+            include_sensitive (bool): Include sensitive fields like email
         
         Returns:
             dict: User data as dictionary
         """
-        return {
+        data = {
             'id': self.id,
-            'email': self.email,
             'name': self.name,
             'role': self.role,
-            'department': self.department,
+            'profile_picture': self.profile_picture,
+            'auth_provider': self.auth_provider,
             'is_active': self.is_active,
-            'is_verified': self.is_verified,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'last_login': self.last_login.isoformat() if self.last_login else None
+            'last_login': self.last_login.isoformat() if self.last_login else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None
         }
+        
+        if include_sensitive:
+            data['email'] = self.email
+            data['google_id'] = self.google_id
+            data['is_verified'] = self.is_verified
+        
+        return data
     
     def __repr__(self):
         """String representation of User object."""
-        return f'<User {self.email}>'
+        return f'<User {self.email} ({self.auth_provider})>'
 
 
 # ============================================================
-# DATABASE MODEL (TO BE IMPLEMENTED)
+# USER QUERY HELPERS
 # ============================================================
-"""
-When database is set up, replace above with SQLAlchemy model:
 
-class User(db.Model):
-    '''User account model.'''
+def get_user_by_email(email):
+    """
+    Get user by email address.
     
-    __tablename__ = 'users'
+    Args:
+        email (str): User's email
     
-    # Primary Key
-    id = db.Column(db.Integer, primary_key=True)
+    Returns:
+        User: User object or None
+    """
+    return User.query.filter_by(email=email).first()
+
+
+def get_user_by_google_id(google_id):
+    """
+    Get user by Google OAuth ID.
     
-    # Authentication
-    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(255), nullable=False)
+    Args:
+        google_id (str): Google OAuth ID
     
-    # Profile Information
-    name = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), nullable=False)  # student, admin, maintenance, mess
-    department = db.Column(db.String(50))
-    phone = db.Column(db.String(20))
-    profile_picture = db.Column(db.String(255))
+    Returns:
+        User: User object or None
+    """
+    return User.query.filter_by(google_id=google_id).first()
+
+
+def get_user_by_id(user_id):
+    """
+    Get user by ID.
     
-    # Account Status
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
-    is_verified = db.Column(db.Boolean, default=False, nullable=False)
+    Args:
+        user_id (int): User's ID
     
-    # Timestamps
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    last_login = db.Column(db.DateTime)
+    Returns:
+        User: User object or None
+    """
+    return User.query.get(user_id)
+
+
+def create_google_user(google_id, email, name, picture, role='student'):
+    """
+    Create a new user from Google OAuth data.
     
-    # Relationships
-    complaints = db.relationship('Complaint', backref='user', lazy='dynamic')
-    ratings = db.relationship('MessRating', backref='user', lazy='dynamic')
-    bookings = db.relationship('ClassroomBooking', backref='user', lazy='dynamic')
+    Args:
+        google_id (str): Google OAuth ID
+        email (str): User's email
+        name (str): User's name
+        picture (str): Profile picture URL
+        role (str): User role (default: 'student')
     
-    def set_password(self, password):
-        '''Hash and set user password.'''
-        self.password_hash = generate_password_hash(password)
+    Returns:
+        User: Created user object
+    """
+    user = User(
+        google_id=google_id,
+        email=email,
+        name=name,
+        profile_picture=picture,
+        role=role,
+        auth_provider='google',
+        is_active=True,
+        is_verified=True  # Google emails are pre-verified
+    )
     
-    def check_password(self, password):
-        '''Verify user password.'''
-        return check_password_hash(self.password_hash, password)
+    db.session.add(user)
+    db.session.commit()
     
-    def generate_auth_token(self, expiration=3600):
-        '''Generate authentication token (JWT).'''
-        # TODO: Implement JWT token generation
-        pass
-    
-    @staticmethod
-    def verify_auth_token(token):
-        '''Verify authentication token.'''
-        # TODO: Implement JWT token verification
-        pass
-    
-    def to_dict(self):
-        '''Convert user to dictionary.'''
-        return {
-            'id': self.id,
-            'email': self.email,
-            'name': self.name,
-            'role': self.role,
-            'department': self.department,
-            'phone': self.phone,
-            'is_active': self.is_active,
-            'is_verified': self.is_verified,
-            'created_at': self.created_at.isoformat(),
-            'last_login': self.last_login.isoformat() if self.last_login else None
-        }
-    
-    def __repr__(self):
-        return f'<User {self.email}>'
-"""
+    return user

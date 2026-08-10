@@ -117,6 +117,13 @@ class Config:
     AI_MODEL_PATH = os.path.join(os.path.dirname(__file__), 'ml_models')
     AI_CONFIDENCE_THRESHOLD = 0.75
     
+    # ===== GOOGLE OAUTH SETTINGS =====
+    
+    # Google OAuth 2.0 configuration
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+    GOOGLE_DISCOVERY_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+    
     @staticmethod
     def init_app(app):
         """
@@ -152,8 +159,14 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = True
     
     # Use SQLite for development (easy setup, no server needed)
+    # Database will be created in backend/instance/ folder
+    import os
+    base_dir = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///campuspulse_dev.db'
+        f'sqlite:///{os.path.join(base_dir, "backend", "instance", "campuspulse_dev.db")}'
+    
+    # Session cookies should not be secure in development (no HTTPS)
+    SESSION_COOKIE_SECURE = False
     
     # Pretty print JSON responses
     JSONIFY_PRETTYPRINT_REGULAR = True

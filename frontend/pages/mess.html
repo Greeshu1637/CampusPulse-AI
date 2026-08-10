@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusPulse AI – Smart Mess Management</title>
-  <meta name="description" content="AI-powered mess management system for CampusPulse – menu planning, nutrition tracking, and waste reduction." />
+  <title>CampusPulse AI – Smart Dining Management</title>
+  <meta name="description" content="AI-powered dining management system for Girls Hostel – menu planning, nutrition tracking, and waste reduction." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/mess.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/mess.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
 </head>
 <body>
@@ -34,7 +34,7 @@
       <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
       <div class="logo-text">
         <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
-        <span>Smart University Platform</span>
+        <span>Girls Hostel & Smart Dining</span>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
     <nav class="sidebar-nav">
       <div class="nav-section-label">Main</div>
 
-      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+      <a class="nav-item" href="/dashboard" data-page="dashboard">
         <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
         <span class="nav-label">Dashboard</span>
         <span class="nav-tooltip">Dashboard</span>
@@ -57,7 +57,7 @@
         <span class="nav-label">AI Copilot</span>
         <span class="nav-tooltip">AI Copilot</span>
       </a>
-      <a class="nav-item" href="#" data-page="analytics">
+      <a class="nav-item" href="/analytics" data-page="analytics">
         <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
         <span class="nav-label">Analytics</span>
         <span class="nav-tooltip">Analytics</span>
@@ -65,12 +65,7 @@
 
       <div class="nav-section-label">Modules</div>
 
-      <a class="nav-item" href="classroom.html" data-page="classrooms">
-        <span class="nav-icon"><i class="fa-solid fa-chalkboard"></i></span>
-        <span class="nav-label">Classrooms</span>
-        <span class="nav-tooltip">Classrooms</span>
-      </a>
-      <a class="nav-item" href="complaints.html" data-page="complaints">
+      <a class="nav-item" href="/complaints" data-page="complaints">
         <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
         <span class="nav-label">Complaints</span>
         <span class="nav-badge">7</span>
@@ -81,7 +76,7 @@
         <span class="nav-label">Hostels</span>
         <span class="nav-tooltip">Hostels</span>
       </a>
-      <a class="nav-item active" href="mess.html" data-page="dining">
+      <a class="nav-item active" href="/mess" data-page="dining">
         <span class="nav-icon"><i class="fa-solid fa-utensils"></i></span>
         <span class="nav-label">Smart Dining</span>
         <span class="nav-tooltip">Smart Dining</span>
@@ -205,7 +200,7 @@
           <div class="profile-avatar">AK</div>
           <div class="profile-info">
             <div class="profile-name">Dr. A. Kumar</div>
-            <div class="profile-role">Campus Admin</div>
+            <div class="profile-role">Hostel Manager</div>
           </div>
           <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);margin-left:4px;" aria-hidden="true"></i>
           <div class="profile-dropdown" id="profileDropdown">
@@ -307,214 +302,11 @@
             <span class="badge badge-green">Friday, July 24</span>
           </div>
 
-          <div class="menu-grid">
-            <!-- Breakfast -->
-            <div class="meal-card">
-              <div class="meal-header">
-                <div class="meal-icon breakfast">
-                  <i class="fa-solid fa-mug-saucer"></i>
-                </div>
-                <div>
-                  <h3 class="meal-title">Breakfast</h3>
-                  <p class="meal-time">7:00 AM – 9:30 AM</p>
-                </div>
-                <span class="meal-status available">Available</span>
-              </div>
-              <div class="meal-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Idli Sambar</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 220 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 8g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Aloo Paratha</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 310 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 6g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Fresh Fruit Salad</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 85 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 2g Protein</span>
-                  </div>
-                </div>
-              </div>
-              <div class="meal-footer">
-                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
-                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
-              </div>
-            </div>
-
-            <!-- Lunch -->
-            <div class="meal-card">
-              <div class="meal-header">
-                <div class="meal-icon lunch">
-                  <i class="fa-solid fa-bowl-rice"></i>
-                </div>
-                <div>
-                  <h3 class="meal-title">Lunch</h3>
-                  <p class="meal-time">12:00 PM – 2:30 PM</p>
-                </div>
-                <span class="meal-status upcoming">Upcoming</span>
-              </div>
-              <div class="meal-items">
-                <div class="menu-item featured">
-                  <div class="item-info">
-                    <span class="item-name">Paneer Tikka Masala ⭐</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 420 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 18g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Dal Tadka</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 180 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 12g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Jeera Rice</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 240 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 4g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Garlic Naan</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 290 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 7g Protein</span>
-                  </div>
-                </div>
-              </div>
-              <div class="meal-footer">
-                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
-                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
-              </div>
-            </div>
-
-            <!-- Snacks -->
-            <div class="meal-card">
-              <div class="meal-header">
-                <div class="meal-icon snacks">
-                  <i class="fa-solid fa-cookie"></i>
-                </div>
-                <div>
-                  <h3 class="meal-title">Snacks</h3>
-                  <p class="meal-time">4:00 PM – 5:30 PM</p>
-                </div>
-                <span class="meal-status upcoming">Upcoming</span>
-              </div>
-              <div class="meal-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Masala Chai</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 90 Cal</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Samosa</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 260 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 5g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Bread Pakora</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 210 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 6g Protein</span>
-                  </div>
-                </div>
-              </div>
-              <div class="meal-footer">
-                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
-                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
-              </div>
-            </div>
-
-            <!-- Dinner -->
-            <div class="meal-card">
-              <div class="meal-header">
-                <div class="meal-icon dinner">
-                  <i class="fa-solid fa-moon"></i>
-                </div>
-                <div>
-                  <h3 class="meal-title">Dinner</h3>
-                  <p class="meal-time">7:00 PM – 9:30 PM</p>
-                </div>
-                <span class="meal-status upcoming">Upcoming</span>
-              </div>
-              <div class="meal-items">
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Chole Bhature</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 480 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 14g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Mixed Vegetable Curry</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 150 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 8g Protein</span>
-                  </div>
-                </div>
-                <div class="menu-item">
-                  <div class="item-info">
-                    <span class="item-name">Gulab Jamun</span>
-                    <span class="item-badge veg"><i class="fa-solid fa-circle"></i> Veg</span>
-                  </div>
-                  <div class="item-nutrition">
-                    <span><i class="fa-solid fa-fire"></i> 140 Cal</span>
-                    <span><i class="fa-solid fa-dumbbell"></i> 3g Protein</span>
-                  </div>
-                </div>
-              </div>
-              <div class="meal-footer">
-                <button class="rate-btn"><i class="fa-solid fa-star"></i> Rate</button>
-                <button class="feedback-btn"><i class="fa-solid fa-comment"></i> Feedback</button>
-              </div>
+          <div class="menu-grid" id="todayMenuContainer">
+            <!-- Menu will be dynamically loaded from database via JavaScript -->
+            <div style="text-align:center;padding:40px;color:var(--text-muted);">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size:32px;margin-bottom:16px;display:block;"></i>
+              <p>Loading today's menu from database...</p>
             </div>
           </div>
         </section>
@@ -533,89 +325,11 @@
           </div>
 
           <div class="chart-card">
-            <div class="weekly-menu-container">
-              <div class="day-column">
-                <div class="day-header">
-                  <div class="day-name">Monday</div>
-                  <div class="day-date">Jul 21</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Poha, Jalebi</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Rajma Rice</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Roti, Aloo Gobi</div>
-                </div>
-              </div>
-
-              <div class="day-column">
-                <div class="day-header">
-                  <div class="day-name">Tuesday</div>
-                  <div class="day-date">Jul 22</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Upma, Coffee</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Biryani</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Dal, Roti, Sabzi</div>
-                </div>
-              </div>
-
-              <div class="day-column">
-                <div class="day-header">
-                  <div class="day-name">Wednesday</div>
-                  <div class="day-date">Jul 23</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Dosa, Chutney</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Chole Rice</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Paneer Curry</div>
-                </div>
-              </div>
-
-              <div class="day-column active">
-                <div class="day-header">
-                  <div class="day-name">Thursday</div>
-                  <div class="day-date">Jul 24 <span class="today-badge">Today</span></div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Idli Sambar</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Paneer Tikka ⭐</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Chole Bhature</div>
-                </div>
-              </div>
-
-              <div class="day-column">
-                <div class="day-header">
-                  <div class="day-name">Friday</div>
-                  <div class="day-date">Jul 25</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Paratha, Curd</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Fish Curry</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Mix Veg, Roti</div>
-                </div>
-              </div>
-
-              <div class="day-column weekend">
-                <div class="day-header">
-                  <div class="day-name">Saturday</div>
-                  <div class="day-date">Jul 26</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Puri Bhaji</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Special Thali</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Pizza, Pasta</div>
-                </div>
-              </div>
-
-              <div class="day-column weekend">
-                <div class="day-header">
-                  <div class="day-name">Sunday</div>
-                  <div class="day-date">Jul 27</div>
-                </div>
-                <div class="day-meals">
-                  <div class="mini-meal"><span class="meal-icon-sm breakfast"><i class="fa-solid fa-mug-saucer"></i></span> Bread, Omelette</div>
-                  <div class="mini-meal"><span class="meal-icon-sm lunch"><i class="fa-solid fa-bowl-rice"></i></span> Chicken Biryani</div>
-                  <div class="mini-meal"><span class="meal-icon-sm dinner"><i class="fa-solid fa-moon"></i></span> Momos, Noodles</div>
-                </div>
+            <div id="weeklyMenuContainer" class="weekly-menu-container">
+              <!-- Weekly menu will be dynamically loaded from API -->
+              <div style="text-align:center;padding:40px;color:var(--text-muted);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px;"></i>
+                <p>Loading weekly menu...</p>
               </div>
             </div>
           </div>
@@ -844,7 +558,7 @@
             <div class="logo-dot"></div>
             CampusPulse AI
           </div>
-          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+          <span class="footer-copy">© 2025 CampusPulse AI – AI-powered Girls Hostel & Smart Dining Management. All rights reserved.</span>
         </div>
         <div class="footer-links">
           <span class="footer-link">Privacy Policy</span>
@@ -863,6 +577,6 @@
   </div>
 </div>
 
-<script src="../js/mess.js"></script>
+<script src="/js/mess.js"></script>
 </body>
 </html>

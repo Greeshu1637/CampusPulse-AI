@@ -1,316 +1,496 @@
-# CampusPulse AI - Backend API
+# CampusPulse AI - Backend
 
-Production-ready Flask backend for CampusPulse AI Smart University Management Platform.
+Production-ready Flask backend for CampusPulse AI with Google OAuth 2.0 authentication.
 
 ## 🏗️ Architecture
 
-### Application Structure
 ```
 backend/
-├── app.py                 # Application entry point & factory
-├── config.py             # Configuration classes
-├── __init__.py           # Package initialization
-├── routes/               # Blueprint routes
-│   ├── __init__.py
-│   ├── auth.py          # Authentication routes
-│   └── dashboard.py     # Dashboard API routes
-├── models/               # Database models (to be implemented)
-│   ├── __init__.py
-│   └── user.py          # User model
-├── services/             # Business logic layer
-│   └── auth_service.py  # Authentication service
-├── static/               # Static files (served from frontend)
-└── templates/            # HTML templates (served from frontend)
+├── app.py                      # Application entry point
+├── __init__.py                 # Package initialization
+├── database.py                 # Database configuration & utilities
+├── models/                     # Database models
+│   ├── user.py                 # User model with OAuth support
+│   └── __init__.py
+├── routes/                     # API routes (Blueprints)
+│   ├── auth.py                 # Email/password authentication
+│   ├── google_auth.py          # Google OAuth 2.0 flow
+│   ├── dashboard.py            # Dashboard APIs
+│   └── __init__.py
+├── services/                   # Business logic layer
+│   ├── auth_service.py         # Authentication service
+│   ├── google_auth_service.py  # Google OAuth service
+│   └── __init__.py
+├── static/                     # Static files (served from frontend/)
+└── templates/                  # HTML templates (served from frontend/)
 ```
 
-### Design Patterns
-- **Application Factory**: Creates Flask app instances for different environments
-- **Blueprint Architecture**: Modular route organization
-- **Service Layer**: Business logic separated from routes
-- **Configuration Classes**: Environment-specific settings
+## 🚀 Features
 
-## 🚀 Getting Started
+- ✅ **Dual Authentication**
+  - Email/Password (traditional)
+  - Google OAuth 2.0 (SSO)
+- ✅ **Database Integration**
+  - SQLAlchemy ORM
+  - SQLite (development)
+  - PostgreSQL-ready (production)
+- ✅ **Security**
+  - Password hashing (pbkdf2:sha256)
+  - Secure session management
+  - CSRF protection ready
+  - OAuth state parameter
+- ✅ **Blueprint Architecture**
+  - Modular route organization
+  - Service layer pattern
+  - Clean separation of concerns
 
-### Prerequisites
-- Python 3.8 or higher
+## 📋 Prerequisites
+
+- Python 3.8+
 - pip (Python package manager)
 - Virtual environment (recommended)
 
-### Installation
+## ⚙️ Installation
 
-1. **Create virtual environment**
-   ```bash
-   python -m venv venv
+### 1. Create Virtual Environment
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+**Key Dependencies:**
+- `Flask==3.0.0` - Web framework
+- `Flask-SQLAlchemy==3.1.1` - Database ORM
+- `google-auth==2.25.2` - Google OAuth client
+- `google-auth-oauthlib==1.2.0` - OAuth 2.0 flow
+- `google-auth-httplib2==0.2.0` - HTTP transport
+- `Werkzeug==3.0.1` - Security utilities
+- `python-dotenv==1.0.0` - Environment variables
+
+### 3. Configure Environment Variables
+
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and configure:
+
+```env
+# Flask
+SECRET_KEY=your-secret-key-here-change-in-production
+FLASK_ENV=development
+FLASK_DEBUG=True
+
+# Database
+DATABASE_URL=sqlite:///campuspulse_dev.db
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+```
+
+**🔐 Generate Secure Secret Key:**
+
+```python
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+### 4. Set Up Google OAuth 2.0
+
+#### Step 1: Create Google Cloud Project
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable **Google+ API** and **People API**
+
+#### Step 2: Create OAuth 2.0 Credentials
+
+1. Navigate to **APIs & Services** > **Credentials**
+2. Click **Create Credentials** > **OAuth client ID**
+3. Application type: **Web application**
+4. Name: `CampusPulse AI`
+5. **Authorized JavaScript origins:**
    ```
-
-2. **Activate virtual environment**
-   - Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - Linux/Mac:
-     ```bash
-     source venv/bin/activate
-     ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
+   http://localhost:5000
+   https://yourdomain.com
    ```
-
-4. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
+6. **Authorized redirect URIs:**
    ```
-
-5. **Run the development server**
-   ```bash
-   python backend/app.py
+   http://localhost:5000/auth/google/callback
+   https://yourdomain.com/auth/google/callback
    ```
+7. Click **Create**
+8. Copy **Client ID** and **Client Secret** to `.env`
 
-   Or using Flask CLI:
-   ```bash
-   export FLASK_APP=backend/app.py  # Linux/Mac
-   set FLASK_APP=backend/app.py     # Windows
-   flask run
-   ```
+#### Step 3: Configure OAuth Consent Screen
 
-The server will start at `http://localhost:5000`
+1. Navigate to **OAuth consent screen**
+2. User Type: **Internal** (for organization) or **External** (public)
+3. Fill required fields:
+   - App name: `CampusPulse AI`
+   - User support email: `your-email@example.com`
+   - Developer contact: `your-email@example.com`
+4. Add scopes:
+   - `userinfo.email`
+   - `userinfo.profile`
+   - `openid`
+5. Save and continue
 
-## 📡 API Endpoints
+### 5. Initialize Database
 
-### Authentication (`/auth`)
+```bash
+# Run from project root
+cd backend
+python app.py
+```
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/auth/login` | Login page |
-| POST | `/auth/login` | User login |
-| POST/GET | `/auth/logout` | User logout |
-| GET | `/auth/check-session` | Check session validity |
-| POST | `/auth/forgot-password` | Request password reset |
-| POST | `/auth/reset-password` | Reset password with token |
+The database will be automatically created with test users:
 
-### Dashboard API (`/api`)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/dashboard` | Main dashboard data |
-| GET | `/api/kpis` | KPI metrics |
-| GET | `/api/analytics/students` | Student analytics |
-| GET | `/api/analytics/complaints` | Complaint trends |
-| GET | `/api/analytics/classrooms` | Classroom utilization |
-| GET | `/api/analytics/mess` | Mess food analytics |
-| GET | `/api/ai-insights` | AI-generated insights |
-| GET | `/api/export/report` | Export analytics report |
-
-### Root Routes
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Main dashboard (serves frontend) |
-| GET | `/health` | Health check endpoint |
-
-## 🔒 Authentication
-
-Currently uses **session-based authentication** with mock users:
-
-### Test Users
 | Email | Password | Role |
 |-------|----------|------|
-| student@campuspulse.edu | student123 | Student |
-| admin@campuspulse.edu | admin123 | Admin |
-| maintenance@campuspulse.edu | maintenance123 | Maintenance |
-| mess@campuspulse.edu | mess123 | Mess Manager |
+| `student@campuspulse.edu` | `student123` | Student |
+| `admin@campuspulse.edu` | `admin123` | Admin |
+| `maintenance@campuspulse.edu` | `maintenance123` | Maintenance |
+| `mess@campuspulse.edu` | `mess123` | Mess Manager |
 
-### Login Example
+## 🎯 Running the Application
+
+### Development Server
+
+```bash
+# From project root
+cd backend
+python app.py
+```
+
+Server will start at: **http://localhost:5000**
+
+### Production Server (Gunicorn)
+
+```bash
+# Install gunicorn
+pip install gunicorn
+
+# Run with 4 worker processes
+gunicorn -w 4 -b 0.0.0.0:5000 "backend.app:create_app()"
+```
+
+## 🔄 API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/auth/login` | Login page |
+| `POST` | `/auth/login` | Email/password login |
+| `GET/POST` | `/auth/logout` | Logout user |
+| `GET` | `/auth/check-session` | Verify session |
+
+### Google OAuth
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/auth/google/login` | Initiate OAuth flow |
+| `GET` | `/auth/google/callback` | OAuth callback |
+| `GET` | `/auth/google/userinfo` | Get user info |
+| `GET` | `/auth/google/status` | Check OAuth config |
+
+### Dashboard
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/dashboard` | Get dashboard data |
+
+## 🗃️ Database Schema
+
+### Users Table
+
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    google_id VARCHAR(255) UNIQUE,          -- Google OAuth ID
+    email VARCHAR(120) UNIQUE NOT NULL,      -- User email
+    password_hash VARCHAR(255),              -- Hashed password (nullable for OAuth)
+    name VARCHAR(100) NOT NULL,              -- Full name
+    profile_picture VARCHAR(500),            -- Profile picture URL
+    role VARCHAR(20) DEFAULT 'student',      -- User role
+    auth_provider VARCHAR(20) DEFAULT 'email', -- Auth method
+    is_active BOOLEAN DEFAULT TRUE,          -- Account status
+    is_verified BOOLEAN DEFAULT FALSE,       -- Email verification
+    last_login DATETIME,                     -- Last login timestamp
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Database Operations
+
+```python
+# Get user by email
+from backend.models.user import get_user_by_email
+user = get_user_by_email('student@campuspulse.edu')
+
+# Get user by Google ID
+from backend.models.user import get_user_by_google_id
+user = get_user_by_google_id('1234567890')
+
+# Create Google user
+from backend.models.user import create_google_user
+user = create_google_user(
+    google_id='1234567890',
+    email='user@gmail.com',
+    name='John Doe',
+    picture='https://lh3.googleusercontent.com/...',
+    role='student'
+)
+
+# Verify password
+user = get_user_by_email('student@campuspulse.edu')
+if user and user.check_password('student123'):
+    print('Password valid')
+
+# Update last login
+user.update_last_login()
+```
+
+## 🔐 Security Best Practices
+
+### ✅ Implemented
+
+- Password hashing with `werkzeug.security`
+- Secure session cookies (HttpOnly, SameSite)
+- OAuth state parameter for CSRF protection
+- Environment variables for secrets
+- Token validation
+
+### 🚧 Recommended for Production
+
+- [ ] Enable HTTPS (required for OAuth)
+- [ ] Add rate limiting (Flask-Limiter)
+- [ ] Implement CSRF protection (Flask-WTF)
+- [ ] Add logging and monitoring (Sentry)
+- [ ] Use Redis for sessions (Flask-Session)
+- [ ] Enable CORS properly (Flask-CORS)
+- [ ] Add input validation
+- [ ] Implement password reset
+- [ ] Add email verification
+- [ ] Use PostgreSQL (not SQLite)
+
+## 🧪 Testing
+
+### Manual Testing
+
+**Test Email Login:**
 ```bash
 curl -X POST http://localhost:5000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@campuspulse.edu",
-    "password": "admin123",
-    "role": "admin"
+    "email": "student@campuspulse.edu",
+    "password": "student123",
+    "role": "student"
   }'
 ```
 
-## ⚙️ Configuration
-
-### Environment Variables
-See `.env.example` for all configuration options.
-
-### Configuration Classes
-- `DevelopmentConfig`: Local development (SQLite, debug enabled)
-- `TestingConfig`: Unit testing (in-memory database)
-- `ProductionConfig`: Production deployment (PostgreSQL, security enabled)
-
-Select configuration using `FLASK_ENV` environment variable:
+**Check Session:**
 ```bash
-export FLASK_ENV=development  # or production, testing
+curl http://localhost:5000/auth/check-session
 ```
 
-## 🗄️ Database (To Be Implemented)
-
-### Current Status
-- Using **mock data** for development
-- **SQLite** configured as fallback
-- Ready for **PostgreSQL** integration
-
-### Implementation Plan
-1. Install SQLAlchemy dependencies
-2. Create database migrations with Flask-Migrate
-3. Implement User model with password hashing
-4. Add Student, Faculty, Complaint, Classroom models
-5. Replace mock data with database queries
-
-### Migration Commands (when implemented)
+**Test Google OAuth Status:**
 ```bash
-flask db init          # Initialize migrations
-flask db migrate -m "Initial migration"  # Create migration
-flask db upgrade       # Apply migration
+curl http://localhost:5000/auth/google/status
 ```
 
-## 🛡️ Security Features
+### Unit Tests (TODO)
 
-### Implemented
-- Session-based authentication
-- Session cookies with HttpOnly flag
-- CSRF protection ready
-- Secure session configuration
-- Error handling
-
-### To Implement
-- Password hashing with bcrypt
-- JWT token authentication
-- Rate limiting
-- Input validation
-- SQL injection prevention
-- XSS protection
-
-## 📊 Monitoring & Health
-
-### Health Check
 ```bash
-curl http://localhost:5000/health
+# Install pytest
+pip install pytest pytest-flask
+
+# Run tests
+pytest tests/
 ```
 
-Response:
-```json
-{
-  "status": "healthy",
-  "service": "CampusPulse AI Backend",
-  "version": "1.0.0",
-  "environment": "development"
+## 🐛 Troubleshooting
+
+### Issue: Database Not Found
+
+```bash
+# Reinitialize database
+python
+>>> from backend.app import create_app
+>>> from backend.database import db, seed_db
+>>> app = create_app()
+>>> with app.app_context():
+...     db.create_all()
+...     seed_db(app)
+```
+
+### Issue: Google OAuth Redirect Mismatch
+
+**Error:** `redirect_uri_mismatch`
+
+**Solution:** Ensure redirect URI in Google Console exactly matches:
+```
+http://localhost:5000/auth/google/callback
+```
+
+### Issue: Google OAuth Not Configured
+
+**Error:** `⚠️ Warning: Google OAuth credentials not configured`
+
+**Solution:** Add to `.env`:
+```env
+GOOGLE_CLIENT_ID=your-actual-client-id
+GOOGLE_CLIENT_SECRET=your-actual-client-secret
+```
+
+### Issue: Import Errors
+
+**Error:** `ModuleNotFoundError: No module named 'backend'`
+
+**Solution:** Run from project root or add to Python path:
+```bash
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+```
+
+## 📚 Code Structure
+
+### Application Factory Pattern
+
+```python
+# backend/app.py
+def create_app(config_name=None):
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    
+    # Initialize database
+    db.init_app(app)
+    
+    # Register blueprints
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(google_auth_bp)
+    
+    return app
+```
+
+### Blueprint Example
+
+```python
+# backend/routes/auth.py
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    # Authentication logic
+    pass
+```
+
+### Service Layer Pattern
+
+```python
+# backend/services/auth_service.py
+class AuthService:
+    def authenticate_user(self, email, password):
+        user = get_user_by_email(email)
+        if user and user.check_password(password):
+            return {'success': True, 'user': user}
+        return {'success': False}
+```
+
+## 🚀 Deployment
+
+### Environment Setup
+
+```bash
+# Production environment variables
+FLASK_ENV=production
+FLASK_DEBUG=False
+SECRET_KEY=<strong-random-secret>
+DATABASE_URL=postgresql://user:pass@host:5432/db
+GOOGLE_CLIENT_ID=<production-client-id>
+GOOGLE_CLIENT_SECRET=<production-client-secret>
+```
+
+### PostgreSQL Migration
+
+```env
+# Update .env
+DATABASE_URL=postgresql://campuspulse_user:password@localhost:5432/campuspulse_db
+```
+
+```bash
+# Install PostgreSQL adapter
+pip install psycopg2-binary
+
+# Create database
+createdb campuspulse_db
+
+# Initialize
+python
+>>> from backend.app import create_app
+>>> from backend.database import db, seed_db
+>>> app = create_app('production')
+>>> with app.app_context():
+...     db.create_all()
+```
+
+### Gunicorn + Nginx
+
+**gunicorn.conf.py:**
+```python
+bind = "0.0.0.0:5000"
+workers = 4
+worker_class = "sync"
+timeout = 120
+```
+
+**nginx.conf:**
+```nginx
+server {
+    listen 80;
+    server_name campuspulse.ai;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
 }
 ```
 
-## 🧪 Testing (To Be Implemented)
+## 📝 License
 
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=backend
-
-# Run specific test file
-pytest tests/test_auth.py
-```
-
-## 🚢 Production Deployment
-
-### Using Gunicorn
-```bash
-gunicorn -w 4 -b 0.0.0.0:5000 "backend.app:create_app()"
-```
-
-### Using Docker (Dockerfile to be created)
-```bash
-docker build -t campuspulse-backend .
-docker run -p 5000:5000 campuspulse-backend
-```
-
-### Environment Checklist
-- [ ] Set strong `SECRET_KEY`
-- [ ] Configure PostgreSQL `DATABASE_URL`
-- [ ] Set `FLASK_ENV=production`
-- [ ] Configure Redis for sessions
-- [ ] Set up error tracking (e.g., Sentry)
-- [ ] Configure logging
-- [ ] Set up HTTPS
-- [ ] Configure CORS properly
-- [ ] Enable rate limiting
-
-## 📝 Development Notes
-
-### Adding New Routes
-1. Create blueprint in `routes/` directory
-2. Register blueprint in `app.py`
-3. Add route handlers with docstrings
-4. Update this README with endpoints
-
-### Adding New Models
-1. Create model in `models/` directory
-2. Define SQLAlchemy columns and relationships
-3. Import model in `models/__init__.py`
-4. Create database migration
-
-### Adding New Services
-1. Create service in `services/` directory
-2. Implement business logic methods
-3. Use service in route handlers
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Issue**: Module not found
-```bash
-# Solution: Ensure you're in project root and virtual environment is activated
-pip install -r requirements.txt
-```
-
-**Issue**: Port already in use
-```bash
-# Solution: Change port in .env or kill process
-export FLASK_PORT=8000
-```
-
-**Issue**: Template not found
-```bash
-# Solution: Check template_folder path in app.py
-# Ensure frontend files exist in ../frontend/pages
-```
-
-## 📚 Resources
-
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
-- [Flask-Login Documentation](https://flask-login.readthedocs.io/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+MIT License - See LICENSE file for details
 
 ## 🤝 Contributing
 
-When contributing to the backend:
-1. Follow PEP 8 style guide
-2. Add docstrings to all functions
-3. Update README for new endpoints
-4. Write tests for new features
-5. Keep services separate from routes
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📧 Support
 
-This project is part of CampusPulse AI Smart University Management Platform.
+For issues or questions:
+- Email: support@campuspulse.ai
+- GitHub Issues: [Link to repository]
 
 ---
 
-**Status**: Backend foundation complete, ready for database integration.
-
-**Next Steps**:
-1. Set up PostgreSQL database
-2. Implement User model with authentication
-3. Create database migrations
-4. Add remaining models (Student, Complaint, etc.)
-5. Implement JWT authentication
-6. Add unit tests
-7. Set up production deployment
+**Built with ❤️ for modern campus management**

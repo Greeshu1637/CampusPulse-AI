@@ -660,8 +660,16 @@ img { max-width: 100%; display: block; }
 .chart-card.full-width { grid-column: 1 / -1; }
 .chart-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
 .chart-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 20px; }
-.chart-container { position: relative; }
-.chart-container canvas { max-height: 260px; }
+.chart-container { 
+  position: relative; 
+  height: 260px;
+  width: 100%;
+}
+.chart-container canvas { 
+  max-height: 260px;
+  width: 100% !important;
+  height: 100% !important;
+}
 
 .heatmap-grid {
   display: grid; grid-template-columns: repeat(24, 1fr);
@@ -757,6 +765,205 @@ img { max-width: 100%; display: block; }
 .prediction-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 600; background: var(--bg-badge); color: var(--accent-purple); margin: 4px; border: 1px solid var(--border-color); }
 .confidence-bar { height: 6px; background: var(--bg-hover); border-radius: var(--radius-full); overflow: hidden; margin: 6px 0 3px; }
 .confidence-fill { height: 100%; background: var(--gradient-primary); border-radius: var(--radius-full); transition: width 1.5s ease; }
+
+/* ============================================================
+   SMART DINING - MESS MENU
+   ============================================================ */
+.mess-menu-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  animation: fadeInUp 0.5s ease both;
+  transition: background var(--transition), border-color var(--transition);
+}
+[data-theme="dark"] .mess-menu-card { backdrop-filter: blur(16px); }
+
+.mess-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.menu-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--gradient-primary);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.menu-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.meal-card {
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: transform var(--transition), box-shadow var(--transition);
+  cursor: pointer;
+}
+.meal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.meal-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.meal-type {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.meal-status {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+.meal-status.upcoming {
+  background: rgba(59,130,246,0.12);
+  color: var(--accent-blue);
+}
+.meal-status.ongoing {
+  background: rgba(16,185,129,0.12);
+  color: var(--accent-green);
+}
+.meal-status.completed {
+  background: rgba(148,163,184,0.12);
+  color: var(--text-muted);
+}
+
+.meal-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meal-item-tag {
+  font-size: 0.73rem;
+  padding: 4px 10px;
+  background: var(--bg-badge);
+  color: var(--accent-purple);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+}
+
+.special-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+/* Weekly Menu View */
+.week-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.week-day-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.week-day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.week-day-header {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.week-day-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Skeleton Loading */
+.skeleton-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 60%;
+  background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-tertiary) 50%, var(--bg-hover) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+}
+
+.skeleton-line {
+  height: 14px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-tertiary) 50%, var(--bg-hover) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.skeleton-line:last-child {
+  width: 80%;
+}
 
 /* ============================================================
    DIGITAL TWIN
@@ -1147,3 +1354,463 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(2px);
 }
 .mobile-overlay.active { display: block; }
+
+
+/* ============================================================
+   SMART DINING - MODAL STYLES
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Star Rating */
+.star-rating {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+  color: var(--accent-amber);
+}
+
+.star-btn.active {
+  color: var(--accent-amber);
+}
+
+/* Meal Actions */
+.meal-rate-btn,
+.meal-feedback-btn,
+.mark-attendance-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meal-rate-btn:hover,
+.meal-feedback-btn:hover,
+.mark-attendance-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  transform: translateY(-1px);
+}
+
+/* Item Actions */
+.item-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* Meal Status Badges */
+.meal-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meal-status.available {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-green);
+}
+
+.meal-status.upcoming {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+}
+
+.meal-status.ended {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--text-muted);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Loading States */
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.loading-spinner i {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.empty-state,
+.error-state {
+  text-align: center;
+  padding: 40px;
+  grid-column: 1 / -1;
+}
+
+.empty-state i,
+.error-state i {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  display: block;
+  opacity: 0.3;
+}
+
+.empty-state p,
+.error-state p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 16px 0;
+}
+
+/* Skeleton Loading */
+.skeleton-loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-title {
+  height: 20px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 60%;
+}
+
+.skeleton-line {
+  height: 14px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-line:last-child {
+  width: 80%;
+}
+
+/* Meal Card Enhancements */
+.meal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.meal-type {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-time {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.special-badge {
+  background: linear-gradient(135deg, var(--accent-amber), var(--accent-red));
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meal-item-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  margin: 0 6px 6px 0;
+}
+
+.meal-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+/* Week Menu Grid */
+.week-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.week-day-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.week-day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.week-day-header {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-day-meals {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.day-column {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.day-column.active {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+}
+
+.day-header {
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.day-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.day-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.today-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--accent-purple);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.day-meals {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mini-meal {
+  padding: 8px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-icon-sm {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.meal-icon-sm.breakfast { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+.meal-icon-sm.lunch { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+.meal-icon-sm.snacks { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+.meal-icon-sm.dinner { background: rgba(108, 99, 255, 0.15); color: var(--accent-purple); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .week-menu-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .meal-items {
+    flex-direction: column;
+  }
+}

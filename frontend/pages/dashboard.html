@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusPulse AI – Dashboard</title>
-  <meta name="description" content="CampusPulse AI enterprise university management dashboard." />
+  <title>CampusPulse AI – Hostel Dashboard</title>
+  <meta name="description" content="CampusPulse AI - Girls Hostel & Smart Dining Management Dashboard." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<link rel="stylesheet" href="../css/style.css">  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -30,7 +31,7 @@
       <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
       <div class="logo-text">
         <h2>CampusPulse <span class="ai-badge"><i class="fa-solid fa-bolt"></i> AI</span></h2>
-        <span>Smart University Platform</span>
+        <span>Girls Hostel & Smart Dining</span>
       </div>
     </div>
 
@@ -115,7 +116,7 @@
 
       <div class="topbar-search">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" placeholder="Search students, faculty, rooms…" id="searchInput" autocomplete="off" />
+        <input type="text" placeholder="Search hostel students, rooms, meals…" id="searchInput" autocomplete="off" />
       </div>
 
       <div class="topbar-right">
@@ -153,7 +154,7 @@
           <div class="profile-avatar">AK</div>
           <div class="profile-info">
             <div class="profile-name">Dr. A. Kumar</div>
-            <div class="profile-role">Campus Admin</div>
+            <div class="profile-role">Hostel Manager</div>
           </div>
           <i class="fa-solid fa-chevron-down" style="font-size:10px; color:var(--text-muted); margin-left:4px;"></i>
           <div class="profile-dropdown" id="profileDropdown">
@@ -185,11 +186,11 @@
               <span class="pulse-dot"></span>
               AI Online
             </span>
-            <span class="hero-badge"><i class="fa-solid fa-satellite-dish"></i> Mission Control</span>
+            <span class="hero-badge"><i class="fa-solid fa-satellite-dish"></i> Hostel Control</span>
             <span class="hero-badge"><i class="fa-solid fa-shield-check"></i> Secure</span>
           </div>
-          <h1 class="hero-title">University Mission Control</h1>
-          <p class="hero-subtitle">Real-time AI-powered insights for every corner of your campus — students, faculty, facilities, and beyond.</p>
+          <h1 class="hero-title">Hostel Management Dashboard</h1>
+          <p class="hero-subtitle">Real-time AI-powered insights for Girls Hostel — students, dining, facilities, complaints, and administration.</p>
           <div class="hero-actions">
             <button class="hero-btn hero-btn-primary btn-ripple" onclick="document.getElementById('copilotSection').scrollIntoView({behavior:'smooth'})">
               <i class="fa-solid fa-file-chart-column"></i> Generate Report
@@ -199,8 +200,8 @@
             </button>
           </div>
           <div class="hero-stats">
-            <div class="hero-stat"><div class="value">12,847</div><div class="label">Active Students</div></div>
-            <div class="hero-stat"><div class="value">847</div><div class="label">Faculty Members</div></div>
+            <div class="hero-stat"><div class="value">4,000</div><div class="label">Hostel Students</div></div>
+            <div class="hero-stat"><div class="value">7</div><div class="label">Hostel Blocks</div></div>
             <div class="hero-stat"><div class="value">98.2%</div><div class="label">System Uptime</div></div>
             <div class="hero-stat"><div class="value">AI v4.1</div><div class="label">Engine Version</div></div>
           </div>
@@ -216,7 +217,7 @@
               <div class="score-label">SCORE</div>
             </div>
           </div>
-          <h4>Campus Health Score</h4>
+          <h4>Hostel Health Score</h4>
         </div>
       </section>
 
@@ -258,15 +259,15 @@
         <!-- Row 1: Line + Bar -->
         <div class="analytics-grid" style="margin-bottom:20px;">
           <div class="chart-card">
-            <div class="chart-title">Student Attendance Trend</div>
-            <div class="chart-subtitle">Daily attendance across all departments</div>
+            <div class="chart-title">Hostel Attendance Trend</div>
+            <div class="chart-subtitle">Daily attendance across all hostel blocks</div>
             <div class="chart-container">
               <canvas id="lineChart"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Department Enrollment</div>
-            <div class="chart-subtitle">Current semester enrollment by department</div>
+            <div class="chart-title">Block Occupancy</div>
+            <div class="chart-subtitle">Current occupancy by hostel block</div>
             <div class="chart-container">
               <canvas id="barChart"></canvas>
             </div>
@@ -276,22 +277,22 @@
         <!-- Row 2: Donut + Area + Heatmap -->
         <div class="analytics-grid-3">
           <div class="chart-card">
-            <div class="chart-title">Resource Distribution</div>
-            <div class="chart-subtitle">Campus resource allocation</div>
+            <div class="chart-title">Facility Distribution</div>
+            <div class="chart-subtitle">Hostel facility allocation</div>
             <div class="chart-container" style="display:flex;justify-content:center;">
               <canvas id="donutChart" style="max-height:220px;max-width:220px;"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Energy &amp; Water Usage</div>
-            <div class="chart-subtitle">Monthly consumption forecast</div>
+            <div class="chart-title">Hostel Energy &amp; Water Usage</div>
+            <div class="chart-subtitle">Monthly consumption by hostel blocks</div>
             <div class="chart-container">
               <canvas id="areaChart"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Activity Heatmap</div>
-            <div class="chart-subtitle">Campus activity by hour · last 7 days</div>
+            <div class="chart-title">Hostel Activity Heatmap</div>
+            <div class="chart-subtitle">Hostel activity by hour · last 7 days</div>
             <div id="heatmapContainer"></div>
           </div>
         </div>
@@ -313,7 +314,7 @@
             <div class="ai-card-header">
               <div class="ai-card-icon" style="background:var(--gradient-success);"><i class="fa-solid fa-circle-check"></i></div>
               <div>
-                <div class="ai-card-title">Campus Status</div>
+                <div class="ai-card-title">Hostel Status</div>
                 <div class="ai-card-sub">All systems overview</div>
               </div>
             </div>
@@ -323,7 +324,7 @@
                 <span class="status-value badge badge-green">Optimal</span>
               </div>
               <div class="status-item">
-                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Academic Systems</span></div>
+                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Smart Dining</span></div>
                 <span class="status-value badge badge-green">Online</span>
               </div>
               <div class="status-item">
@@ -331,7 +332,7 @@
                 <span class="status-value badge badge-amber">Degraded</span>
               </div>
               <div class="status-item">
-                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Library System</span></div>
+                <div class="status-left"><div class="status-dot green"></div><span class="status-name">Complaint System</span></div>
                 <span class="status-value badge badge-green">Online</span>
               </div>
               <div class="status-item">
@@ -353,17 +354,17 @@
             </div>
             <div class="recommendation-list">
               <div class="rec-item priority-high">
-                <div class="rec-title">⚡ Peak Power Alert – Block C</div>
+                <div class="rec-title">⚡ Peak Power Alert – Galaxy Block</div>
                 <div class="rec-desc">Predicted 23% surge in energy consumption Friday 2–5 PM. Schedule load balancing to avoid overload.</div>
                 <div class="rec-meta"><span class="rec-tag">Energy</span><span class="rec-tag">High Priority</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 91%</span></div>
               </div>
               <div class="rec-item priority-medium">
-                <div class="rec-title">📚 Library Congestion Predicted</div>
-                <div class="rec-desc">Exam season starts in 5 days. Library occupancy will exceed 95%. Consider extending hours to 10 PM.</div>
-                <div class="rec-meta"><span class="rec-tag">Library</span><span class="rec-tag">Medium</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 87%</span></div>
+                <div class="rec-title">📋 Complaint Resolution Backlog</div>
+                <div class="rec-desc">7 complaints pending for more than 48 hours. Prioritize AC repair in N Square block.</div>
+                <div class="rec-meta"><span class="rec-tag">Complaints</span><span class="rec-tag">Medium</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 87%</span></div>
               </div>
               <div class="rec-item priority-low">
-                <div class="rec-title">🍽️ Menu Optimization – Mess Hall A</div>
+                <div class="rec-title">🍽️ Menu Optimization – Girls Hostel Mess</div>
                 <div class="rec-desc">AI suggests adding 2 vegetarian options to reduce food waste by ~18% based on consumption patterns.</div>
                 <div class="rec-meta"><span class="rec-tag">Dining</span><span class="rec-tag">Low</span><span style="font-size:0.7rem;color:var(--text-muted);">Confidence: 79%</span></div>
               </div>
@@ -384,7 +385,7 @@
               <div class="risk-bar"><div class="risk-fill low"></div></div>
             </div>
             <div class="risk-meter">
-              <div class="risk-label"><span>Academic</span><span class="text-warning">Medium (52%)</span></div>
+              <div class="risk-label"><span>Dining Quality</span><span class="text-warning">Medium (52%)</span></div>
               <div class="risk-bar"><div class="risk-fill medium"></div></div>
             </div>
             <div class="risk-meter">
@@ -410,15 +411,15 @@
             <div class="alert-list">
               <div class="alert-item alert-danger">
                 <i class="fa-solid fa-fire alert-icon" style="color:var(--accent-red);"></i>
-                <div><strong>Fire drill</strong> scheduled for Block A tomorrow 10 AM. Ensure all exits are clear.</div>
+                <div><strong>Fire drill</strong> scheduled for Main Block tomorrow 10 AM. Ensure all exits are clear.</div>
               </div>
               <div class="alert-item alert-warning">
                 <i class="fa-solid fa-droplet alert-icon" style="color:var(--accent-amber);"></i>
-                <div><strong>Water maintenance</strong> in Hostel B, 6–8 AM. Inform residents.</div>
+                <div><strong>Water maintenance</strong> in Elite Block, 6–8 AM. Inform residents.</div>
               </div>
               <div class="alert-item alert-info">
                 <i class="fa-solid fa-circle-info alert-icon" style="color:var(--accent-blue);"></i>
-                <div><strong>Exam timetable</strong> released. Library access extended by 2 hours.</div>
+                <div><strong>Special meal</strong> planned for Saturday dinner. Menu includes biryani.</div>
               </div>
             </div>
           </div>
@@ -429,7 +430,7 @@
               <div class="ai-card-icon" style="background:linear-gradient(135deg,#3B82F6,#22D3EE);"><i class="fa-solid fa-cloud-sun"></i></div>
               <div>
                 <div class="ai-card-title">Weather &amp; Forecast</div>
-                <div class="ai-card-sub">Campus environment data</div>
+                <div class="ai-card-sub">Hostel environment data</div>
               </div>
             </div>
             <div class="weather-widget">
@@ -457,13 +458,77 @@
       </section>
 
       <!-- ===========================
+           SMART DINING - REAL MESS MENU
+           =========================== -->
+      <section id="smartDiningSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="fa-solid fa-utensils"></i></span>
+            Smart Dining – Today's Menu
+          </h2>
+          <div class="section-actions">
+            <button class="tab-btn active" id="todayMenuTab">Today</button>
+            <button class="tab-btn" id="weekMenuTab">This Week</button>
+          </div>
+        </div>
+        
+        <!-- Today's Menu -->
+        <div id="todayMenuView">
+          <div class="mess-menu-card">
+            <div class="mess-menu-header">
+              <div class="menu-date-badge">
+                <i class="fa-solid fa-calendar-day"></i>
+                <span id="menuDay">Loading...</span>
+              </div>
+              <div class="menu-rating">
+                <i class="fa-solid fa-star" style="color: var(--accent-amber);"></i>
+                <span id="menuRating">0.0</span>/5.0
+                <span style="color: var(--text-muted); margin-left: 4px;">(<span id="ratingCount">0</span> ratings)</span>
+              </div>
+            </div>
+            
+            <div class="meals-grid" id="mealsGrid">
+              <!-- Loading skeleton -->
+              <div class="meal-card skeleton-loading">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+              <div class="meal-card skeleton-loading">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+              <div class="meal-card skeleton-loading">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+              <div class="meal-card skeleton-loading">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Weekly Menu -->
+        <div id="weekMenuView" style="display: none;">
+          <div class="week-menu-grid" id="weekMenuGrid">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===========================
            DIGITAL TWIN
            =========================== -->
       <section>
         <div class="section-header">
           <h2 class="section-title">
             <span class="section-icon"><i class="fa-solid fa-city"></i></span>
-            Digital Twin Campus
+            Digital Twin Hostel
           </h2>
           <div class="section-actions">
             <button class="tab-btn active">All Buildings</button>
@@ -496,7 +561,7 @@
           </div>
           <!-- Live Feed -->
           <div class="activity-card">
-            <div class="chart-title" style="margin-bottom:18px;">Live Campus Feed</div>
+            <div class="chart-title" style="margin-bottom:18px;">Live Hostel Feed</div>
             <div id="liveFeed" style="display:flex;flex-direction:column;gap:10px;"></div>
           </div>
         </div>
@@ -509,7 +574,7 @@
         <div class="section-header">
           <h2 class="section-title">
             <span class="section-icon"><i class="fa-solid fa-robot"></i></span>
-            AI Copilot – Campus Intelligence
+            AI Copilot – Hostel Intelligence
           </h2>
         </div>
         <div class="copilot-card">
@@ -517,7 +582,7 @@
             <div class="copilot-header-icon"><i class="fa-solid fa-brain"></i></div>
             <div class="copilot-header-text">
               <h3>CampusPulse AI Copilot</h3>
-              <p>Ask anything about your campus — instant AI-powered answers</p>
+              <p>Ask anything about your hostel — instant AI-powered answers</p>
             </div>
             <div class="copilot-status">
               <span class="pulse-dot" style="width:7px;height:7px;border-radius:50%;background:#34D399;display:inline-block;animation:pulse 1.5s infinite;"></span>
@@ -530,17 +595,17 @@
           </div>
           <div class="copilot-input-area">
             <div class="copilot-input-row">
-              <textarea class="copilot-input" id="copilotInput" placeholder="Ask Campus AI: e.g. 'Show hostel occupancy trend for this week…'" rows="1"></textarea>
+              <textarea class="copilot-input" id="copilotInput" placeholder="Ask Hostel AI: e.g. 'Show room occupancy trend for this week…'" rows="1"></textarea>
               <button class="copilot-send-btn btn-ripple" id="copilotSendBtn">
                 <i class="fa-solid fa-paper-plane"></i>
               </button>
             </div>
             <div class="quick-actions-row">
-              <button class="quick-action-btn"><i class="fa-solid fa-chart-line"></i> Attendance Report</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-chart-line"></i> Hostel Report</button>
               <button class="quick-action-btn"><i class="fa-solid fa-building"></i> Room Status</button>
-              <button class="quick-action-btn"><i class="fa-solid fa-bolt"></i> Energy Summary</button>
-              <button class="quick-action-btn"><i class="fa-solid fa-triangle-exclamation"></i> Active Alerts</button>
-              <button class="quick-action-btn"><i class="fa-solid fa-graduation-cap"></i> Exam Schedule</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-utensils"></i> Meal Summary</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-triangle-exclamation"></i> Active Complaints</button>
+              <button class="quick-action-btn"><i class="fa-solid fa-bell"></i> Notifications</button>
             </div>
           </div>
         </div>
@@ -555,7 +620,7 @@
             <div class="logo-dot"></div>
             CampusPulse AI
           </div>
-          <span class="footer-copy">© 2025 CampusPulse AI – Smart University Management Platform. All rights reserved.</span>
+          <span class="footer-copy">© 2025 CampusPulse AI – AI-powered Girls Hostel & Smart Dining Management. All rights reserved.</span>
         </div>
         <div class="footer-links">
           <span class="footer-link">Privacy Policy</span>
@@ -574,5 +639,6 @@
   </div><!-- /main-content -->
 </div><!-- /app-layout -->
 
-<script src="../js/dashboard.js"></script></body>
+<script src="/js/dashboard.js"></script>
+</body>
 </html>

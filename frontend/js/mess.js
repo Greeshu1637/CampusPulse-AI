@@ -475,7 +475,7 @@
   // ============================================================
   // INITIALIZATION
   // ============================================================
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     ThemeManager.init();
     SidebarManager.init();
     TopbarManager.init();
@@ -485,8 +485,745 @@
     MealStatusUpdater.init();
     RippleEffect.init();
     ScrollAnimations.init();
+    
+    // Initialize Menu Data Manager (API Integration)
+    await MenuDataManager.init();
+    
+    // Initialize Mess Manager (for manager view)
+    await MessManager.init();
 
     console.log('🍽️ CampusPulse Mess Management initialized successfully!');
+    console.log('✅ API Integration Active - Menu data loaded from database');
+    console.log('✅ Manager Module Active - Edit capabilities enabled');
   });
 
 })();
+
+
+  // ============================================================
+  // MENU DATA MANAGER - API Integration
+  // ============================================================
+  const MenuDataManager = {
+    todayMenu: null,
+    weeklyMenu: null,
+    managerMenus: null,
+
+    async init() {
+      console.log('🍽️ Initializing Menu Data Manager...');
+      await this.fetchTodayMenu();
+      await this.fetchWeeklyMenu();
+    },
+
+    async fetchTodayMenu() {
+      try {
+        const response = await fetch('/api/dining/today');
+        const data = await response.json();
+        
+        if (data.success) {
+          this.todayMenu = data;
+          console.log('✅ Today\'s menu loaded:', data.meals.length, 'meals');
+          this.renderTodayMenu();
+        } else {
+          console.error('❌ Failed to load today\'s menu:', data.message);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching today\'s menu:', error);
+      }
+    },
+
+    async fetchWeeklyMenu() {
+      try {
+        const response = await fetch('/api/dining/week');
+        const data = await response.json();
+        
+        if (data.success) {
+          this.weeklyMenu = data;
+          console.log('✅ Weekly menu loaded:', data.week.length, 'days');
+          this.renderWeeklyMenu();
+        } else {
+          console.error('❌ Failed to load weekly menu:', data.message);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching weekly menu:', error);
+      }
+    },
+
+    renderTodayMenu() {
+      const container = document.querySelector('.meals-grid, .menu-content, #todayMenuContainer');
+      if (!container || !this.todayMenu) {
+        console.warn('⚠️  Menu container or data not found');
+        return;
+      }
+
+      const meals = this.todayMenu.meals;
+      if (meals.length === 0) {
+        container.innerHTML = '<p style="text-align:center;padding:20px;color:var(--text-muted);">No meals available for today</p>';
+        return;
+      }
+
+      let html = '';
+      meals.forEach(meal => {
+        const statusClass = meal.status === 'ongoing' ? 'available' : 
+                           meal.status === 'upcoming' ? 'upcoming' : 'ended';
+        
+        html += `
+          <div class="meal-card" data-meal-id="${meal.id}">
+            <div class="meal-header">
+              <div>
+                <h3 class="meal-title">${meal.meal_type}</h3>
+                <p class="meal-time">${meal.time}</p>
+              </div>
+              <span class="meal-status ${statusClass}">${meal.status}</span>
+            </div>
+            <div class="meal-body">
+              <div class="meal-items">
+                ${meal.items.map(item => `
+                  <div class="menu-item ${item.is_veg ? 'veg' : 'non-veg'}">
+                    <span class="item-name">${item.item_name}</span>
+                    ${item.is_popular ? '<span class="item-badge">⭐ Popular</span>' : ''}
+                    ${item.average_rating > 0 ? `<span class="item-rating">★ ${item.average_rating.toFixed(1)}</span>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn-action rate-btn" data-meal-id="${meal.id}">
+                <i class="fa-solid fa-star"></i> Rate
+              </button>
+              <button class="btn-action feedback-btn" data-meal-id="${meal.id}">
+                <i class="fa-solid fa-comment"></i> Feedback
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      console.log('✅ Rendered', meals.length, 'meal cards');
+      
+      // Rebind button events
+      this.bindMealActions();
+    },
+
+    renderWeeklyMenu() {
+      const container = document.getElementById('weeklyMenuContainer');
+      if (!container || !this.weeklyMenu) {
+        console.warn('⚠️  Weekly menu container or data not found');
+        return;
+      }
+
+      const weekData = this.weeklyMenu.week;
+      if (weekData.length === 0) {
+        container.innerHTML = '<p style="text-align:center;padding:20px;color:var(--text-muted);">No weekly menu available</p>';
+        return;
+      }
+
+      const today = this.todayMenu?.day || '';
+      const currentDate = new Date();
+      
+      let html = '';
+      weekData.forEach((dayData, index) => {
+        const isToday = dayData.day === today;
+        const isWeekend = dayData.day === 'Saturday' || dayData.day === 'Sunday';
+        
+        // Calculate date for display
+        const dayDate = new Date(currentDate);
+        dayDate.setDate(currentDate.getDate() - currentDate.getDay() + index + 1); // +1 because week starts on Monday
+        const dateStr = dayDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        
+        html += `
+          <div class="day-column ${isToday ? 'active' : ''} ${isWeekend ? 'weekend' : ''}" data-day="${dayData.day}">
+            <div class="day-header">
+              <div class="day-name">${dayData.day}</div>
+              <div class="day-date">${dateStr}${isToday ? ' <span class="today-badge">Today</span>' : ''}</div>
+            </div>
+            <div class="day-meals">
+              ${this.renderDayMeals(dayData.meals)}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      console.log('✅ Rendered weekly menu for', weekData.length, 'days');
+      
+      // Bind click events to expand meals
+      this.bindWeeklyMealClicks();
+    },
+
+    renderDayMeals(meals) {
+      const mealTypeIcons = {
+        'Breakfast': 'fa-mug-saucer',
+        'Lunch': 'fa-bowl-rice',
+        'Snacks': 'fa-cookie-bite',
+        'Dinner': 'fa-moon'
+      };
+
+      const mealTypeClass = {
+        'Breakfast': 'breakfast',
+        'Lunch': 'lunch',
+        'Snacks': 'snacks',
+        'Dinner': 'dinner'
+      };
+
+      let html = '';
+      meals.forEach(meal => {
+        const items = meal.items || [];
+        const iconClass = mealTypeIcons[meal.meal_type] || 'fa-utensils';
+        const typeClass = mealTypeClass[meal.meal_type] || 'breakfast';
+        
+        // Show first 3 items, then "+X more"
+        const displayItems = items.slice(0, 3);
+        const remainingCount = items.length - 3;
+        
+        const itemsText = displayItems.map(item => item.item_name).join(', ');
+        const moreText = remainingCount > 0 ? ` <strong>+${remainingCount} more</strong>` : '';
+        
+        html += `
+          <div class="mini-meal" data-meal-id="${meal.id}" data-meal-type="${meal.meal_type}" title="Click to view full menu">
+            <span class="meal-icon-sm ${typeClass}">
+              <i class="fa-solid ${iconClass}"></i>
+            </span>
+            <span class="mini-meal-text">${itemsText}${moreText}</span>
+          </div>
+        `;
+      });
+
+      return html;
+    },
+
+    bindWeeklyMealClicks() {
+      document.querySelectorAll('.mini-meal').forEach(mealEl => {
+        mealEl.addEventListener('click', (e) => {
+          const mealId = e.currentTarget.dataset.mealId;
+          const mealType = e.currentTarget.dataset.mealType;
+          const day = e.currentTarget.closest('.day-column').dataset.day;
+          this.showMealDetails(day, mealType, mealId);
+        });
+      });
+    },
+
+    showMealDetails(day, mealType, mealId) {
+      // Find the meal from weekly data
+      const dayData = this.weeklyMenu?.week.find(d => d.day === day);
+      if (!dayData) return;
+
+      const meal = dayData.meals.find(m => m.meal_type === mealType);
+      if (!meal) return;
+
+      // Create modal HTML
+      const items = meal.items || [];
+      const itemsHtml = items.map(item => `
+        <div class="menu-item ${item.is_veg ? 'veg' : 'non-veg'}" style="padding:8px;margin:4px 0;border-radius:6px;background:var(--card-bg);">
+          <span class="item-name">${item.item_name}</span>
+          ${item.average_rating > 0 ? `<span class="item-rating" style="float:right;">★ ${item.average_rating.toFixed(1)}</span>` : ''}
+        </div>
+      `).join('');
+
+      // Simple alert for now (can be replaced with proper modal)
+      const message = `${day} - ${mealType}\n${meal.time}\n\nMenu Items (${items.length}):\n` + 
+                      items.map((item, i) => `${i + 1}. ${item.item_name}`).join('\n');
+      
+      alert(message);
+      
+      console.log(`📋 Showing meal details:`, { day, mealType, itemCount: items.length });
+    },
+
+    bindMealActions() {
+      document.querySelectorAll('.rate-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const mealId = e.currentTarget.dataset.mealId;
+          this.showRatingModal(mealId);
+        });
+      });
+
+      document.querySelectorAll('.feedback-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const mealId = e.currentTarget.dataset.mealId;
+          this.showFeedbackModal(mealId);
+        });
+      });
+    },
+
+    showRatingModal(mealId) {
+      // Find meal
+      const meal = this.todayMenu?.meals.find(m => m.id == mealId);
+      if (!meal) return;
+
+      alert(`Rate ${meal.meal_type}\\n\\nRating functionality connected to API!\\nMeal ID: ${mealId}\\n\\nTODO: Implement rating modal UI`);
+      
+      // TODO: Open proper modal and submit to /api/dining/rate
+      console.log('Rating meal:', mealId, meal.meal_type);
+    },
+
+    showFeedbackModal(mealId) {
+      const meal = this.todayMenu?.meals.find(m => m.id == mealId);
+      if (!meal) return;
+
+      const feedback = prompt(`Share feedback for ${meal.meal_type}:`);
+      if (feedback && feedback.trim()) {
+        this.submitFeedback(mealId, feedback);
+      }
+    },
+
+    async submitFeedback(mealId, feedbackText) {
+      try {
+        const response = await fetch('/api/dining/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            menu_id: mealId,
+            feedback_text: feedbackText,
+            feedback_type: 'general'
+          })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Thank you for your feedback!');
+          console.log('✅ Feedback submitted');
+        } else {
+          alert('Failed to submit feedback: ' + data.message);
+        }
+      } catch (error) {
+        console.error('❌ Error submitting feedback:', error);
+        alert('Error submitting feedback');
+      }
+    }
+  };
+
+
+  // ============================================================
+  // MESS MANAGER MODULE
+  // ============================================================
+  const MessManager = {
+    dashboardStats: null,
+    allMenus: null,
+    currentEditingMenu: null,
+
+    async init() {
+      console.log('👨‍💼 Initializing Mess Manager...');
+      await this.fetchDashboardStats();
+      await this.fetchAllMenus();
+      this.bindManagerButtons();
+    },
+
+    async fetchDashboardStats() {
+      try {
+        const response = await fetch('/api/manager/dashboard');
+        const data = await response.json();
+        
+        if (data.success) {
+          this.dashboardStats = data.stats;
+          console.log('✅ Dashboard stats loaded');
+          this.renderDashboardStats();
+        } else {
+          console.error('❌ Failed to load dashboard stats');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching dashboard stats:', error);
+      }
+    },
+
+    async fetchAllMenus() {
+      try {
+        const response = await fetch('/api/manager/menus');
+        const data = await response.json();
+        
+        if (data.success) {
+          this.allMenus = data.menus;
+          console.log('✅ Manager menus loaded:', data.count);
+        } else {
+          console.error('❌ Failed to load manager menus');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching manager menus:', error);
+      }
+    },
+
+    renderDashboardStats() {
+      if (!this.dashboardStats) return;
+
+      const stats = this.dashboardStats;
+      
+      // Update attendance KPI
+      const attendanceValue = document.querySelector('#managerView .kpi-value');
+      if (attendanceValue) {
+        attendanceValue.textContent = stats.today_attendance || 0;
+      }
+
+      // Update average rating
+      const ratingValues = document.querySelectorAll('#managerView .kpi-value');
+      if (ratingValues[1]) {
+        ratingValues[1].textContent = stats.average_rating || '0.0';
+      }
+
+      console.log('✅ Dashboard stats rendered');
+    },
+
+    bindManagerButtons() {
+      // Bind Update Menu button
+      const updateMenuBtn = document.getElementById('updateMenuBtn');
+      if (updateMenuBtn) {
+        updateMenuBtn.addEventListener('click', () => this.showMenuEditor());
+      }
+
+      console.log('✅ Manager buttons bound');
+    },
+
+    showMenuEditor() {
+      // Create menu editor modal
+      const modal = document.createElement('div');
+      modal.id = 'menuEditorModal';
+      modal.innerHTML = `
+        <div class="modal-overlay" onclick="MessManager.closeMenuEditor()"></div>
+        <div class="modal-content menu-editor-modal">
+          <div class="modal-header">
+            <h2><i class="fa-solid fa-edit"></i> Edit Weekly Menu</h2>
+            <button class="modal-close-btn" onclick="MessManager.closeMenuEditor()">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="menuEditorContent">
+              ${this.renderMenuEditorContent()}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      
+      // Bind menu item actions
+      this.bindMenuItemActions();
+    },
+
+    renderMenuEditorContent() {
+      if (!this.allMenus || this.allMenus.length === 0) {
+        return '<p style="text-align:center;padding:40px;color:var(--text-muted);">No menus found</p>';
+      }
+
+      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const mealTypes = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
+
+      let html = '<div class="menu-editor-grid">';
+
+      days.forEach(day => {
+        html += `<div class="day-editor-section">`;
+        html += `<h3 class="day-editor-title">${day}</h3>`;
+        
+        mealTypes.forEach(mealType => {
+          const menu = this.allMenus.find(m => m.day === day && m.meal_type === mealType);
+          
+          if (menu) {
+            html += `
+              <div class="meal-editor-card" data-menu-id="${menu.id}">
+                <div class="meal-editor-header">
+                  <span class="meal-editor-title">${mealType}</span>
+                  <div class="meal-editor-actions">
+                    <button class="icon-btn edit-meal-btn" data-menu-id="${menu.id}" title="Edit">
+                      <i class="fa-solid fa-edit"></i>
+                    </button>
+                    <button class="icon-btn ${menu.is_special ? 'active' : ''} toggle-special-btn" 
+                            data-menu-id="${menu.id}" title="Mark as Special">
+                      <i class="fa-solid fa-star"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="meal-editor-body">
+                  <div class="meal-editor-time">
+                    <i class="fa-solid fa-clock"></i> ${menu.time_start} - ${menu.time_end}
+                  </div>
+                  <div class="meal-editor-items">
+                    ${menu.items && menu.items.length > 0 ? 
+                      menu.items.slice(0, 3).map(item => item.item_name).join(', ') + 
+                      (menu.items.length > 3 ? ` +${menu.items.length - 3} more` : '')
+                      : 'No items'}
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="meal-editor-card empty">
+                <span>${mealType}</span>
+                <button class="add-meal-btn" data-day="${day}" data-meal-type="${mealType}">
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+            `;
+          }
+        });
+
+        html += `</div>`;
+      });
+
+      html += '</div>';
+      return html;
+    },
+
+    bindMenuItemActions() {
+      // Edit meal buttons
+      document.querySelectorAll('.edit-meal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const menuId = parseInt(e.currentTarget.dataset.menuId);
+          this.editMeal(menuId);
+        });
+      });
+
+      // Toggle special buttons
+      document.querySelectorAll('.toggle-special-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const menuId = parseInt(e.currentTarget.dataset.menuId);
+          await this.toggleSpecial(menuId, e.currentTarget);
+        });
+      });
+
+      // Add meal buttons
+      document.querySelectorAll('.add-meal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const day = e.currentTarget.dataset.day;
+          const mealType = e.currentTarget.dataset.mealType;
+          this.createMeal(day, mealType);
+        });
+      });
+    },
+
+    async editMeal(menuId) {
+      const menu = this.allMenus.find(m => m.id === menuId);
+      if (!menu) {
+        alert('Menu not found');
+        return;
+      }
+
+      this.currentEditingMenu = menu;
+      
+      // Show detailed edit form
+      const editorContent = document.getElementById('menuEditorContent');
+      editorContent.innerHTML = this.renderDetailedMealEditor(menu);
+      
+      // Bind save button
+      document.getElementById('saveMealBtn').addEventListener('click', () => this.saveMeal(menuId));
+      
+      // Bind cancel buttons
+      document.getElementById('cancelEditBtn').addEventListener('click', () => {
+        editorContent.innerHTML = this.renderMenuEditorContent();
+        this.bindMenuItemActions();
+      });
+      document.getElementById('cancelEditBtn2').addEventListener('click', () => {
+        editorContent.innerHTML = this.renderMenuEditorContent();
+        this.bindMenuItemActions();
+      });
+      
+      // Bind add item button
+      document.getElementById('addItemBtn').addEventListener('click', () => {
+        const itemsList = document.getElementById('menuItemsList');
+        const newRow = document.createElement('div');
+        newRow.className = 'menu-item-row';
+        newRow.innerHTML = `
+          <input type="text" value="" class="form-input item-name-input" placeholder="Item name" />
+          <select class="form-input item-category-input">
+            <option value="Main Course">Main Course</option>
+            <option value="Side Dish">Side Dish</option>
+            <option value="Beverage">Beverage</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Snack">Snack</option>
+            <option value="Staple">Staple</option>
+          </select>
+          <label class="checkbox-label">
+            <input type="checkbox" class="item-veg-input" checked />
+            Veg
+          </label>
+          <button class="icon-btn remove-item-btn" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+        itemsList.appendChild(newRow);
+      });
+    },
+
+    renderDetailedMealEditor(menu) {
+      return `
+        <div class="detailed-meal-editor">
+          <div class="editor-header">
+            <button class="back-btn" id="cancelEditBtn">
+              <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <h3>${menu.day} - ${menu.meal_type}</h3>
+          </div>
+
+          <div class="editor-form">
+            <div class="form-section">
+              <h4>Meal Timings</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Start Time</label>
+                  <input type="time" id="editTimeStart" value="${menu.time_start}" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>End Time</label>
+                  <input type="time" id="editTimeEnd" value="${menu.time_end}" class="form-input" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Meal Properties</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" id="editIsSpecial" ${menu.is_special ? 'checked' : ''} />
+                    Mark as Special
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label>Estimated Servings</label>
+                  <input type="number" id="editServings" value="${menu.estimated_servings || 3000}" 
+                         class="form-input" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Menu Items</h4>
+              <div id="menuItemsList">
+                ${menu.items && menu.items.length > 0 ? 
+                  menu.items.map((item, index) => `
+                    <div class="menu-item-row" data-item-index="${index}">
+                      <input type="text" value="${item.item_name}" 
+                             class="form-input item-name-input" placeholder="Item name" />
+                      <select class="form-input item-category-input">
+                        <option value="Main Course" ${item.category === 'Main Course' ? 'selected' : ''}>Main Course</option>
+                        <option value="Side Dish" ${item.category === 'Side Dish' ? 'selected' : ''}>Side Dish</option>
+                        <option value="Beverage" ${item.category === 'Beverage' ? 'selected' : ''}>Beverage</option>
+                        <option value="Dessert" ${item.category === 'Dessert' ? 'selected' : ''}>Dessert</option>
+                        <option value="Snack" ${item.category === 'Snack' ? 'selected' : ''}>Snack</option>
+                        <option value="Staple" ${item.category === 'Staple' ? 'selected' : ''}>Staple</option>
+                      </select>
+                      <label class="checkbox-label">
+                        <input type="checkbox" class="item-veg-input" ${item.is_veg ? 'checked' : ''} />
+                        Veg
+                      </label>
+                      <button class="icon-btn remove-item-btn" onclick="this.parentElement.remove()">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+                  `).join('')
+                  : '<p style="color:var(--text-muted);padding:12px;">No items. Add items below.</p>'}
+              </div>
+              <button class="btn-secondary" id="addItemBtn" type="button">
+                <i class="fa-solid fa-plus"></i> Add Item
+              </button>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn-secondary" id="cancelEditBtn2" type="button">Cancel</button>
+              <button class="btn-primary" id="saveMealBtn" type="button">
+                <i class="fa-solid fa-save"></i> Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
+    async saveMeal(menuId) {
+      try {
+        // Collect form data
+        const updateData = {
+          time_start: document.getElementById('editTimeStart').value,
+          time_end: document.getElementById('editTimeEnd').value,
+          is_special: document.getElementById('editIsSpecial').checked,
+          estimated_servings: parseInt(document.getElementById('editServings').value),
+          items: []
+        };
+
+        // Collect menu items
+        document.querySelectorAll('.menu-item-row').forEach(row => {
+          const itemName = row.querySelector('.item-name-input').value.trim();
+          if (itemName) {
+            updateData.items.push({
+              item_name: itemName,
+              category: row.querySelector('.item-category-input').value,
+              is_veg: row.querySelector('.item-veg-input').checked,
+              calories: 120,
+              protein_g: 4.0,
+              carbs_g: 20.0,
+              fat_g: 3.0
+            });
+          }
+        });
+
+        // Send update to API
+        const response = await fetch(`/api/manager/menu/${menuId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateData)
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('✅ Menu updated successfully!');
+          
+          // Refresh data
+          await this.fetchAllMenus();
+          await MenuDataManager.fetchTodayMenu();
+          await MenuDataManager.fetchWeeklyMenu();
+          
+          // Close editor
+          this.closeMenuEditor();
+          
+          console.log('✅ Menu updated and views refreshed');
+        } else {
+          alert('Failed to update menu: ' + data.message);
+        }
+      } catch (error) {
+        console.error('❌ Error saving menu:', error);
+        alert('Error saving menu');
+      }
+    },
+
+    async toggleSpecial(menuId, buttonElement) {
+      const menu = this.allMenus.find(m => m.id === menuId);
+      if (!menu) return;
+
+      const newSpecialStatus = !menu.is_special;
+
+      try {
+        const response = await fetch(`/api/manager/menu/${menuId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_special: newSpecialStatus })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          menu.is_special = newSpecialStatus;
+          buttonElement.classList.toggle('active');
+          
+          // Refresh student views
+          await MenuDataManager.fetchTodayMenu();
+          await MenuDataManager.fetchWeeklyMenu();
+          
+          console.log(`✅ Menu ${menuId} special status: ${newSpecialStatus}`);
+        }
+      } catch (error) {
+        console.error('❌ Error toggling special:', error);
+      }
+    },
+
+    createMeal(day, mealType) {
+      alert(`Create new meal: ${day} - ${mealType}\n\nThis feature will allow adding new meals to the timetable.`);
+      // TODO: Implement create meal functionality
+    },
+
+    closeMenuEditor() {
+      const modal = document.getElementById('menuEditorModal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+  };
+

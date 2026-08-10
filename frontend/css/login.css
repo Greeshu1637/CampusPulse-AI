@@ -1058,3 +1058,105 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .lp-logo--card { display: flex; }
 }
+
+
+/* ============================================================
+   PASSWORD STRENGTH METER
+   ============================================================ */
+.lp-pw-strength {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lp-pw-strength__bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.lp-pw-strength__bar {
+  height: 4px;
+  flex: 1;
+  background: var(--c-border);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.lp-pw-strength__bar.active {
+  transform: scaleY(1.5);
+}
+
+.lp-pw-strength__bar.weak {
+  background: #ef4444;
+}
+
+.lp-pw-strength__bar.fair {
+  background: #f59e0b;
+}
+
+.lp-pw-strength__bar.good {
+  background: #3b82f6;
+}
+
+.lp-pw-strength__bar.strong {
+  background: #10b981;
+}
+
+.lp-pw-strength__text {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 50px;
+  text-align: right;
+}
+
+.lp-pw-strength__text.weak {
+  color: #ef4444;
+}
+
+.lp-pw-strength__text.fair {
+  color: #f59e0b;
+}
+
+.lp-pw-strength__text.good {
+  color: #3b82f6;
+}
+
+.lp-pw-strength__text.strong {
+  color: #10b981;
+}
+
+/* ============================================================
+   PASSWORD MATCH INDICATOR
+   ============================================================ */
+.lp-pw-match {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #10b981;
+  font-size: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.lp-pw-match.show {
+  opacity: 1;
+  visibility: visible;
+  animation: checkmarkPulse 0.4s ease;
+}
+
+@keyframes checkmarkPulse {
+  0% {
+    transform: translateY(-50%) scale(0.5);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.2);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}

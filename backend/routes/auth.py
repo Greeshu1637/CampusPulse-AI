@@ -21,6 +21,8 @@ Security Features:
 
 from flask import Blueprint, request, jsonify, render_template, session, redirect, url_for
 from backend.services.auth_service import AuthService
+from backend.models.user import get_user_by_email, get_user_by_id
+from backend.database import db
 # ============================================================
 # CREATE AUTHENTICATION BLUEPRINT
 # ============================================================
@@ -53,6 +55,217 @@ def login_page():
         return redirect(url_for('index'))
     
     return render_template('login.html')
+
+
+@auth_bp.route('/register', methods=['GET'])
+def register_page():
+    """
+    Render the registration page.
+    
+    GET /auth/register
+    
+    Returns:
+        Rendered register.html template
+    """
+    # Check if user is already logged in
+    if session.get('user_id'):
+        return redirect(url_for('index'))
+    
+    return render_template('register.html')
+
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    """
+    Handle user registration.
+    
+    POST /auth/register
+    
+    Expected JSON payload:
+    {
+        "name": "Full Name",
+        "email": "user@example.com",
+        "password": "SecurePass123",
+        "confirm_password": "SecurePass123",
+        "role": "student"
+    }
+    
+    Returns:
+        JSON response with registration status
+    """
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        
+        # Validate required fields
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'No data provided'
+            }), 400
+        
+        name = data.get('name', '').strip()
+        email = data.get('email', '').strip().lower()
+        password = data.get('password', '')
+        confirm_password = data.get('confirm_password', '')
+        role = data.get('role', 'student')
+        
+        # Validate name
+        if not name:
+            return jsonify({
+                'success': False,
+                'message': 'Full name is required',
+                'field': 'name'
+            }), 400
+        
+        if len(name) < 2:
+            return jsonify({
+                'success': False,
+                'message': 'Name must be at least 2 characters',
+                'field': 'name'
+            }), 400
+        
+        # Validate email
+        if not email:
+            return jsonify({
+                'success': False,
+                'message': 'Email is required',
+                'field': 'email'
+            }), 400
+        
+        # Email format validation
+        import re
+        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_regex, email):
+            return jsonify({
+                'success': False,
+                'message': 'Invalid email format',
+                'field': 'email'
+            }), 400
+        
+        # Check if email already exists
+        existing_user = get_user_by_email(email)
+        if existing_user:
+            return jsonify({
+                'success': False,
+                'message': 'Email already registered',
+                'field': 'email'
+            }), 409
+        
+        # Validate password
+        if not password:
+            return jsonify({
+                'success': False,
+                'message': 'Password is required',
+                'field': 'password'
+            }), 400
+        
+        # Password strength validation
+        if len(password) < 8:
+            return jsonify({
+                'success': False,
+                'message': 'Password must be at least 8 characters',
+                'field': 'password'
+            }), 400
+        
+        # Check password complexity
+        has_upper = any(c.isupper() for c in password)
+        has_lower = any(c.islower() for c in password)
+        has_digit = any(c.isdigit() for c in password)
+        
+        if not has_upper:
+            return jsonify({
+                'success': False,
+                'message': 'Password must contain at least one uppercase letter',
+                'field': 'password'
+            }), 400
+        
+        if not has_lower:
+            return jsonify({
+                'success': False,
+                'message': 'Password must contain at least one lowercase letter',
+                'field': 'password'
+            }), 400
+        
+        if not has_digit:
+            return jsonify({
+                'success': False,
+                'message': 'Password must contain at least one number',
+                'field': 'password'
+            }), 400
+        
+        # Validate confirm password
+        if not confirm_password:
+            return jsonify({
+                'success': False,
+                'message': 'Please confirm your password',
+                'field': 'confirm_password'
+            }), 400
+        
+        if password != confirm_password:
+            return jsonify({
+                'success': False,
+                'message': 'Passwords do not match',
+                'field': 'confirm_password'
+            }), 400
+        
+        # Validate role
+        valid_roles = ['student', 'admin', 'maintenance', 'mess']
+        if role not in valid_roles:
+            return jsonify({
+                'success': False,
+                'message': 'Invalid role selected',
+                'field': 'role'
+            }), 400
+        
+        # Create new user
+        from backend.models.user import User
+        new_user = User(
+            name=name,
+            email=email,
+            role=role,
+            auth_provider='email',
+            is_active=True,
+            is_verified=False  # Email verification can be added later
+        )
+        
+        # Hash and set password
+        new_user.set_password(password)
+        
+        # Save to database
+        db.session.add(new_user)
+        db.session.commit()
+        
+        print(f'✓ New user registered: {email} ({role})')
+        
+        # Auto-login after registration
+        session['user_id'] = new_user.id
+        session['user_email'] = new_user.email
+        session['user_role'] = new_user.role
+        session['user_name'] = new_user.name
+        session['user_picture'] = new_user.profile_picture
+        session['auth_provider'] = 'email'
+        session.permanent = True
+        
+        # Update last login
+        new_user.update_last_login()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Registration successful',
+            'user': new_user.to_dict(include_sensitive=False),
+            'redirect': '/frontend/pages/dashboard.html'
+        }), 201
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f'Registration error: {str(e)}')
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'message': 'An error occurred during registration'
+        }), 500
 
 
 @auth_bp.route('/login', methods=['POST'])
@@ -96,31 +309,63 @@ def login():
                 'message': 'Email and password are required'
             }), 400
         
-        # TODO: Authenticate user with database
-        # For now, use mock authentication
-        auth_result = auth_service.authenticate_user(email, password, role)
+        # Authenticate user with database
+        user = get_user_by_email(email)
         
-        if auth_result['success']:
-            # Store user info in session
-            session['user_id'] = auth_result['user']['id']
-            session['user_email'] = auth_result['user']['email']
-            session['user_role'] = auth_result['user']['role']
-            session['user_name'] = auth_result['user']['name']
-            
-            # Set session as permanent if "remember me" is checked
-            session.permanent = remember
-            
-            return jsonify({
-                'success': True,
-                'message': 'Login successful',
-                'user': auth_result['user'],
-                'redirect': url_for('index')
-            }), 200
-        else:
+        if not user:
             return jsonify({
                 'success': False,
-                'message': auth_result['message']
+                'message': 'Invalid email or password'
             }), 401
+        
+        # Verify password (only for email auth users)
+        if user.auth_provider == 'email':
+            if not user.check_password(password):
+                return jsonify({
+                    'success': False,
+                    'message': 'Invalid email or password'
+                }), 401
+        else:
+            # OAuth users cannot login with password
+            return jsonify({
+                'success': False,
+                'message': f'This account uses {user.auth_provider} authentication. Please use the "Continue with {user.auth_provider.title()}" button.'
+            }), 401
+        
+        # Verify role if specified
+        if role and user.role != role:
+            return jsonify({
+                'success': False,
+                'message': f'Access denied for role: {role}'
+            }), 403
+        
+        # Check if user is active
+        if not user.is_active:
+            return jsonify({
+                'success': False,
+                'message': 'Account is disabled. Contact administrator.'
+            }), 403
+        
+        # Update last login
+        user.update_last_login()
+        
+        # Create session
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        session['user_role'] = user.role
+        session['user_name'] = user.name
+        session['user_picture'] = user.profile_picture
+        session['auth_provider'] = 'email'
+        
+        # Set session as permanent if "remember me" is checked
+        session.permanent = remember
+        
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'user': user.to_dict(include_sensitive=False),
+            'redirect': '/frontend/pages/dashboard.html'
+        }), 200
     
     except Exception as e:
         print(f'Login error: {str(e)}')
@@ -193,7 +438,9 @@ def check_session():
                 'id': session.get('user_id'),
                 'email': session.get('user_email'),
                 'name': session.get('user_name'),
-                'role': session.get('user_role')
+                'role': session.get('user_role'),
+                'picture': session.get('user_picture'),
+                'auth_provider': session.get('auth_provider', 'email')
             }
         }), 200
     else:
